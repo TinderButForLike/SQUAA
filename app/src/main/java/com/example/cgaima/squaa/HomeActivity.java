@@ -3,7 +3,6 @@ package com.example.cgaima.squaa;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class HomeActivity extends AppCompatActivity {
 
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
