@@ -2,10 +2,15 @@ package com.example.cgaima.squaa;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toolbar;
+
+import com.example.cgaima.squaa.Models.Event;
+import com.parse.ParseException;
+import com.parse.SaveCallback;
 
 import java.util.Date;
 
@@ -56,9 +61,25 @@ public class EventActivity extends AppCompatActivity {
 
     //create a new event
     private void createEvent(String name, String location, Date date, boolean privacy, String description) {
+        final Event newEvent = new Event();
+        newEvent.setEventName(name);
+        newEvent.setLocation(location);
+        newEvent.setDate(date);
+        newEvent.setPrivacy(privacy);
+        newEvent.setDescription(description);
 
-        
-
+        newEvent.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e == null) {
+                    Log.d("Event Activity", "You just made a new event!");
+                }
+                else {
+                    Log.d("Event Activity", "Something went wrong :(");
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
 
