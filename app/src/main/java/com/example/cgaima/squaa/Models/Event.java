@@ -11,7 +11,7 @@ import org.json.JSONArray;
 
 import java.util.Date;
 
-@ParseClassName("Post")
+@ParseClassName("Event")
 public class Event extends ParseObject{
     private static final String KEY_DESCRIPTION = "description";
     private static final String KEY_IMAGE = "event_image";
