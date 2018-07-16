@@ -1,5 +1,6 @@
 package com.example.cgaima.squaa;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -54,18 +55,26 @@ public class EventActivity extends AppCompatActivity {
         create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String mName = name.getText().toString();
+                String mLocation = location.getText().toString();
+                Date mDate = (Date) date.getText();
+                String mDescription = description.getText().toString();
 
+                createEvent(mName, mLocation, mDate, mDescription);
+
+                Intent createIntent = new Intent(EventActivity.this, HomeActivity.class);
+                startActivity(createIntent);
             }
         });
     }
 
     //create a new event
-    private void createEvent(String name, String location, Date date, boolean privacy, String description) {
+    private void createEvent(String name, String location, Date date,  String description) { //TODO add privacy, image, date
         final Event newEvent = new Event();
-        newEvent.setName(name);
+        newEvent.setEventName(name);
         newEvent.setLocation(location);
         newEvent.setDate(date);
-        newEvent.setPrivacy(privacy);
+        //newEvent.setPrivacy(privacy);
         newEvent.setDescription(description);
 
         newEvent.saveInBackground(new SaveCallback() {
