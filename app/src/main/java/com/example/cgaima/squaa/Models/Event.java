@@ -18,11 +18,15 @@ public class Event extends ParseObject{
     private static final String KEY_OWNER = "owner";
     private static final String KEY_ATTENDEES = "attendees";
     private static final String KEY_LOCATION = "location";
-    private static final String KEY_DATE = "date";
+    private static final String KEY_DATE = "event_date";
     private static final String KEY_PRIVACY = "privacy";
+    private static final String KEY_NAME = "event_name";
 
 
-
+    // get event name
+    public String getEventName() {return getString(KEY_NAME);}
+    // set event name
+    public void setEventName(String name) {put(KEY_NAME,name);}
     // get the event description
     public String getDescription() {
         return getString(KEY_DESCRIPTION);
