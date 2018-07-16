@@ -56,7 +56,7 @@ public class EventActivity extends AppCompatActivity {
 
     //create a new event
     private void createEvent(String name, String location, Date date, boolean privacy, String description) {
-        final Event newEvent = new Event();
+
         
 
     }

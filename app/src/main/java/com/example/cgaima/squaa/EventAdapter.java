@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -85,8 +84,6 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         @BindView(R.id.tvAttendees) TextView tvAttendees;
         @BindView(R.id.tvDate) TextView tvDate;
         @BindView(R.id.tvLocation) TextView tvLocation;
-        @BindView(R.id.btCreateEvent) Button btEvent;
-
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
