@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -43,8 +44,13 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
 
         // TODO - create get and set methods in Event class?
         Event event = events.get(position);
-        //holder.tvName.setText(event.get);
+        holder.tvName.setText(event.getEventName());
         holder.tvDescription.setText(event.getDescription());
+        holder.tvDate.setText(event.getDate().toString());
+        holder.tvLocation.setText(event.getLocation());
+
+
+
 
         // TODO - is attendees a JSONArray?
         //holder.tvAttendees.setText(event.getString("attendees"));
@@ -79,6 +85,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         @BindView(R.id.tvAttendees) TextView tvAttendees;
         @BindView(R.id.tvDate) TextView tvDate;
         @BindView(R.id.tvLocation) TextView tvLocation;
+        @BindView(R.id.btCreateEvent) Button btEvent;
 
         public ViewHolder(View itemView) {
             super(itemView);

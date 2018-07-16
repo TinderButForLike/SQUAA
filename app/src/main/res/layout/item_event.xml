@@ -8,17 +8,14 @@
     <ImageView
         android:id="@+id/ivPicture"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
+        android:layout_height="wrap_content"
         app:srcCompat="@android:color/holo_orange_light" />
 
     <TextView
         android:id="@+id/tvName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/ivPicture"
+        android:layout_below="@id/ivPicture"
         android:text="Event Name" />
 
     <TextView
@@ -26,7 +23,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvName"
-        android:layout_toEndOf="@+id/ivPicture"
         android:text="Location" />
 
     <TextView
@@ -34,7 +30,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvDescription"
-        android:layout_toEndOf="@+id/ivPicture"
         android:text="Date" />
 
     <TextView
@@ -42,7 +37,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvLocation"
-        android:layout_toEndOf="@+id/ivPicture"
         android:text="Description" />
 
     <TextView
@@ -50,7 +44,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvDate"
-        android:layout_toEndOf="@+id/ivPicture"
         android:text="Attendees" />
+
+    <Button
+        android:id="@+id/btCreateEvent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:background="#c0c0c0"
+        android:text="Create Event" />
 
 </RelativeLayout>
