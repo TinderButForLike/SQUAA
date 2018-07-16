@@ -77,9 +77,9 @@ public class Event extends ParseObject{
     }
 
     // get event attendees
-    public JSONArray getAttendees() {
-        return getJSONArray(KEY_ATTENDEES);
-    }
+//    public ArrayList<User> getAttendees() {
+//        return (KEY_ATTENDEES);
+//    }
     // set event attendees
     public void setAttendees(JSONArray attendees) {
         put(KEY_ATTENDEES, attendees);
