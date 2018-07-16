@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.cgaima.squaa.Models.Event;
 import com.parse.GetDataCallback;
 import com.parse.ParseException;
 
@@ -42,15 +43,15 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
 
         // TODO - create get and set methods in Event class?
         Event event = events.get(position);
-        holder.tvName.setText(event.getString("name"));
-        holder.tvDescription.setText(event.getString("description"));
+        //holder.tvName.setText(event.get);
+        holder.tvDescription.setText(event.getDescription());
 
         // TODO - is attendees a JSONArray?
-        holder.tvAttendees.setText(event.getString("attendees"));
-        holder.tvDate.setText(event.getString("date"));
-        holder.tvLocation.setText(event.getString("location"));
+        //holder.tvAttendees.setText(event.getString("attendees"));
+        //holder.tvDate.setText(event.getDate());
+        //holder.tvLocation.setText(event.getLocation());
         // TODO - what key for picture
-        event.getParseFile("poster").getDataInBackground(new GetDataCallback() {
+        event.getEventImage().getDataInBackground(new GetDataCallback() {
             @Override
             public void done(byte[] data, ParseException e) {
                 if (e == null) {
@@ -73,7 +74,6 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.ivPicture) ImageView ivPicture;
-        @BindView(R.id.rvEvents) RecyclerView rvEvents;
         @BindView(R.id.tvName) TextView tvName;
         @BindView(R.id.tvDescription) TextView tvDescription;
         @BindView(R.id.tvAttendees) TextView tvAttendees;
