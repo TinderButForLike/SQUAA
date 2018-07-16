@@ -2,7 +2,10 @@ package com.example.cgaima.squaa;
 
 import android.app.Application;
 
+import com.example.cgaima.squaa.Models.Event;
+import com.example.cgaima.squaa.Models.User;
 import com.parse.Parse;
+import com.parse.ParseObject;
 
 public class ParseApp extends Application {
 
@@ -10,7 +13,8 @@ public class ParseApp extends Application {
     public void onCreate() {
         super.onCreate();
 
-        //ParseObject.registerSubclass(Post.class);
+        ParseObject.registerSubclass(Event.class);
+        ParseObject.registerSubclass(User.class);
         final Parse.Configuration configuration = new Parse.Configuration.Builder(this)
                 .applicationId("squID")
                 .clientKey("christinechiticheyenne")
