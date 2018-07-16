@@ -10,6 +10,8 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
         android:background="#6db4fa"
         app:title="create an event"
         app:titleTextColor="@android:color/background_light" />
@@ -18,47 +20,83 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/toolbar">
+        android:layout_alignParentTop="true">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
-            <EditText
-                android:id="@+id/eventName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:ems="10"
-                android:hint="what is the name of your event?"
-                android:inputType="text"
-                android:textSize="14sp" />
-
-            <EditText
-                android:id="@+id/eventTime"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentStart="true"
-                android:layout_marginBottom="107dp"
-                android:ems="10"
-                android:hint="what time is your event taking place?"
-                android:inputType="textPersonName|time"
-                android:textSize="14sp" />
-
-            <EditText
-                android:id="@+id/eventDate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:ems="10"
-                android:hint="when is your event happening?"
-                android:inputType="date"
-                android:textSize="14sp" />
         </RelativeLayout>
 
 
     </ScrollView>
+
+    <EditText
+        android:id="@+id/location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/name"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="114dp"
+        android:ems="10"
+        android:hint="where is your event?"
+        android:inputType="text"
+        android:textSize="14sp" />
+
+    <EditText
+        android:id="@+id/date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="174dp"
+        android:ems="10"
+        android:hint="when is your event?"
+        android:inputType="datetime"
+        android:textSize="14sp" />
+
+    <EditText
+        android:id="@+id/privacy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="243dp"
+        android:ems="10"
+        android:hint="is your event public?"
+        android:inputType="text"
+        android:textSize="14sp" />
+
+    <EditText
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/toolbar"
+        android:ems="10"
+        android:hint="what's your event called?"
+        android:inputType="text"
+        android:textSize="14sp" />
+
+    <EditText
+        android:id="@+id/description"
+        android:layout_width="361dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="170dp"
+        android:ems="10"
+        android:hint="tell the world a little more about your event."
+        android:inputType="text|textPersonName"
+        android:textSize="14sp" />
+
+    <Button
+        android:id="@+id/create"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="53dp"
+        android:text="create event" />
 
 </RelativeLayout>

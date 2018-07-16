@@ -20,8 +20,10 @@ import butterknife.ButterKnife;
 
 public class HomeActivity extends AppCompatActivity {
 
-    @BindView(R.id.rvEvents) RecyclerView rvEvents;
-    @BindView(R.id.swipeContainer) SwipeRefreshLayout swipeContainer;
+    @BindView(R.id.rvEvents)
+    RecyclerView rvEvents;
+    @BindView(R.id.swipeContainer)
+    SwipeRefreshLayout swipeContainer;
 
     private EventAdapter eventAdapter;
     private ArrayList<Event> events;
