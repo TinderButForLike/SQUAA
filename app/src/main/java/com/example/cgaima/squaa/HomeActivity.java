@@ -1,10 +1,5 @@
 package com.example.cgaima.squaa;
 
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-
-public class HomeActivity extends AppCompatActivity {
-
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -22,8 +17,10 @@ import butterknife.ButterKnife;
 
 public class HomeActivity extends AppCompatActivity {
 
-    @BindView(R.id.rvEvents) RecyclerView rvEvents;
-    @BindView(R.id.swipeContainer) SwipeRefreshLayout swipeContainer;
+    @BindView(R.id.rvEvents)
+    RecyclerView rvEvents;
+    @BindView(R.id.swipeContainer)
+    SwipeRefreshLayout swipeContainer;
 
     private EventAdapter eventAdapter;
     private ArrayList<Event> events;

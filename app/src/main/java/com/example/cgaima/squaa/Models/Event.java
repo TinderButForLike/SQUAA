@@ -1,3 +1,4 @@
+
 package com.example.cgaima.squaa.Models;
 
 import com.parse.ParseClassName;
