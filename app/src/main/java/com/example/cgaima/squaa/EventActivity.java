@@ -10,6 +10,7 @@ import android.widget.EditText;
 
 import com.example.cgaima.squaa.Models.Event;
 import com.parse.ParseException;
+import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import java.util.Date;
@@ -67,6 +68,8 @@ public class EventActivity extends AppCompatActivity {
         newEvent.setDate(date);
         //newEvent.setPrivacy(privacy);
         newEvent.setDescription(description);
+        // set event owner
+        newEvent.setOwner(ParseUser.getCurrentUser());
 
         newEvent.saveInBackground(new SaveCallback() {
             @Override

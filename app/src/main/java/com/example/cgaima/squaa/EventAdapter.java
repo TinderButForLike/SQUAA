@@ -1,6 +1,8 @@
 package com.example.cgaima.squaa;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
@@ -16,6 +18,8 @@ import com.example.cgaima.squaa.Models.Event;
 import com.parse.GetDataCallback;
 import com.parse.ParseException;
 
+import org.parceler.Parcels;
+
 import java.util.List;
 
 import butterknife.BindView;
@@ -24,6 +28,7 @@ import butterknife.ButterKnife;
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> {
     Context context;
     List<Event> events;
+    private final int REQUEST_CODE = 21;
 
     public EventAdapter(List<Event> events) {
         this.events = events;
@@ -39,13 +44,13 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
 
         // TODO - create get and set methods in Event class?
-        Event event = events.get(position);
+        final Event event = events.get(position);
         holder.tvName.setText(event.getEventName());
         holder.tvDescription.setText(event.getDescription());
-        holder.tvDate.setText(event.getDate().toString());
+//        holder.tvDate.setText(event.getDate().toString());
         holder.tvLocation.setText(event.getLocation());
 
 
@@ -69,7 +74,17 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
                 }
             }
         });
-    }
+
+        holder.ivPicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(context, EventDetailActivity.class);
+                i.putExtra("event", Parcels.wrap(event));
+                //i.putExtra("post", post);
+                ((Activity) context).startActivityForResult(i, REQUEST_CODE);
+            }
+        });
+   }
 
     @Override
     public int getItemCount() {
