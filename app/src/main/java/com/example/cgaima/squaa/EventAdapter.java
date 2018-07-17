@@ -1,11 +1,8 @@
 package com.example.cgaima.squaa;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.cgaima.squaa.Models.Event;
-import com.parse.GetDataCallback;
-import com.parse.ParseException;
 
 import java.util.List;
 
@@ -41,22 +36,15 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
 
-        // TODO - create get and set methods in Event class?
         Event event = events.get(position);
         holder.tvName.setText(event.getEventName());
         holder.tvDescription.setText(event.getDescription());
-        holder.tvDate.setText(event.getDate().toString());
         holder.tvLocation.setText(event.getLocation());
-
-
-
-
-        // TODO - is attendees a JSONArray?
+        // TODO - set all vars to the right things
+        //holder.tvDate.setText(event.getDate().toString());
         //holder.tvAttendees.setText(event.getString("attendees"));
-        //holder.tvDate.setText(event.getDate());
-        //holder.tvLocation.setText(event.getLocation());
-        // TODO - what key for picture
-        event.getEventImage().getDataInBackground(new GetDataCallback() {
+
+        /*event.getEventImage().getDataInBackground(new GetDataCallback() {
             @Override
             public void done(byte[] data, ParseException e) {
                 if (e == null) {
@@ -68,7 +56,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
                     e.printStackTrace();
                 }
             }
-        });
+        });*/
+
     }
 
     @Override
