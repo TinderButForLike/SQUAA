@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toolbar;
 
 import com.example.cgaima.squaa.Models.Event;
 import com.parse.ParseException;
@@ -20,8 +19,7 @@ import butterknife.ButterKnife;
 public class EventActivity extends AppCompatActivity {
 
     //resource variables
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
+
     @BindView(R.id.name)
     EditText name;
     @BindView(R.id.location)
@@ -44,13 +42,6 @@ public class EventActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
         ButterKnife.bind(this); //bind butterknife after
-
-        if (useToolbar()){
-            setActionBar(toolbar);
-        }
-        else {
-            toolbar.setVisibility(View.GONE);
-        }
         create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
