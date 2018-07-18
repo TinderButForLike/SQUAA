@@ -78,7 +78,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         holder.ivPicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(context, EventDetailActivity.class);
+                Intent i = new Intent(context, ProfileLandingActivity.class);
                 i.putExtra("event", Parcels.wrap(event));
                 //i.putExtra("post", post);
                 ((Activity) context).startActivityForResult(i, REQUEST_CODE);

@@ -87,7 +87,7 @@ public class HomeActivity extends AppCompatActivity {
     private void loadTopPosts() {
         final Event.Query eventsQuery = new Event.Query();
         eventsQuery.getTop();
-        eventsQuery.findInBackground(new FindCallback<Event>() {
+        eventsQuery.orderByDescending("createdAt").findInBackground(new FindCallback<Event>() {
             @Override
             public void done(List<Event> objects, ParseException e) {
                 if (e==null){

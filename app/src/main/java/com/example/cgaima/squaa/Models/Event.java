@@ -2,13 +2,16 @@
 package com.example.cgaima.squaa.Models;
 
 import com.parse.ParseClassName;
+import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 @ParseClassName("Event")
@@ -81,12 +84,30 @@ public class Event extends ParseObject{
     }
 
     // get event attendees
-//    public ArrayList<User> getAttendees() {
-//        return (KEY_ATTENDEES);
-//    }
+    public ArrayList getAttendees() {
+        ArrayList<Object> attendees = new ArrayList<>();
+        JSONArray jsonArray = (JSONArray)getJSONArray(KEY_ATTENDEES);
+        if (jsonArray != null) {
+            int len = jsonArray.length();
+            for (int i=0;i<len;i++){
+                try {
+                    attendees.add(jsonArray.get(i));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return attendees;
+    }
     // set event attendees
-    public void setAttendees(JSONArray attendees) {
-        put(KEY_ATTENDEES, attendees);
+    public void setAttendees(ParseUser attendee) {
+          addUnique(KEY_ATTENDEES,attendee);
+        try {
+            save();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
     }
 
 
