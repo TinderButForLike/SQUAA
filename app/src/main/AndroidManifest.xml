@@ -24,6 +24,7 @@
         <activity android:name=".HomeActivity">
         </activity>
         <activity android:name=".SignUpActivity" />
+        <activity android:name=".EventDetailActivity" />
         <activity android:name=".EventActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar">
         </activity>

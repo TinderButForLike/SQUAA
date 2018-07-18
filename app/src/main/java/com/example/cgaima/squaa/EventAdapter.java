@@ -1,6 +1,8 @@
 package com.example.cgaima.squaa;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
@@ -16,6 +18,8 @@ import com.bumptech.glide.Glide;
 import com.example.cgaima.squaa.Models.Event;
 import com.parse.GetDataCallback;
 import com.parse.ParseException;
+
+import org.parceler.Parcels;
 
 import java.util.List;
 
@@ -46,7 +50,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         final Event event = events.get(position);
         holder.tvName.setText(event.getEventName());
         holder.tvDescription.setText(event.getDescription());
-        holder.tvDate.setText(event.getDate().toString());
+//        holder.tvDate.setText(event.getDate().toString());
         holder.tvLocation.setText(event.getLocation());
 
         // TODO - set correct variables to UI
@@ -72,6 +76,16 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
                 }
             });
         }
+
+        holder.ivPicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(context, EventDetailActivity.class);
+                i.putExtra("event", Parcels.wrap(event));
+                //i.putExtra("post", post);
+                ((Activity) context).startActivityForResult(i, REQUEST_CODE);
+            }
+        });
     }
 
     @Override

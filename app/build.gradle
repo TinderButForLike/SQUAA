@@ -55,6 +55,9 @@ dependencies {
     implementation 'com.jakewharton:butterknife:8.4.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
 
+    // circular imageview
+    implementation 'de.hdodenhof:circleimageview:2.2.0'
+
     implementation 'com.squareup.okhttp3:logging-interceptor:3.8.1'
     // for logging API calls to LogCat
 }

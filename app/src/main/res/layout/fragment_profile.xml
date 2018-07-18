@@ -30,12 +30,14 @@
             app:popupTheme="@style/AppTheme.PopupOverlay"
             >
 
-            <ImageView
+
+            <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/ivProfilePic"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_launcher_foreground" />
+                android:src="@drawable/ic_launcher_foreground"
+                app:civ_border_color="#FF000000"
+                 />
 
         </android.support.v7.widget.Toolbar>
 
@@ -68,6 +70,9 @@
     <android.support.v4.view.ViewPager
         android:id="@+id/vpContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="303dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="264dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 </RelativeLayout>

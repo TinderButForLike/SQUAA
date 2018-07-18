@@ -74,6 +74,11 @@ public class EventDetailActivity extends AppCompatActivity {
 
         Glide.with(this).load(event.getEventImage().getUrl()).into(EventPic);
 //        Glide.with(this).load(event.getOwner().getProfgetUrl()).into(EventPic);
+        try {
+            Glide.with(this).load(event.getOwner().fetchIfNeeded().getParseFile("profile_picture").getUrl()).into(ownerPic);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
     }
 

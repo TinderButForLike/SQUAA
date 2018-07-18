@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.cgaima.squaa.R;
+import com.parse.ParseUser;
 
 public class AboutUser extends Fragment {
     // The onCreateView method is called when Fragment should create its View object hierarchy,
@@ -15,6 +16,7 @@ public class AboutUser extends Fragment {
     private TextView Name;
     private TextView Age;
     private TextView bio;
+    private TextView home;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         // Defines the xml file for the fragment
@@ -30,9 +32,17 @@ public class AboutUser extends Fragment {
         Name = view.findViewById(R.id.tvName);
         Age = view.findViewById(R.id.tvAge);
         bio = view.findViewById(R.id.tvBio);
+        home = view.findViewById(R.id.tvResidence);
 
-//        Name.setText();
-//        Age.setText();
-//        bio.setText();
+
+        ParseUser currentUser = ParseUser.getCurrentUser();
+        String name = currentUser.getUsername().toString() + ',';
+
+        Name.setText(name);
+        Age.setText("21");
+        bio.setText("I was born in Puerto Rico and moved to the United States when I was 4. I love to eat and bike around the " +
+                "city. Proudly latina");
+        home.setText("San Andreas");
+
     }
 }

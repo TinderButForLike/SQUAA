@@ -13,10 +13,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.example.cgaima.squaa.ProfileFragements.AboutUser;
 import com.example.cgaima.squaa.ProfileFragements.EventHistory;
 import com.example.cgaima.squaa.ProfileFragements.Logout;
 import com.example.cgaima.squaa.R;
+import com.parse.ParseException;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
@@ -44,6 +46,11 @@ public class ProfileFragment extends Fragment {
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         final ImageView imageInToolbar = (ImageView) toolbar.findViewById(R.id.ivProfilePic);
         ParseUser currentUser =  ParseUser.getCurrentUser();
+        try {
+            Glide.with(this).load(currentUser.fetchIfNeeded().getParseFile("profile_picture").getUrl()).into(imageInToolbar);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
 
         //((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
