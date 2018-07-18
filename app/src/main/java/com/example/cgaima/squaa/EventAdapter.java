@@ -25,6 +25,7 @@ import butterknife.ButterKnife;
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> {
     Context context;
     List<Event> events;
+    private final int REQUEST_CODE = 21;
 
     public EventAdapter(List<Event> events) {
         this.events = events;
@@ -40,14 +41,13 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
 
-        // TODO - create get and set methods in Event class?
-        Event event = events.get(position);
+        final Event event = events.get(position);
         holder.tvName.setText(event.getEventName());
         holder.tvDescription.setText(event.getDescription());
+        holder.tvDate.setText(event.getDate().toString());
         holder.tvLocation.setText(event.getLocation());
-        //Glide.with(context).load(event.getEventImage().getUrl()).into(holder.ivPicture);
 
 
 
@@ -85,8 +85,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.ivPicture)
-        ImageView ivPicture;
+        @BindView(R.id.ivPicture) ImageView ivPicture;
         @BindView(R.id.tvName) TextView tvName;
         @BindView(R.id.tvDescription) TextView tvDescription;
         @BindView(R.id.tvAttendees) TextView tvAttendees;

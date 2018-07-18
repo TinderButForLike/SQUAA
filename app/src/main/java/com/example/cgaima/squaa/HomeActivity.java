@@ -7,10 +7,12 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.example.cgaima.squaa.Models.Event;
 import com.parse.FindCallback;
@@ -55,13 +57,51 @@ public class HomeActivity extends AppCompatActivity {
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                eventAdapter.clear();
-                loadTopPosts();
+                loadTopEvents();
                 swipeContainer.setRefreshing(false);
             }
         });
 
-        loadTopPosts();
+        loadTopEvents();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_toolbar, menu);
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) searchItem.getActionView();
+        searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem menuItem) {
+                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                    @Override
+                    public boolean onQueryTextSubmit(String query) {
+                        // perform query
+                        fetchQueryEvents(query);
+                        // avoid issues with firing twice
+                        searchView.clearFocus();
+                        return true;
+                    }
+
+                    @Override
+                    public boolean onQueryTextChange(String s) {
+                        return false;
+                    }
+
+                });
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem menuItem) {
+                loadTopEvents();
+                return true;
+            }
+        });
+
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -79,29 +119,50 @@ public class HomeActivity extends AppCompatActivity {
             startNewActivity();
             */
                 return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    private void loadTopPosts() {
+    /** loads top 20 events */
+    // TODO - make infinite scrolling work?
+    private void loadTopEvents() {
+        eventAdapter.clear();
         final Event.Query eventsQuery = new Event.Query();
         eventsQuery.getTop();
         eventsQuery.findInBackground(new FindCallback<Event>() {
             @Override
             public void done(List<Event> objects, ParseException e) {
                 if (e==null){
-                    Log.e("HomeActivity","objects size " + objects.size());
+//                    Log.e("HomeActivity","objects size " + objects.size());
                     eventAdapter.setItems(objects);
-                } else { e.printStackTrace(); }
+                }
+                else { e.printStackTrace(); }
             }
         });
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_toolbar, menu);
-        return true;
+    /** fetch event by name
+     * now case sensitive and searches for all that contains the search query word.
+     * cannot go back to main screen after search */
+    private void fetchQueryEvents(String query) {
+        // clear adapter
+        eventAdapter.clear();
+        // create a new query
+        final Event.Query eventsQuery = new Event.Query();
+        eventsQuery.containsWord(query);
+        eventsQuery.findInBackground(new FindCallback<Event>() {
+            @Override
+            public void done(List<Event> objects, ParseException e) {
+                if (e == null) {
+                    Log.e("HomeActivity", String.valueOf(objects));
+                    eventAdapter.setItems(objects);
+                } else {
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), "Search did not match any events", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
     }
 }

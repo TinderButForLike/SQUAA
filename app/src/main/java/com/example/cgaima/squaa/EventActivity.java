@@ -16,6 +16,8 @@ import android.widget.Toast;
 import com.example.cgaima.squaa.Models.Event;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseFile;
+import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import java.io.ByteArrayOutputStream;
@@ -86,6 +88,8 @@ public class EventActivity extends AppCompatActivity {
         newEvent.setLocation(location);
         newEvent.setDescription(description);
         newEvent.setEventImage(img);
+        // set event owner
+        newEvent.setOwner(ParseUser.getCurrentUser());
 
         newEvent.saveInBackground(new SaveCallback() {
             @Override
@@ -158,5 +162,7 @@ public class EventActivity extends AppCompatActivity {
     protected boolean useToolbar(){
         return true;
     }
+
+
 
 }

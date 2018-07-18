@@ -9,6 +9,7 @@ public class User extends ParseUser {
 
     private static final String KEY_IMAGE = "profile_picture";
     private static final String KEY_FRIENDS = "friends";
+    private static final String KEY_USER = "username";
 
     //set user profile picture
     public void setProfilePic(ParseFile image) {
@@ -27,6 +28,11 @@ public class User extends ParseUser {
 
     public ParseFile getFriendList() {
         return getParseFile(KEY_FRIENDS);
+    }
+
+    // get user name
+    public String getUsername() {
+        return getString("KEY_USER");
     }
 
 
