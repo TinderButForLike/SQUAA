@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.cgaima.squaa.Models.Event;
 import com.parse.GetDataCallback;
 import com.parse.ParseException;
@@ -45,8 +46,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         Event event = events.get(position);
         holder.tvName.setText(event.getEventName());
         holder.tvDescription.setText(event.getDescription());
-        holder.tvDate.setText(event.getDate().toString());
         holder.tvLocation.setText(event.getLocation());
+        //Glide.with(context).load(event.getEventImage().getUrl()).into(holder.ivPicture);
 
 
 
@@ -56,19 +57,25 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         //holder.tvDate.setText(event.getDate());
         //holder.tvLocation.setText(event.getLocation());
         // TODO - what key for picture
-        event.getEventImage().getDataInBackground(new GetDataCallback() {
-            @Override
-            public void done(byte[] data, ParseException e) {
-                if (e == null) {
-                    Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
-                    holder.ivPicture.setImageBitmap(bmp);
+
+        if (event.getEventImage()==null) {
+            Glide.with(context).load("https://www.google.com/url?sa=i&source=images&cd=&ved=2ahUKEwiKgcfT56TcAhWzHDQIHZ7ICZgQjRx6BAgBEAU&url=http%3A%2F%2Fwww.washingtonpost.com%2Frecipes%2Flunch-box-pasta-salad%2F15483%2F&psig=AOvVaw3QDPftuCv2CSZjHVzwoXZB&ust=1531871357428835").into(holder.ivPicture);
+
+        } else {
+            event.getEventImage().getDataInBackground(new GetDataCallback() {
+                @Override
+                public void done(byte[] data, ParseException e) {
+                    if (e == null) {
+                        Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
+                        holder.ivPicture.setImageBitmap(bmp);
+                    }
+                    else {
+                        Log.d("EventAdapter", "Can't load image");
+                        e.printStackTrace();
+                    }
                 }
-                else {
-                    Log.d("EventAdapter", "Can't load image");
-                    e.printStackTrace();
-                }
-            }
-        });
+            });
+        }
     }
 
     @Override
@@ -78,7 +85,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.ivPicture) ImageView ivPicture;
+        @BindView(R.id.ivPicture)
+        ImageView ivPicture;
         @BindView(R.id.tvName) TextView tvName;
         @BindView(R.id.tvDescription) TextView tvDescription;
         @BindView(R.id.tvAttendees) TextView tvAttendees;
