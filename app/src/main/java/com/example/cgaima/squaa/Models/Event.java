@@ -111,7 +111,7 @@ public class Event extends ParseObject{
     }
 
 
-    public static class Query extends ParseQuery{
+    public static class Query extends ParseQuery {
 
         public Query() {
             super( Event.class);
@@ -123,7 +123,13 @@ public class Event extends ParseObject{
         }
 
         public Query withOwner() {
-            include("owner");
+            include(KEY_OWNER);
+            return this;
+        }
+
+        public Query containsWord(String query) {
+            setLimit(20);
+            whereContains(KEY_NAME, query);
             return this;
         }
 

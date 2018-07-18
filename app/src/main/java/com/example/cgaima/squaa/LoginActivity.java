@@ -26,7 +26,6 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-
         usernameInput = findViewById(R.id.etUsername);
         passwordInput = findViewById(R.id.etPassword);
         loginBtn = findViewById(R.id.btLogin);
@@ -43,14 +42,18 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         SignupBtn.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View view) {
+                // to avoid ParseUser Exception: invalid session token
+                if (ParseUser.getCurrentUser() != null ) {
+                    ParseUser.logOut();
+                }
                 final Intent j = new Intent(LoginActivity.this, SignUpActivity.class);
                 startActivity(j);
             }
         });
 
+        // persist user
         ParseUser currentUser = ParseUser.getCurrentUser();
         if (currentUser != null) {
             // do stuff with the user
@@ -60,13 +63,16 @@ public class LoginActivity extends AppCompatActivity {
 
         } else {
             // show the signup or login screen
-
         }
     }
 
 
 
     private void login(String username, String password) {
+        // to avoid ParseUser Exception: invalid session token
+        if (ParseUser.getCurrentUser() != null ) {
+            ParseUser.logOut();
+        }
         ParseUser.logInInBackground(username, password, new LogInCallback() {
             @Override
             public void done(ParseUser user, ParseException e) {
