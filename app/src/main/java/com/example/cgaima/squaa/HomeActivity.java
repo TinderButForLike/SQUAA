@@ -1,5 +1,6 @@
 package com.example.cgaima.squaa;
 
+
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -85,5 +86,4 @@ public class HomeActivity extends AppCompatActivity implements
         }
         return true;
     }
-
 }

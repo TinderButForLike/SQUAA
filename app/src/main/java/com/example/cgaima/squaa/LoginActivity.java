@@ -51,17 +51,17 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-//        ParseUser currentUser = ParseUser.getCurrentUser();
-//        if (currentUser != null) {
-//            // do stuff with the user
-//            final Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-//            startActivity(intent);
-//            finish();
-//
-//        } else {
-//            // show the signup or login screen
-//
-//        }
+        ParseUser currentUser = ParseUser.getCurrentUser();
+        if (currentUser != null) {
+            // do stuff with the user
+            final Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+            startActivity(intent);
+            finish();
+
+        } else {
+            // show the signup or login screen
+
+        }
     }
 
 

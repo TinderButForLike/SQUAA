@@ -18,11 +18,15 @@ public class Event extends ParseObject{
     private static final String KEY_OWNER = "owner";
     private static final String KEY_ATTENDEES = "attendees";
     private static final String KEY_LOCATION = "location";
-    private static final String KEY_DATE = "date";
+    private static final String KEY_DATE = "event_date";
     private static final String KEY_PRIVACY = "privacy";
+    private static final String KEY_NAME = "event_name";
 
 
-
+    // get event name
+    public String getEventName() {return getString(KEY_NAME);}
+    // set event name
+    public void setEventName(String name) {put(KEY_NAME,name);}
     // get the event description
     public String getDescription() {
         return getString(KEY_DESCRIPTION);
@@ -77,16 +81,16 @@ public class Event extends ParseObject{
     }
 
     // get event attendees
-    public JSONArray getAttendees() {
-        return getJSONArray(KEY_ATTENDEES);
-    }
+//    public ArrayList<User> getAttendees() {
+//        return (KEY_ATTENDEES);
+//    }
     // set event attendees
     public void setAttendees(JSONArray attendees) {
         put(KEY_ATTENDEES, attendees);
     }
 
 
-    public static class Query extends ParseQuery{
+    public static class Query extends ParseQuery {
 
         public Query() {
             super( Event.class);
@@ -98,7 +102,13 @@ public class Event extends ParseObject{
         }
 
         public Query withOwner() {
-            include("owner");
+            include(KEY_OWNER);
+            return this;
+        }
+
+        public Query containsWord(String query) {
+            setLimit(20);
+            whereContains(KEY_NAME, query);
             return this;
         }
 

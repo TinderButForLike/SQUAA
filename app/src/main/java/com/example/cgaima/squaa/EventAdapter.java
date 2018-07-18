@@ -1,11 +1,10 @@
 package com.example.cgaima.squaa;
 
+import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +12,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.cgaima.squaa.Models.Event;
-import com.parse.GetDataCallback;
-import com.parse.ParseException;
+
+import org.parceler.Parcels;
 
 import java.util.List;
 
@@ -24,6 +23,7 @@ import butterknife.ButterKnife;
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> {
     Context context;
     List<Event> events;
+    private final int REQUEST_CODE = 21;
 
     public EventAdapter(List<Event> events) {
         this.events = events;
@@ -39,19 +39,17 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
 
-        // TODO - create get and set methods in Event class?
-        Event event = events.get(position);
-        //holder.tvName.setText(event.get);
+        final Event event = events.get(position);
+        holder.tvName.setText(event.getEventName());
         holder.tvDescription.setText(event.getDescription());
-
-        // TODO - is attendees a JSONArray?
+        holder.tvLocation.setText(event.getLocation());
+        // TODO - set all vars to the right things
+        //holder.tvDate.setText(event.getDate().toString());
         //holder.tvAttendees.setText(event.getString("attendees"));
-        //holder.tvDate.setText(event.getDate());
-        //holder.tvLocation.setText(event.getLocation());
-        // TODO - what key for picture
-        event.getEventImage().getDataInBackground(new GetDataCallback() {
+
+        /*event.getEventImage().getDataInBackground(new GetDataCallback() {
             @Override
             public void done(byte[] data, ParseException e) {
                 if (e == null) {
@@ -63,8 +61,18 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
                     e.printStackTrace();
                 }
             }
+        }); */
+
+        holder.ivPicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(context, EventDetailActivity.class);
+                i.putExtra("event", Parcels.wrap(event));
+                //i.putExtra("post", post);
+                ((Activity) context).startActivityForResult(i, REQUEST_CODE);
+            }
         });
-    }
+   }
 
     @Override
     public int getItemCount() {
@@ -79,7 +87,6 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         @BindView(R.id.tvAttendees) TextView tvAttendees;
         @BindView(R.id.tvDate) TextView tvDate;
         @BindView(R.id.tvLocation) TextView tvLocation;
-
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
