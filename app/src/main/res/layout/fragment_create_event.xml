@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/holo_orange_light"
+    tools:context=".fragments.CreateEventFragment">
+
+    <EditText
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_margin="5dp"
+        android:ems="10"
+        android:hint="what's your event called?"
+        android:inputType="text"
+        android:textColorHint="@android:color/white"
+        android:textSize="14sp" />
+
+    <EditText
+        android:id="@+id/location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/name"
+        android:layout_margin="5dp"
+        android:ems="10"
+        android:hint="where is your event?"
+        android:inputType="text"
+        android:textColorHint="@android:color/white"
+        android:textSize="14sp" />
+
+    <EditText
+        android:id="@+id/privacy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/location"
+        android:layout_margin="5dp"
+        android:ems="10"
+        android:hint="is your event public?"
+        android:inputType="text"
+        android:textColorHint="@android:color/white"
+        android:textSize="14sp" />
+
+    <EditText
+        android:id="@+id/date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/privacy"
+        android:layout_margin="5dp"
+        android:ems="10"
+        android:hint="when is your event?"
+        android:inputType="datetime"
+        android:textColorHint="@android:color/white"
+        android:textSize="14sp" />
+
+    <EditText
+        android:id="@+id/description"
+        android:layout_width="361dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/date"
+        android:layout_margin="5dp"
+        android:ems="10"
+        android:hint="tell the world a little more about your event."
+        android:inputType="text|textPersonName"
+        android:textColorHint="@android:color/white"
+        android:textSize="14sp" />
+
+    <Button
+        android:id="@+id/create"
+        android:layout_width="136dp"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/imagePrompt"
+        android:layout_alignTop="@+id/eventPic"
+        android:layout_margin="5dp"
+        android:text="create event" />
+
+    <TextView
+        android:id="@+id/imagePrompt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/description"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="5dp"
+        android:text="upload an image that best portrays your event!"
+        android:textColor="@android:color/white" />
+
+    <ImageView
+        android:id="@+id/eventPic"
+        android:layout_width="121dp"
+        android:layout_height="123dp"
+        android:layout_alignStart="@+id/imagePrompt"
+        android:layout_below="@+id/imagePrompt"
+        android:layout_margin="5dp"
+        app:srcCompat="@android:color/holo_red_light" />
+
+    <Button
+        android:id="@+id/launchGalBtn"
+        android:layout_width="131dp"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/create"
+        android:layout_below="@+id/create"
+        android:layout_margin="5dp"
+        android:text="launch gallery" />
+
+</RelativeLayout>

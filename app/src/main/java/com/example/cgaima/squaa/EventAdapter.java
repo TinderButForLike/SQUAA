@@ -49,14 +49,10 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         holder.tvDate.setText(event.getDate().toString());
         holder.tvLocation.setText(event.getLocation());
 
-
-
-
-        // TODO - is attendees a JSONArray?
+        // TODO - set correct variables to UI
         //holder.tvAttendees.setText(event.getString("attendees"));
         //holder.tvDate.setText(event.getDate());
         //holder.tvLocation.setText(event.getLocation());
-        // TODO - what key for picture
 
         if (event.getEventImage()==null) {
             Glide.with(context).load("https://www.google.com/url?sa=i&source=images&cd=&ved=2ahUKEwiKgcfT56TcAhWzHDQIHZ7ICZgQjRx6BAgBEAU&url=http%3A%2F%2Fwww.washingtonpost.com%2Frecipes%2Flunch-box-pasta-salad%2F15483%2F&psig=AOvVaw3QDPftuCv2CSZjHVzwoXZB&ust=1531871357428835").into(holder.ivPicture);
