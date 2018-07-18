@@ -1,4 +1,4 @@
-package com.example.cgaima.squaa;
+package com.example.cgaima.squaa.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,7 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.cgaima.squaa.EventAdapter;
 import com.example.cgaima.squaa.Models.Event;
+import com.example.cgaima.squaa.R;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 
@@ -80,5 +82,4 @@ public class HomeFragment extends Fragment {
             }
         });
     }
-
 }

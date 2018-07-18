@@ -10,6 +10,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
+import com.example.cgaima.squaa.fragments.HomeFragment;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -20,6 +22,8 @@ public class HomeActivity extends AppCompatActivity implements
     @BindView(R.id.viewpager)
     ViewPager viewPager;
     private PagerAdapter pagerAdapter;
+
+    // TODO - for yelp style search bar: https://stackoverflow.com/questions/50708072/android-customized-searchview-layout/50764908
 
     // TODO - change eventFragment and profileFragment
     public HomeFragment homeFragment;
