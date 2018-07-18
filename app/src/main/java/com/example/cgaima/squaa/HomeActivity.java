@@ -34,6 +34,9 @@ public class HomeActivity extends AppCompatActivity {
     private EventAdapter eventAdapter;
     private ArrayList<Event> events;
 
+    private EndlessRecyclerViewScrollListener scrollListener;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,7 +53,14 @@ public class HomeActivity extends AppCompatActivity {
         // setup recycler view with adapter
         events = new ArrayList<>();
         eventAdapter = new EventAdapter(events);
-        rvEvents.setLayoutManager(new LinearLayoutManager(this));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        rvEvents.setLayoutManager(linearLayoutManager);
+        /*scrollListener = new EndlessRecyclerViewScrollListener() {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+
+            }
+        };*/
         rvEvents.setAdapter(eventAdapter);
 
         // setup container view for refresh function
@@ -67,7 +77,7 @@ public class HomeActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
+        // inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_toolbar, menu);
         MenuItem searchItem = menu.findItem(R.id.action_search);
         final SearchView searchView = (SearchView) searchItem.getActionView();
@@ -94,6 +104,7 @@ public class HomeActivity extends AppCompatActivity {
                 return true;
             }
 
+            // go back to home screen when search view is collapsed
             @Override
             public boolean onMenuItemActionCollapse(MenuItem menuItem) {
                 loadTopEvents();
@@ -144,8 +155,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     /** fetch event by name
-     * now case sensitive and searches for all that contains the search query word.
-     * cannot go back to main screen after search */
+     * now case sensitive and searches for all that contains the search query word. */
     private void fetchQueryEvents(String query) {
         // clear adapter
         eventAdapter.clear();
@@ -164,5 +174,11 @@ public class HomeActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void loadNextEvents(int offset) {
+        // clear adapter
+        eventAdapter.clear();
+
     }
 }

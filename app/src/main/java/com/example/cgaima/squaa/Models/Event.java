@@ -72,6 +72,7 @@ public class Event extends ParseObject{
     }
     // get event privacy
     public Boolean getPrivacy() {
+
         return getBoolean(KEY_PRIVACY);
     }
 
