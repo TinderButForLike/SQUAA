@@ -9,8 +9,11 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.cgaima.squaa.fragments.CreateEventFragment;
 import com.example.cgaima.squaa.fragments.HomeFragment;
 
 import butterknife.BindView;
@@ -24,11 +27,10 @@ public class HomeActivity extends AppCompatActivity implements
     ViewPager viewPager;
     private PagerAdapter pagerAdapter;
 
-    // TODO - for yelp style search bar: https://stackoverflow.com/questions/50708072/android-customized-searchview-layout/50764908
 
     // TODO - change eventFragment and profileFragment
     public HomeFragment homeFragment;
-    public HomeFragment eventFragment;
+    public CreateEventFragment eventFragment;
     public HomeFragment profileFragment;
 
     @Override
@@ -37,12 +39,17 @@ public class HomeActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
 
+
+        // find the toolbar view inside layout and set tool as action bar for activity
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         if (homeFragment == null) {
             homeFragment = new HomeFragment();
         }
         // TODO - change eventFragment and profileFragment
         if (eventFragment == null) {
-            eventFragment = new HomeFragment();
+            eventFragment = new CreateEventFragment();
         }
         if (profileFragment == null) {
             profileFragment = new HomeFragment();
@@ -69,6 +76,15 @@ public class HomeActivity extends AppCompatActivity implements
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
         bottomNavigationView.setSelectedItemId(R.id.action_home);
     }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_toolbar, menu);
+        return true;
+    }
+
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {

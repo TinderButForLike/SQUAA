@@ -1,96 +1,91 @@
 package com.example.cgaima.squaa.fragments;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 
+import com.example.cgaima.squaa.Models.Event;
 import com.example.cgaima.squaa.R;
+import com.parse.ParseException;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link CreateEventFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link CreateEventFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
+
 public class CreateEventFragment extends Fragment {
-    private OnFragmentInteractionListener mListener;
+    @BindView(R.id.name)
+    EditText name;
+    @BindView(R.id.location)
+    EditText location;
+    @BindView(R.id.date)
+    EditText date;
+    @BindView(R.id.privacy)
+    EditText privacy;
+    @BindView(R.id.description)
+    EditText description;
+    @BindView(R.id.create)
+    Button create;
 
-    public CreateEventFragment() {
-        // Required empty public constructor
-    }
+    // Required empty public constructor
+    public CreateEventFragment() { }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment CreateEventFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static CreateEventFragment newInstance(String param1, String param2) {
-        CreateEventFragment fragment = new CreateEventFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_create_event, container, false);
+        View view = inflater.inflate(R.layout.fragment_create_event, container, false);
+        ButterKnife.bind(this, view);
+        return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+    @OnClick(R.id.create)
+    public void onCreate(View view) {
+        String mName = name.getText().toString();
+        String mLocation = location.getText().toString();
+        //Date mDate = (Date) date.getText();
+        String mDescription = description.getText().toString();
+
+        createEvent(mName, mLocation, mDescription);//mDate, mDescription);
+
+        // TODO - set fragment to home fragment after creating event
+        /*Fragment homeFragment = new HomeFragment();
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.viewpager, homeFragment ); // give your fragment container id in first parameter
+        transaction.addToBackStack(null);  // if written, this transaction will be added to backstack
+        transaction.commit();*/
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
+    //create a new event
+    private void createEvent(String name, String location, String description) { //TODO add privacy, image, date
+        final Event newEvent = new Event();
+        newEvent.setEventName(name);
+        newEvent.setLocation(location);
+        //newEvent.setDate(date);
+        //newEvent.setPrivacy(privacy);
+        newEvent.setDescription(description);
+        // set event owner
+        newEvent.setOwner(ParseUser.getCurrentUser());
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        newEvent.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e == null) {
+                    Log.d("Event Activity", "You just made a new event!");
+                } else {
+                    Log.d("Event Activity", "Something went wrong :(");
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 }

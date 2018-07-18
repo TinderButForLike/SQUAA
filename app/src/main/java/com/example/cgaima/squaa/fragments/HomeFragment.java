@@ -6,9 +6,15 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.cgaima.squaa.EventAdapter;
 import com.example.cgaima.squaa.Models.Event;
@@ -36,6 +42,50 @@ public class HomeFragment extends Fragment {
     public HomeFragment() {}
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        // TODO - for yelp style search bar: https://stackoverflow.com/questions/50708072/android-customized-searchview-layout/50764908
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+
+        final SearchView searchView = (SearchView) searchItem.getActionView();
+
+        searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem menuItem) {
+                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                    @Override
+                    public boolean onQueryTextSubmit(String query) {
+                        // perform query
+                        fetchQueryEvents(query);
+                        // avoid issues with firing twice
+                        searchView.clearFocus();
+                        return true;
+                    }
+
+                    @Override
+                    public boolean onQueryTextChange(String s) {
+                        return false;
+                    }
+
+                });
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem menuItem) {
+                loadTopPosts();
+                return true;
+            }
+        });
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -58,18 +108,12 @@ public class HomeFragment extends Fragment {
                 swipeContainer.setRefreshing(false);
             }
         });
-
         loadTopPosts();
 
         return view;
-
     }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        listener = null;
-    }
+    /** loads top 20 events */
+    // TODO - make infinite scrolling work
     private void loadTopPosts() {
         final Event.Query eventsQuery = new Event.Query();
         eventsQuery.getTop().withOwner();
@@ -82,4 +126,28 @@ public class HomeFragment extends Fragment {
             }
         });
     }
+
+    /** fetch event by name
+     * now case sensitive and searches for all that contains the search query word.
+     * cannot go back to main screen after search */
+    private void fetchQueryEvents(String query) {
+        // clear adapter
+        eventAdapter.clear();
+        // create a new query
+        final Event.Query eventsQuery = new Event.Query();
+        eventsQuery.containsWord(query);
+        eventsQuery.findInBackground(new FindCallback<Event>() {
+            @Override
+            public void done(List<Event> objects, ParseException e) {
+                if (e == null) {
+                    Log.e("HomeActivity", String.valueOf(objects));
+                    eventAdapter.setItems(objects);
+                } else {
+                    e.printStackTrace();
+                    Toast.makeText(getContext(), "Search did not match any events", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
+
 }
