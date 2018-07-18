@@ -1,23 +1,34 @@
 package com.example.cgaima.squaa.fragments;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.cgaima.squaa.Models.Event;
 import com.example.cgaima.squaa.R;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static android.app.Activity.RESULT_OK;
 
 
 public class CreateEventFragment extends Fragment {
@@ -25,19 +36,20 @@ public class CreateEventFragment extends Fragment {
     EditText name;
     @BindView(R.id.location)
     EditText location;
-    @BindView(R.id.date)
-    EditText date;
+    //@BindView(R.id.date)
+    //EditText date;
     @BindView(R.id.privacy)
     EditText privacy;
     @BindView(R.id.description)
     EditText description;
-    @BindView(R.id.create)
-    Button create;
+    @BindView(R.id.eventPic)
+    ImageView eventPic;
+
+    static ParseFile image;
+    private int PICK_PHOTO_CODE = 1046;
 
     // Required empty public constructor
     public CreateEventFragment() { }
-
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -48,8 +60,9 @@ public class CreateEventFragment extends Fragment {
         return view;
     }
 
+    // TODO - automatically add new event to home without refresh
     @OnClick(R.id.create)
-    public void onCreate(View view) {
+    public void onCreateEvent() {
         String mName = name.getText().toString();
         String mLocation = location.getText().toString();
         //Date mDate = (Date) date.getText();
@@ -88,4 +101,58 @@ public class CreateEventFragment extends Fragment {
             }
         });
     }
+
+    @OnClick(R.id.launchGalBtn)
+    //choose a photo from the gallery
+    public void onPickPhoto() {
+        // create the intent for picking a photo from the gallery
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        //as long as the result isn't null, we can use this intent
+        if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+            //bring up the gallery
+            startActivityForResult(intent, PICK_PHOTO_CODE);
+        }
+    }
+
+    //handle intents and activity results
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PICK_PHOTO_CODE) {
+            if (resultCode == RESULT_OK) {
+                //launch the gallery
+                if (data != null) {
+                    Uri photoUri = data.getData();
+                    //do something with the photo based on what we get
+                    Bitmap selectedImage = null;
+                    try {
+                        selectedImage = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), photoUri);
+                    } catch (IOException e) {
+                        Log.d("Event Activity", "Something aint right");
+                        e.printStackTrace();
+                    }
+
+                    //load the image into the view
+                    eventPic.setImageBitmap(selectedImage);
+                    writeBitmapToFile(selectedImage);
+
+                }
+            }
+        }
+        else {
+            //make them sad
+            Toast.makeText(getContext(), "there was an error uploading your picture. try again!", Toast.LENGTH_SHORT).show();
+        }
+    }
+    public static void writeBitmapToFile(Bitmap bitmap) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 0, stream);
+        byte[] bitmapBytes = stream.toByteArray();
+
+        image = new ParseFile("myImage", bitmapBytes);
+        try {
+            image.save();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

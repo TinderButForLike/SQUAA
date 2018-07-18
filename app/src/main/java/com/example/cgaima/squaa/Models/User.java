@@ -2,10 +2,10 @@ package com.example.cgaima.squaa.Models;
 
 import com.parse.ParseClassName;
 import com.parse.ParseFile;
-import com.parse.ParseObject;
+import com.parse.ParseUser;
 
 @ParseClassName("User")
-public class User extends ParseObject{
+public class User extends ParseUser {
 
     private static final String KEY_IMAGE = "profile_picture";
     private static final String KEY_FRIENDS = "friends";
