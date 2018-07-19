@@ -1,4 +1,4 @@
-package com.example.cgaima.squaa;
+package com.example.cgaima.squaa.adapters;
 
 import android.app.Activity;
 import android.content.Context;
@@ -16,6 +16,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.cgaima.squaa.Models.Event;
+import com.example.cgaima.squaa.R;
+import com.example.cgaima.squaa.activities.EventDetailActivity;
 import com.parse.GetDataCallback;
 import com.parse.ParseException;
 
@@ -60,7 +62,6 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
 
         if (event.getEventImage()==null) {
             Glide.with(context).load("https://www.google.com/url?sa=i&source=images&cd=&ved=2ahUKEwiKgcfT56TcAhWzHDQIHZ7ICZgQjRx6BAgBEAU&url=http%3A%2F%2Fwww.washingtonpost.com%2Frecipes%2Flunch-box-pasta-salad%2F15483%2F&psig=AOvVaw3QDPftuCv2CSZjHVzwoXZB&ust=1531871357428835").into(holder.ivPicture);
-
         } else {
             event.getEventImage().getDataInBackground(new GetDataCallback() {
                 @Override
@@ -94,18 +95,28 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
     }
 
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         @BindView(R.id.ivPicture) ImageView ivPicture;
         @BindView(R.id.tvName) TextView tvName;
         @BindView(R.id.tvDescription) TextView tvDescription;
         @BindView(R.id.tvAttendees) TextView tvAttendees;
         @BindView(R.id.tvDate) TextView tvDate;
         @BindView(R.id.tvLocation) TextView tvLocation;
+
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
+
+        @Override
+        public void onClick(View view) {
+            final Event event = (Event) itemView.getTag();
+            Intent intent = new Intent(context, EventDetailActivity.class);
+            intent.putExtra("event", Parcels.wrap(event));
+            context.startActivity(intent);
+        }
     }
+
 
     public void clear() {
         events.clear();
