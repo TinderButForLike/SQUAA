@@ -1,38 +1,38 @@
 package com.example.cgaima.squaa;
 
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
-import com.example.cgaima.squaa.Models.Event;
-import com.parse.FindCallback;
-import com.parse.ParseException;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.example.cgaima.squaa.fragments.CreateEventFragment;
+import com.example.cgaima.squaa.fragments.HomeFragment;
+import com.example.cgaima.squaa.fragments.ProfileFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity implements
+        BottomNavigationView.OnNavigationItemSelectedListener {
 
-    @BindView(R.id.rvEvents)
-    RecyclerView rvEvents;
-    @BindView(R.id.swipeContainer)
-    SwipeRefreshLayout swipeContainer;
+    @BindView(R.id.bottom_navigation) BottomNavigationView bottomNavigationView;
+    @BindView(R.id.viewpager)
+    ViewPager viewPager;
+    private PagerAdapter pagerAdapter;
 
-    private EventAdapter eventAdapter;
-    private ArrayList<Event> events;
+
+    // TODO - change eventFragment and profileFragment
+    public HomeFragment homeFragment;
+    public CreateEventFragment eventFragment;
+    public ProfileFragment profileFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,128 +41,66 @@ public class HomeActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
 
-        // Find the toolbar view inside the activity layout
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        // Sets the Toolbar to act as the ActionBar for this Activity window.
-        // Make sure the toolbar exists in the activity and is not null
+        // find the toolbar view inside layout and set tool as action bar for activity
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // setup recycler view with adapter
-        events = new ArrayList<>();
-        eventAdapter = new EventAdapter(events);
-        rvEvents.setLayoutManager(new LinearLayoutManager(this));
-        rvEvents.setAdapter(eventAdapter);
+        if (homeFragment == null) {
+            homeFragment = new HomeFragment();
+        }
+        // TODO - change eventFragment and profileFragment
+        if (eventFragment == null) {
+            eventFragment = new CreateEventFragment();
+        }
+        if (profileFragment == null) {
+            profileFragment = new ProfileFragment();
+        }
 
-        // setup container view for refresh function
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        pagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override
-            public void onRefresh() {
-                loadTopEvents();
-                swipeContainer.setRefreshing(false);
+            public Fragment getItem(int i) {
+                switch (i) {
+                    default:
+                    case 0:
+                        return homeFragment;
+                    case 1:
+                        return eventFragment;
+                    case 2:
+                        return profileFragment;
+                }
             }
-        });
+            @Override
+            public int getCount() { return 3; }
+        };
 
-        loadTopEvents();
+        viewPager.setAdapter(pagerAdapter);
+        bottomNavigationView.setOnNavigationItemSelectedListener(this);
+        bottomNavigationView.setSelectedItemId(R.id.action_home);
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_toolbar, menu);
-        MenuItem searchItem = menu.findItem(R.id.action_search);
-        final SearchView searchView = (SearchView) searchItem.getActionView();
-        searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
-
-            @Override
-            public boolean onMenuItemActionExpand(MenuItem menuItem) {
-                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                    @Override
-                    public boolean onQueryTextSubmit(String query) {
-                        // perform query
-                        fetchQueryEvents(query);
-                        // avoid issues with firing twice
-                        searchView.clearFocus();
-                        return true;
-                    }
-
-                    @Override
-                    public boolean onQueryTextChange(String s) {
-                        return false;
-                    }
-
-                });
-                return true;
-            }
-
-            @Override
-            public boolean onMenuItemActionCollapse(MenuItem menuItem) {
-                loadTopEvents();
-                return true;
-            }
-        });
-
-        return super.onCreateOptionsMenu(menu);
+        return true;
     }
+
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
-        switch (item.getItemId()) {
-            //Back button
-            case R.id.miNewEvent:
-                //If create new event icon selected, launch event activity
-                Intent intent = new Intent(this,EventActivity.class);
-                startActivity(intent);
-                //finish();
-
-            /*If you wish to open new activity and close this one
-            startNewActivity();
-            */
-                return true;
-
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
             default:
-                return super.onOptionsItemSelected(item);
+            case R.id.action_home:
+                viewPager.setCurrentItem(0);
+                break;
+            case R.id.action_new_event:
+                viewPager.setCurrentItem(1);
+                break;
+            case R.id.action_profile:
+                viewPager.setCurrentItem(2);
+                break;
         }
-    }
-
-    /** loads top 20 events */
-    // TODO - make infinite scrolling work?
-    private void loadTopEvents() {
-        eventAdapter.clear();
-        final Event.Query eventsQuery = new Event.Query();
-        eventsQuery.getTop();
-        eventsQuery.findInBackground(new FindCallback<Event>() {
-            @Override
-            public void done(List<Event> objects, ParseException e) {
-                if (e==null){
-//                    Log.e("HomeActivity","objects size " + objects.size());
-                    eventAdapter.setItems(objects);
-                }
-                else { e.printStackTrace(); }
-            }
-        });
-    }
-
-    /** fetch event by name
-     * now case sensitive and searches for all that contains the search query word.
-     * cannot go back to main screen after search */
-    private void fetchQueryEvents(String query) {
-        // clear adapter
-        eventAdapter.clear();
-        // create a new query
-        final Event.Query eventsQuery = new Event.Query();
-        eventsQuery.containsWord(query);
-        eventsQuery.findInBackground(new FindCallback<Event>() {
-            @Override
-            public void done(List<Event> objects, ParseException e) {
-                if (e == null) {
-                    Log.e("HomeActivity", String.valueOf(objects));
-                    eventAdapter.setItems(objects);
-                } else {
-                    e.printStackTrace();
-                    Toast.makeText(getApplicationContext(), "Search did not match any events", Toast.LENGTH_LONG).show();
-                }
-            }
-        });
+        return true;
     }
 }

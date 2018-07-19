@@ -1,6 +1,8 @@
 package com.example.cgaima.squaa;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
@@ -16,6 +18,8 @@ import com.bumptech.glide.Glide;
 import com.example.cgaima.squaa.Models.Event;
 import com.parse.GetDataCallback;
 import com.parse.ParseException;
+
+import org.parceler.Parcels;
 
 import java.util.List;
 
@@ -46,17 +50,13 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         final Event event = events.get(position);
         holder.tvName.setText(event.getEventName());
         holder.tvDescription.setText(event.getDescription());
-        holder.tvDate.setText(event.getDate().toString());
+//        holder.tvDate.setText(event.getDate().toString());
         holder.tvLocation.setText(event.getLocation());
 
-
-
-
-        // TODO - is attendees a JSONArray?
+        // TODO - set correct variables to UI
         //holder.tvAttendees.setText(event.getString("attendees"));
         //holder.tvDate.setText(event.getDate());
         //holder.tvLocation.setText(event.getLocation());
-        // TODO - what key for picture
 
         if (event.getEventImage()==null) {
             Glide.with(context).load("https://www.google.com/url?sa=i&source=images&cd=&ved=2ahUKEwiKgcfT56TcAhWzHDQIHZ7ICZgQjRx6BAgBEAU&url=http%3A%2F%2Fwww.washingtonpost.com%2Frecipes%2Flunch-box-pasta-salad%2F15483%2F&psig=AOvVaw3QDPftuCv2CSZjHVzwoXZB&ust=1531871357428835").into(holder.ivPicture);
@@ -76,6 +76,16 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
                 }
             });
         }
+
+        holder.ivPicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(context, EventDetailActivity.class);
+                i.putExtra("event", Parcels.wrap(event));
+                //i.putExtra("post", post);
+                ((Activity) context).startActivityForResult(i, REQUEST_CODE);
+            }
+        });
     }
 
     @Override

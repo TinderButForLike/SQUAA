@@ -41,7 +41,6 @@ public class SignUpActivity extends AppCompatActivity {
                 user.setPassword(newPass.getText().toString());
                 user.setEmail(newEmail.getText().toString());
                 // invoke signup in background
-
                 user.signUpInBackground(new SignUpCallback() {
                     public void done(ParseException e) {
                         if (e == null) {
@@ -58,8 +57,6 @@ public class SignUpActivity extends AppCompatActivity {
                 });
             }
         });
-
-
     }
 }
 

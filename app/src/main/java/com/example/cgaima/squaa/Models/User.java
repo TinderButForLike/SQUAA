@@ -1,15 +1,23 @@
 package com.example.cgaima.squaa.Models;
 
 import com.parse.ParseClassName;
+import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseObject;
 import com.parse.ParseUser;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.util.ArrayList;
+
 @ParseClassName("User")
-public class User extends ParseUser {
+public class User extends ParseObject{
 
     private static final String KEY_IMAGE = "profile_picture";
     private static final String KEY_FRIENDS = "friends";
     private static final String KEY_USER = "username";
+
 
     //set user profile picture
     public void setProfilePic(ParseFile image) {
@@ -21,18 +29,41 @@ public class User extends ParseUser {
         return getParseFile(KEY_IMAGE);
     }
 
-    //set user friend list
-    public void setFriendList(ParseFile friends) {
-        put(KEY_FRIENDS, friends);
+    // get user friends
+    public ArrayList getFriends() {
+        ArrayList<Object> attendees = new ArrayList<>();
+        JSONArray jsonArray = (JSONArray)getJSONArray(KEY_FRIENDS);
+        if (jsonArray != null) {
+            int len = jsonArray.length();
+            for (int i=0;i<len;i++){
+                try {
+                    attendees.add(jsonArray.get(i));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return attendees;
     }
+    // set user friends
+    public void setFriends(ParseUser attendee) {
+        addUnique(KEY_FRIENDS,attendee);
+        try {
+            save();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
-    public ParseFile getFriendList() {
-        return getParseFile(KEY_FRIENDS);
     }
 
     // get user name
     public String getUsername() {
-        return getString("KEY_USER");
+        return getString(KEY_USER);
+    }
+
+    // set username
+    public void setUsername(String name){
+        put(KEY_USER, name);
     }
 
 
