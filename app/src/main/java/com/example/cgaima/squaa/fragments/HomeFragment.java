@@ -16,7 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.example.cgaima.squaa.EventAdapter;
+import com.example.cgaima.squaa.adapters.EventAdapter;
 import com.example.cgaima.squaa.Models.Event;
 import com.example.cgaima.squaa.R;
 import com.parse.FindCallback;

@@ -79,7 +79,7 @@ public class CreateEventFragment extends Fragment {
     }
 
     //create a new event
-    private void createEvent(String name, String location, String description) { //TODO add privacy, image, date
+    private void createEvent(String name, String location, String description) { // TODO add privacy, image, date
         final Event newEvent = new Event();
         newEvent.setEventName(name);
         newEvent.setLocation(location);

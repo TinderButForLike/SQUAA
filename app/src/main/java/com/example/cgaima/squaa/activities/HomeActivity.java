@@ -1,4 +1,4 @@
-package com.example.cgaima.squaa;
+package com.example.cgaima.squaa.activities;
 
 
 import android.os.Bundle;
@@ -13,8 +13,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.cgaima.squaa.R;
 import com.example.cgaima.squaa.fragments.CreateEventFragment;
 import com.example.cgaima.squaa.fragments.HomeFragment;
+import com.example.cgaima.squaa.fragments.ProfileFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,7 +33,7 @@ public class HomeActivity extends AppCompatActivity implements
     // TODO - change eventFragment and profileFragment
     public HomeFragment homeFragment;
     public CreateEventFragment eventFragment;
-    public HomeFragment profileFragment;
+    public ProfileFragment profileFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +54,7 @@ public class HomeActivity extends AppCompatActivity implements
             eventFragment = new CreateEventFragment();
         }
         if (profileFragment == null) {
-            profileFragment = new HomeFragment();
+            profileFragment = new ProfileFragment();
         }
 
         pagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
