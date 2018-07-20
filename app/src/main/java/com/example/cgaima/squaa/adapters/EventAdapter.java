@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
+import android.support.v7.recyclerview.extensions.ListAdapter;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,18 +25,38 @@ import com.parse.ParseException;
 
 import org.parceler.Parcels;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> {
+public class EventAdapter extends ListAdapter<Event, EventAdapter.ViewHolder> {
     Context context;
-    List<Event> events;
+    ArrayList<Event> events = new ArrayList<Event>();
     private final int REQUEST_CODE = 21;
 
-    public EventAdapter(List<Event> events) {
-        this.events = events;
+
+    public static final DiffUtil.ItemCallback<Event> DIFF_CALLBACK = new DiffUtil.ItemCallback<Event>() {
+
+        @Override
+        public boolean areItemsTheSame(@NonNull Event oldItem, @NonNull Event newItem) {
+            return oldItem.getObjectId() == newItem.getObjectId();
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull Event oldItem, @NonNull Event newItem) {
+            // TODO - add all contents
+            return oldItem.getPrivacy()== newItem.getPrivacy()&&
+            oldItem.getEventImage()== newItem.getEventImage()&&
+            oldItem.getAttendees()== newItem.getAttendees();
+        }
+    };
+
+    public EventAdapter() { super (DIFF_CALLBACK); }
+
+    protected EventAdapter(@NonNull DiffUtil.ItemCallback<Event> diffCallback) {
+        super(diffCallback);
     }
 
     @NonNull
@@ -48,8 +70,9 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
+        //final Event event = events.get(position);
+        final Event event = getItem(position);
 
-        final Event event = events.get(position);
         holder.tvName.setText(event.getEventName());
 //        holder.tvDate.setText(event.getDate().toString());
         holder.tvLocation.setText(event.getLocation());
@@ -88,10 +111,10 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         });
     }
 
-    @Override
+    /*@Override
     public int getItemCount() {
         return events.size();
-    }
+    }*/
 
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
@@ -120,15 +143,18 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         notifyDataSetChanged();
     }
 
-    public void addAll(List<Event> events) {
-        for (Event event: events) {
-            this.events.add(event);
-        }
+    public void addAll(ArrayList<Event> events) {
+        this.events = events;
         notifyDataSetChanged();
     }
 
     public void add(Event event) {
-        events.add(event);
+        this.events.add(event);
         notifyItemInserted(events.size() - 1);
+    }
+
+    public void addMoreEvents(List<Event> newEvents) {
+        this.events.addAll(newEvents);
+        submitList(events); // DiffUtil takes care of the check
     }
 }

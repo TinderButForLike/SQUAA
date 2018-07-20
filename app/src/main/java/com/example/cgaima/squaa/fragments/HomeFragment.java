@@ -100,7 +100,7 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         ButterKnife.bind(this, view);
         if (eventAdapter == null) {
-            eventAdapter = new EventAdapter(new ArrayList<Event>());
+            eventAdapter = new EventAdapter();
         }
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         // setup recycler view with adapter
@@ -143,7 +143,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void done(List<Event> objects, ParseException e) {
                 if (e==null){
-                    eventAdapter.addAll(objects);
+                    eventAdapter.addMoreEvents(objects);
                 } else { e.printStackTrace(); }
             }
         });
@@ -175,7 +175,7 @@ public class HomeFragment extends Fragment {
             public void done(List<Event> objects, ParseException e) {
                 if (e == null) {
                     Log.e("HomeActivity", String.valueOf(objects));
-                    eventAdapter.addAll(objects);
+                    eventAdapter.addMoreEvents(objects);
                 } else {
                     e.printStackTrace();
                     Toast.makeText(getContext(), "Search did not match any events", Toast.LENGTH_LONG).show();
