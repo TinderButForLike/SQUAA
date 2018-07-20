@@ -21,6 +21,15 @@
         android:layout_below="@+id/toolbarEvent"
         app:srcCompat="@android:drawable/ic_menu_camera" />
 
+    <RatingBar
+        android:id="@+id/ratingBar1"
+        style="@style/foodRatingBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:numStars="5">
+
+    </RatingBar>
+
     <TextView
         android:id="@+id/tvEventName"
         android:layout_width="157dp"
