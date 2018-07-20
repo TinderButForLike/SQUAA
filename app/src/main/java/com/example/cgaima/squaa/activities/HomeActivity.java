@@ -1,4 +1,4 @@
-package com.example.cgaima.squaa;
+package com.example.cgaima.squaa.activities;
 
 
 import android.os.Bundle;
@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.cgaima.squaa.R;
 import com.example.cgaima.squaa.fragments.CreateEventFragment;
 import com.example.cgaima.squaa.fragments.HomeFragment;
 import com.example.cgaima.squaa.fragments.OtherProfileFragment;

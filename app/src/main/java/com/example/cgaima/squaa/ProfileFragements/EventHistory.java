@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 
 import com.example.cgaima.squaa.Models.Event;
 import com.example.cgaima.squaa.R;
-import com.example.cgaima.squaa.profileAdapter;
+import com.example.cgaima.squaa.adapters.profileAdapter;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 

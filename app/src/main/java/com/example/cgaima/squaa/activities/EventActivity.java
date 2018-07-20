@@ -1,4 +1,4 @@
-package com.example.cgaima.squaa;
+package com.example.cgaima.squaa.activities;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.cgaima.squaa.Models.Event;
+import com.example.cgaima.squaa.R;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
@@ -45,6 +46,8 @@ public class EventActivity extends AppCompatActivity {
     Button launch;
     @BindView(R.id.eventPic)
     ImageView eventPic;
+    @BindView(R.id.mapLauchBtn)
+    Button mapLaunch;
 
     static ParseFile image;
 
@@ -58,6 +61,13 @@ public class EventActivity extends AppCompatActivity {
         setContentView(R.layout.activity_event);
         ButterKnife.bind(this); //bind butterknife after
 
+        mapLaunch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent mapIntent = new Intent(EventActivity.this, MapsActivity.class);
+                startActivity(mapIntent);
+            }
+        });
         launch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -79,6 +89,9 @@ public class EventActivity extends AppCompatActivity {
                 startActivity(createIntent);
             }
         });
+
+        location.setText(getIntent().getStringExtra("locationtext"));
+
     }
 
     //create a new event
@@ -161,7 +174,6 @@ public class EventActivity extends AppCompatActivity {
     protected boolean useToolbar(){
         return true;
     }
-
 
 
 }
