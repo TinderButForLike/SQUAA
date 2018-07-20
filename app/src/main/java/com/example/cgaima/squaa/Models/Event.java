@@ -128,9 +128,15 @@ public class Event extends ParseObject{
             return this;
         }
 
-        public Query containsWord(String query) {
+        public Query containsWord(String keyName, String query) {
             setLimit(20);
-            whereContains(KEY_NAME, query);
+            whereContains(keyName, query);
+            return this;
+        }
+
+        public Query skip(int numPosts) {
+            setSkip(numPosts);
+            orderByDescending("createdAt");
             return this;
         }
 

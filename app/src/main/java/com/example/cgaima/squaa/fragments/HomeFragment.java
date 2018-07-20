@@ -16,9 +16,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.example.cgaima.squaa.adapters.EventAdapter;
+import com.example.cgaima.squaa.EndlessRecyclerViewScrollListener;
 import com.example.cgaima.squaa.Models.Event;
 import com.example.cgaima.squaa.R;
+import com.example.cgaima.squaa.adapters.EventAdapter;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 
@@ -35,6 +36,8 @@ public class HomeFragment extends Fragment {
 
     private EventAdapter eventAdapter;
     private ArrayList<Event> events;
+    // current offset index
+    private int currentPage = 0;
 
     private FragmentActivity listener;
 
@@ -49,15 +52,17 @@ public class HomeFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        // TODO - for yelp style search bar: https://stackoverflow.com/questions/50708072/android-customized-searchview-layout/50764908
         MenuItem searchItem = menu.findItem(R.id.action_search);
 
         final SearchView searchView = (SearchView) searchItem.getActionView();
 
         searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
-
             @Override
             public boolean onMenuItemActionExpand(MenuItem menuItem) {
+                //disable refresh during search
+                swipeContainer.setEnabled(false);
+                swipeContainer.setRefreshing(false);
+
                 searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                     @Override
                     public boolean onQueryTextSubmit(String query) {
@@ -79,6 +84,9 @@ public class HomeFragment extends Fragment {
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem menuItem) {
+                // enable after search is done
+                swipeContainer.setEnabled(true);
+                // reload all posts onto home
                 loadTopPosts();
                 return true;
             }
@@ -94,10 +102,23 @@ public class HomeFragment extends Fragment {
         if (eventAdapter == null) {
             eventAdapter = new EventAdapter(new ArrayList<Event>());
         }
-
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         // setup recycler view with adapter
-        rvEvents.setLayoutManager(new LinearLayoutManager(getContext()));
+        rvEvents.setLayoutManager(linearLayoutManager);
         rvEvents.setAdapter(eventAdapter);
+
+        rvEvents.setOnScrollListener(new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                /*if (!isLoading() && !isLastPage()) {
+                    if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
+                            && firstVisibleItemPosition >= 0) {
+                        loadMoreItems();
+                    }
+                }*/
+                loadMorePosts(page);
+            }
+        });
 
         // setup container view for refresh function
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -112,6 +133,7 @@ public class HomeFragment extends Fragment {
 
         return view;
     }
+
     /** loads top 20 events */
     // TODO - make infinite scrolling work
     private void loadTopPosts() {
@@ -121,10 +143,22 @@ public class HomeFragment extends Fragment {
             @Override
             public void done(List<Event> objects, ParseException e) {
                 if (e==null){
-                    eventAdapter.setItems(objects);
+                    eventAdapter.addAll(objects);
                 } else { e.printStackTrace(); }
             }
         });
+    }
+
+    private void loadMorePosts(int page) {
+        // send an API request to retrieve appropriate paginated data
+        final Event.Query eventsQuery = new Event.Query();
+        //  --> Send the request including an offset value (i.e `page`) as a query parameter.
+        eventsQuery.setSkip(page*20);
+        //  --> Deserialize and construct new model objects from the API response
+
+        //  --> Append the new data objects to the existing set of items inside the array of items
+
+        //  --> Notify the adapter of the new items made with `notifyDataSetChanged()`
     }
 
     /** fetch event by name
@@ -135,13 +169,13 @@ public class HomeFragment extends Fragment {
         eventAdapter.clear();
         // create a new query
         final Event.Query eventsQuery = new Event.Query();
-        eventsQuery.containsWord(query);
+        eventsQuery.containsWord("name", query);
         eventsQuery.findInBackground(new FindCallback<Event>() {
             @Override
             public void done(List<Event> objects, ParseException e) {
                 if (e == null) {
                     Log.e("HomeActivity", String.valueOf(objects));
-                    eventAdapter.setItems(objects);
+                    eventAdapter.addAll(objects);
                 } else {
                     e.printStackTrace();
                     Toast.makeText(getContext(), "Search did not match any events", Toast.LENGTH_LONG).show();
@@ -149,5 +183,6 @@ public class HomeFragment extends Fragment {
             }
         });
     }
+
 
 }

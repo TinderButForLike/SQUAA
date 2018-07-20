@@ -120,8 +120,15 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         notifyDataSetChanged();
     }
 
-    public void setItems(List<Event> events) {
-        this.events = events;
+    public void addAll(List<Event> events) {
+        for (Event event: events) {
+            this.events.add(event);
+        }
         notifyDataSetChanged();
+    }
+
+    public void add(Event event) {
+        events.add(event);
+        notifyItemInserted(events.size() - 1);
     }
 }

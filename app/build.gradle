@@ -63,4 +63,8 @@ dependencies {
 
     implementation 'com.squareup.okhttp3:logging-interceptor:3.8.1'
     // for logging API calls to LogCat
+
+    // paging for infinite scrolling
+    implementation "android.arch.paging:runtime:1.0.0"
+
 }
