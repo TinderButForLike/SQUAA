@@ -111,4 +111,13 @@
         android:layout_marginBottom="151dp"
         android:text="launch gallery" />
 
+    <Button
+        android:id="@+id/mapLauchBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/privacy"
+        android:layout_alignStart="@+id/create"
+        android:layout_marginBottom="-113dp"
+        android:text="launch map " />
+
 </RelativeLayout>
