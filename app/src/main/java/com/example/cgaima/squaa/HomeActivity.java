@@ -10,6 +10,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -75,7 +76,15 @@ public class HomeActivity extends AppCompatActivity implements
 
         viewPager.setAdapter(pagerAdapter);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
-        bottomNavigationView.setSelectedItemId(R.id.action_home);
+
+        if (getIntent().hasExtra("locationtext")){
+            Log.d("Home Activity", "we have the goods.....");
+            bottomNavigationView.setSelectedItemId(R.id.action_profile);
+            viewPager.setCurrentItem(1);
+        }
+        else {
+            bottomNavigationView.setSelectedItemId(R.id.action_home);
+        }
     }
 
 

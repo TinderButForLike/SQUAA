@@ -12,7 +12,10 @@
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
+
     <application
+
+
         android:name=".ParseApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -29,10 +32,13 @@
 
         </activity>
         <activity android:name=".HomeActivity"></activity>
-        <activity android:name=".SignUpActivity"></activity>
+        <activity android:name=".SignUpActivity"></activity>]
         <activity android:name=".EventActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar">
         </activity>
+        <activity android:name=".MapsActivity"></activity>
+
+        <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyC1wzsdt6OMMNuW4PBHBHQOFXd_gjtwy2Y"/>
     </application>
 
 </manifest>
