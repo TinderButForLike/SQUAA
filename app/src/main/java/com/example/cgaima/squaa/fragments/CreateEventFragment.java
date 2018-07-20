@@ -17,7 +17,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.example.cgaima.squaa.MapsActivity;
+import com.example.cgaima.squaa.activities.MapsActivity;
 import com.example.cgaima.squaa.Models.Event;
 import com.example.cgaima.squaa.R;
 import com.parse.ParseException;
@@ -42,6 +42,8 @@ public class CreateEventFragment extends Fragment {
     EditText location;
     //@BindView(R.id.date)
     //EditText date;
+    @BindView(R.id.privacy)
+    EditText privacy;
     @BindView(R.id.description)
     EditText description;
     @BindView(R.id.eventPic)
@@ -98,7 +100,7 @@ public class CreateEventFragment extends Fragment {
 
 
 
-        createEvent(mName, mLocation, mDescription, mPrivacy, mImage);//mDate, mDescription);
+        createEvent(mName, mLocation, mDescription, mPrivacy, mImage);
 
 
 
@@ -114,8 +116,6 @@ public class CreateEventFragment extends Fragment {
         transaction.addToBackStack(null);  // if written, this transaction will be added to backstack
         transaction.commit();*/
     }
-
-    //launch the map
 
     //create a new event
     private void createEvent(String name, String location, String description, boolean privacy, ParseFile img) { //TODO add privacy, image, date

@@ -1,4 +1,4 @@
-package com.example.cgaima.squaa;
+package com.example.cgaima.squaa.activities;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.cgaima.squaa.Models.Event;
+import com.example.cgaima.squaa.R;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseUser;

@@ -1,4 +1,4 @@
-package com.example.cgaima.squaa;
+package com.example.cgaima.squaa.adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.cgaima.squaa.Models.Event;
+import com.example.cgaima.squaa.R;
 
 import java.util.List;
 

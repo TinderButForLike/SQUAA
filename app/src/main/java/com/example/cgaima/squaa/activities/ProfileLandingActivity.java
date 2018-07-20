@@ -1,4 +1,4 @@
-package com.example.cgaima.squaa;
+package com.example.cgaima.squaa.activities;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import com.example.cgaima.squaa.ProfileFragements.AboutUser;
 import com.example.cgaima.squaa.ProfileFragements.EventHistory;
 import com.example.cgaima.squaa.ProfileFragements.Logout;
+import com.example.cgaima.squaa.R;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package com.example.cgaima.squaa;
+package com.example.cgaima.squaa.activities;
 
 import android.Manifest;
 import android.content.Intent;
@@ -8,11 +8,13 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.cgaima.squaa.fragments.CreateEventFragment;
+import com.example.cgaima.squaa.R;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.Status;
@@ -121,25 +123,21 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onStop();
         gMapView.onStop();
     }
-
     @Override
     protected void onPause() {
         gMapView.onPause();
         super.onPause();
     }
-
     @Override
     protected void onDestroy() {
         gMapView.onDestroy();
         super.onDestroy();
     }
-
     @Override
     public void onLowMemory() {
         super.onLowMemory();
         gMapView.onLowMemory();
     }
-
 
     @Override //set a default map
     public void onMapReady(GoogleMap googleMap) {
@@ -154,7 +152,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         mMap.setMyLocationEnabled(true);
         mMap.setMinZoomPreference(12);
-
         LatLng ny = new LatLng(40.7143528, -74.0059731);
         mMap.moveCamera(CameraUpdateFactory.newLatLng(ny));
     }
