@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.example.cgaima.squaa.LoginActivity;
+import com.example.cgaima.squaa.activities.LoginActivity;
 import com.example.cgaima.squaa.R;
 import com.parse.ParseUser;
 

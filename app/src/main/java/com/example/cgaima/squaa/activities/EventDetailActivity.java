@@ -1,4 +1,4 @@
-package com.example.cgaima.squaa;
+package com.example.cgaima.squaa.activities;
 
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.cgaima.squaa.Models.Event;
+import com.example.cgaima.squaa.R;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 
