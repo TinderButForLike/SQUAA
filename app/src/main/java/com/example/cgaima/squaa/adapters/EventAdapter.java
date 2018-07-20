@@ -51,7 +51,6 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
 
         final Event event = events.get(position);
         holder.tvName.setText(event.getEventName());
-        holder.tvDescription.setText(event.getDescription());
 //        holder.tvDate.setText(event.getDate().toString());
         holder.tvLocation.setText(event.getLocation());
 
@@ -98,8 +97,6 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         @BindView(R.id.ivPicture) ImageView ivPicture;
         @BindView(R.id.tvName) TextView tvName;
-        @BindView(R.id.tvDescription) TextView tvDescription;
-        @BindView(R.id.tvAttendees) TextView tvAttendees;
         @BindView(R.id.tvDate) TextView tvDate;
         @BindView(R.id.tvLocation) TextView tvLocation;
 

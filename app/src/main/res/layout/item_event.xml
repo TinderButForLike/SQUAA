@@ -28,37 +28,31 @@
             android:id="@+id/tvName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
             android:layout_below="@id/ivPicture"
-            android:text="Event Name" />
+            android:layout_margin="5dp"
+            android:text="Event Name"
+            android:textAllCaps="true"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tvLocation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tvName"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@id/ivPicture"
+            android:layout_margin="5dp"
             android:text="Location" />
 
         <TextView
             android:id="@+id/tvDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tvDescription"
-            android:text="Date" />
-
-        <TextView
-            android:id="@+id/tvDescription"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tvLocation"
-            android:text="Description" />
-
-        <TextView
-            android:id="@+id/tvAttendees"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tvDate"
-            android:text="Attendees" />
-
+            android:layout_below="@id/ivPicture"
+            android:layout_margin="5dp"
+            android:layout_toStartOf="@+id/tvLocation"
+            android:text="Date" />\
 
     </RelativeLayout>
 </android.support.v7.widget.CardView>
