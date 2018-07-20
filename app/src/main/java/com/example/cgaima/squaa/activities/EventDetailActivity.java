@@ -1,5 +1,6 @@
 package com.example.cgaima.squaa.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
@@ -7,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -40,7 +42,8 @@ public class EventDetailActivity extends AppCompatActivity {
     ImageView ownerPic;
     @BindView(R.id.tvLocation)
     TextView Eventlocal;
-
+    @BindView(R.id.ratingBar1)
+    RatingBar rb;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +64,20 @@ public class EventDetailActivity extends AppCompatActivity {
             }
         });
 
+//        rb =(RatingBar)findViewById(R.id.ratingBar1);
+//
+//        rb.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener(){
+//
+//            @Override
+//            public void onRatingChanged(RatingBar ratingBar, float rating,
+//                                        boolean fromUser) {
+//                // TODO Auto-generated method stub
+//                Toast.makeText(getApplicationContext(),Float.toString(rating),Toast.LENGTH_LONG).show();
+//
+//            }
+//
+//        });
+
 
         EventName.setText(event.getEventName());
         description.setText(event.getDescription());
@@ -80,6 +97,15 @@ public class EventDetailActivity extends AppCompatActivity {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+
+        ownerName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(EventDetailActivity.this, HomeActivity.class);
+                i.putExtra("event_owner", Parcels.wrap(event));
+                startActivity(i);
+            }
+        });
 
     }
 
