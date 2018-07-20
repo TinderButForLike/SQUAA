@@ -36,6 +36,7 @@ public class HomeActivity extends AppCompatActivity implements
     public CreateEventFragment eventFragment;
     public ProfileFragment profileFragment;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
