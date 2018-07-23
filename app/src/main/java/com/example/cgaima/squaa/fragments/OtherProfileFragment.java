@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -28,6 +29,7 @@ import com.parse.ParseUser;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -38,6 +40,8 @@ public class OtherProfileFragment extends Fragment {
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private FragmentActivity listener;
+    private Boolean added;
+
 
     // Required empty public constructor
     public OtherProfileFragment() {
@@ -76,30 +80,45 @@ public class OtherProfileFragment extends Fragment {
                 e.printStackTrace();
             }
 
-        }
-        Log.e("OtherProfileFragment", "I GET OPENED");
-        FloatingActionButton fab = view.findViewById(R.id.fabFriend);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//               Snackbar.make(view, "Here's a Snackbar", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-                ParseUser current = ParseUser.getCurrentUser();
-                // current.addUnique("friends", owner);
-                try {
-                    current.save();
-                } catch (ParseException e) {
-                    e.printStackTrace();
+
+            Log.e("OtherProfileFragment", "I GET OPENED");
+            final FloatingActionButton fab = view.findViewById(R.id.fabFriend);
+            added = false;
+            fab.setImageDrawable(ContextCompat.getDrawable(((AppCompatActivity)getActivity()).getApplicationContext(),R.drawable.ic_addfriend));
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    if(!added) {
+                        ParseUser current = ParseUser.getCurrentUser();
+                        current.addUnique("friends", owner);
+                        try {
+                            current.save();
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        fab.setImageDrawable(ContextCompat.getDrawable(((AppCompatActivity)getActivity()).getApplicationContext(),R.drawable.ic_unjoin));
+                        added = true;
+                    } else {
+                        ParseUser current = ParseUser.getCurrentUser();
+                        current.removeAll("friends", Collections.singleton(owner));
+                        try {
+                            current.save();
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+
+                        fab.setImageDrawable(ContextCompat.getDrawable(((AppCompatActivity)getActivity()).getApplicationContext(),R.drawable.ic_addfriend));
+                        added = false;
+
+                    }
+
                 }
+            });
+
+        }
 
 
-            }
-        });
-
-
-        //((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
-
-        // ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         viewPager = (ViewPager) view.findViewById(R.id.vpContainer);
         setupViewPager(viewPager);

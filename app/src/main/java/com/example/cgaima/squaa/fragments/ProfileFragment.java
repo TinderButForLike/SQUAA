@@ -56,9 +56,6 @@ public class ProfileFragment extends Fragment {
         }
 
 
-        //((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
-
-       // ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         viewPager = (ViewPager) view.findViewById(R.id.vpContainer);
         setupViewPager(viewPager);
