@@ -55,9 +55,11 @@ public class CreateEventFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        Log.e("Event Fragment", "I get created too");
         View view = inflater.inflate(R.layout.fragment_create_event, container, false);
         ButterKnife.bind(this, view);
         return view;
+
     }
 
     // TODO - automatically add new event to home without refresh
@@ -69,6 +71,7 @@ public class CreateEventFragment extends Fragment {
         String mDescription = description.getText().toString();
 
         createEvent(mName, mLocation, mDescription);//mDate, mDescription);
+
 
         // TODO - set fragment to home fragment after creating event
         /*Fragment homeFragment = new HomeFragment();

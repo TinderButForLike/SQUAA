@@ -2,13 +2,16 @@ package com.example.cgaima.squaa.fragments;
 
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,35 +30,71 @@ import org.parceler.Parcels;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OtherProfileFragment extends Fragment {
+import butterknife.ButterKnife;
 
+
+public class OtherProfileFragment extends Fragment {
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
+    private FragmentActivity listener;
 
-    // The onCreateView method is called when Fragment should create its View object hierarchy,
-    // either dynamically or via XML layout inflation.
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
-        // Defines the xml file for the fragment
-        return inflater.inflate(R.layout.fragment_other_profile, parent, false);
+    // Required empty public constructor
+    public OtherProfileFragment() {
     }
 
-    // This event is triggered soon after onCreateView().
-    // Any view setup should occur here.  E.g., view lookups and attaching view listeners.
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        // Setup any handles to view objects here
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+        Log.e("OtherProfileFragment", "OtherProfile fragment created");
+    }
+
+
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_other_profile, container, false);
+        ButterKnife.bind(this, view);
+
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         final ImageView imageInToolbar = (ImageView) toolbar.findViewById(R.id.ivProfilePic);
         Parcelable parcel = getActivity().getIntent().getParcelableExtra("event_owner");
-        final Event event = (Event) Parcels.unwrap(parcel);
-        ParseUser owner =  event.getOwner();
-        try {
-            Glide.with(this).load(owner.fetchIfNeeded().getParseFile("profile_picture").getUrl()).into(imageInToolbar);
-        } catch (ParseException e) {
-            e.printStackTrace();
+
+        if (parcel != null) {
+            final Event event = (Event) Parcels.unwrap(parcel);
+
+
+            final ParseUser owner = event.getOwner();
+
+
+            try {
+                Glide.with(this).load(owner.fetchIfNeeded().getParseFile("profile_picture").getUrl()).into(imageInToolbar);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
         }
+        Log.e("OtherProfileFragment", "I GET OPENED");
+        FloatingActionButton fab = view.findViewById(R.id.fabFriend);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//               Snackbar.make(view, "Here's a Snackbar", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+                ParseUser current = ParseUser.getCurrentUser();
+                // current.addUnique("friends", owner);
+                try {
+                    current.save();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+        });
 
 
         //((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
@@ -67,7 +106,11 @@ public class OtherProfileFragment extends Fragment {
 
         tabLayout = (TabLayout) view.findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
+
+
+        return view;
     }
+
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(((AppCompatActivity)getActivity()).getSupportFragmentManager());
         adapter.addFragment(new EventHistory(), "Event History");
@@ -103,4 +146,5 @@ public class OtherProfileFragment extends Fragment {
             return mFragmentTitleList.get(position);
         }
     }
+
 }

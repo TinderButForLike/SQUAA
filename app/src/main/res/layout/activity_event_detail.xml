@@ -121,7 +121,7 @@
         android:layout_below="@+id/ivEventPic"
         android:layout_gravity="end|bottom"
         android:src="@android:drawable/ic_input_add"
-        app:backgroundTint="#6f7899"
+        app:backgroundTint="#c0c0c0"
         app:rippleColor="#525e72" />
 
 </RelativeLayout>
