@@ -46,8 +46,7 @@ public class EventActivity extends AppCompatActivity {
     Button launch;
     @BindView(R.id.eventPic)
     ImageView eventPic;
-    @BindView(R.id.mapLauchBtn)
-    Button mapLaunch;
+
 
     static ParseFile image;
 
@@ -61,13 +60,7 @@ public class EventActivity extends AppCompatActivity {
         setContentView(R.layout.activity_event);
         ButterKnife.bind(this); //bind butterknife after
 
-        mapLaunch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent mapIntent = new Intent(EventActivity.this, MapsActivity.class);
-                startActivity(mapIntent);
-            }
-        });
+
         launch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

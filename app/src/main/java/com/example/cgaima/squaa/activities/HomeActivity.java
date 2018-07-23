@@ -17,7 +17,6 @@ import android.widget.Toast;
 
 import com.example.cgaima.squaa.R;
 import com.example.cgaima.squaa.fragments.CreateEventFragment;
-import com.example.cgaima.squaa.fragments.DummyFragment;
 import com.example.cgaima.squaa.fragments.HomeFragment;
 import com.example.cgaima.squaa.fragments.OtherProfileFragment;
 import com.example.cgaima.squaa.fragments.ProfileFragment;
@@ -40,7 +39,6 @@ public class HomeActivity extends AppCompatActivity implements
     public CreateEventFragment eventFragment;
     public ProfileFragment profileFragment;
     public OtherProfileFragment otherProfileFragment;
-    public DummyFragment dummyFragment;
     public int state;
 
     @Override
@@ -68,11 +66,8 @@ public class HomeActivity extends AppCompatActivity implements
         if (otherProfileFragment == null) {
             otherProfileFragment = new OtherProfileFragment();
         }
-
-        if (dummyFragment == null) {
-            dummyFragment = new DummyFragment();
-        }
         state = 0;
+
         pagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override
             public int getCount() {
@@ -88,15 +83,15 @@ public class HomeActivity extends AppCompatActivity implements
                     case 1:
                         return eventFragment;
                     case 2:
-                        //getSupportActionBar().hide();
+                        getSupportActionBar().hide();
                         return profileFragment;
                     case 3:
-                        //getSupportActionBar().hide();
-                        return  otherProfileFragment;
-
+                        getSupportActionBar().hide();
+                        return otherProfileFragment;
                 }
             }
-
+            @Override
+            public int getCount() { return 4; }
         };
 
         viewPager.setAdapter(pagerAdapter);
@@ -111,7 +106,17 @@ public class HomeActivity extends AppCompatActivity implements
             bottomNavigationView.setSelectedItemId(R.id.action_home);
         }
 
+        if (getIntent().hasExtra("locationtext")){
+            Log.d("Home Activity", "we have the goods.....");
+            bottomNavigationView.setSelectedItemId(R.id.action_profile);
+            viewPager.setCurrentItem(1);
+        }
+        else {
+            bottomNavigationView.setSelectedItemId(R.id.action_home);
+        }
     }
+
+
 
 
     @Override
@@ -133,7 +138,7 @@ public class HomeActivity extends AppCompatActivity implements
                 viewPager.setCurrentItem(1);
                 break;
             case R.id.action_profile:
-                Log.d("Home Activity", "Gang");
+
                 viewPager.setCurrentItem(2);
                 break;
         }
