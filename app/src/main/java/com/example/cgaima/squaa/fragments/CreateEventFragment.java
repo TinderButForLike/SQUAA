@@ -42,8 +42,8 @@ public class CreateEventFragment extends Fragment {
     EditText location;
     //@BindView(R.id.date)
     //EditText date;
-    @BindView(R.id.privacy)
-    EditText privacy;
+//    @BindView(R.id.privacy)
+//    EditText privacy;
     @BindView(R.id.description)
     EditText description;
     @BindView(R.id.eventPic)

@@ -83,15 +83,13 @@ public class HomeActivity extends AppCompatActivity implements
                     case 1:
                         return eventFragment;
                     case 2:
-                        getSupportActionBar().hide();
+
                         return profileFragment;
                     case 3:
-                        getSupportActionBar().hide();
                         return otherProfileFragment;
                 }
             }
-            @Override
-            public int getCount() { return 4; }
+
         };
 
         viewPager.setAdapter(pagerAdapter);
@@ -102,11 +100,7 @@ public class HomeActivity extends AppCompatActivity implements
             Toast.makeText(this,"hey",Toast.LENGTH_LONG);
             viewPager.setCurrentItem(3);
 
-        }else {
-            bottomNavigationView.setSelectedItemId(R.id.action_home);
-        }
-
-        if (getIntent().hasExtra("locationtext")){
+        } else if (getIntent().hasExtra("locationtext")){
             Log.d("Home Activity", "we have the goods.....");
             bottomNavigationView.setSelectedItemId(R.id.action_profile);
             viewPager.setCurrentItem(1);
