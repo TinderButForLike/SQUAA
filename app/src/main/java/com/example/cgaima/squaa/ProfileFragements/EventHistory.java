@@ -2,6 +2,7 @@ package com.example.cgaima.squaa.ProfileFragements;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -18,26 +19,37 @@ import com.parse.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 
 public class EventHistory extends Fragment {
-    // The onCreateView method is called when Fragment should create its View object hierarchy,
-    // either dynamically or via XML layout inflation.
-    private RecyclerView rvGrid;
+    @BindView(R.id.rvEventHistory) RecyclerView rvGrid;
     private profileAdapter mAdapter;
     private List<Event> events;
+
+
+    private FragmentActivity listener;
+
+    // Required empty public constructor
+    public EventHistory() {}
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
-        // Defines the xml file for the fragment
-        return inflater.inflate(R.layout.fragment_event_history, parent, false);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+        Log.e("EventHistory", "Event history fragment created");
     }
 
-    // This event is triggered soon after onCreateView().
-    // Any view setup should occur here.  E.g., view lookups and attaching view listeners.
+
+
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        // Setup any handles to view objects here
-        // EditText etFoo = (EditText) view.findViewById(R.id.etFoo);
-        // Find RecyclerView and bind to adapter
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_event_history, container, false);
+        ButterKnife.bind(this, view);
+
         rvGrid = (RecyclerView) view.findViewById(R.id.rvEventHistory);
 
         // allows for optimizations
@@ -46,8 +58,6 @@ public class EventHistory extends Fragment {
         // Define 2 column grid layout
         final GridLayoutManager layout = new GridLayoutManager(getActivity(), 2);
 
-        // Unlike ListView, you have to explicitly give a LayoutManager to the RecyclerView to position items on the screen.
-        // There are three LayoutManager provided at the moment: GridLayoutManager, StaggeredGridLayoutManager and LinearLayoutManager.
         rvGrid.setLayoutManager(layout);
 
         // get data
@@ -59,8 +69,9 @@ public class EventHistory extends Fragment {
         // Bind adapter to list
         rvGrid.setAdapter(mAdapter);
         getPosts();
-    }
 
+        return view;
+    }
     public void getPosts(){
         final Event.Query query = new Event.Query();
         query.getTop().withOwner();
@@ -83,4 +94,6 @@ public class EventHistory extends Fragment {
             }
         });
     }
+
+
 }

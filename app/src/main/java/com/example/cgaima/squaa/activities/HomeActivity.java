@@ -102,8 +102,10 @@ public class HomeActivity extends AppCompatActivity implements
 
         } else if (getIntent().hasExtra("locationtext")){
             Log.d("Home Activity", "we have the goods.....");
+            bottomNavigationView.setSelectedItemId(R.id.action_new_event);
+            //viewPager.setCurrentItem(1);
+        } else if (getIntent().hasExtra("profile")){
             bottomNavigationView.setSelectedItemId(R.id.action_profile);
-            viewPager.setCurrentItem(1);
         }
         else {
             bottomNavigationView.setSelectedItemId(R.id.action_home);
@@ -132,7 +134,6 @@ public class HomeActivity extends AppCompatActivity implements
                 viewPager.setCurrentItem(1);
                 break;
             case R.id.action_profile:
-
                 viewPager.setCurrentItem(2);
                 break;
         }

@@ -121,9 +121,20 @@ public class EventDetailActivity extends AppCompatActivity {
         ownerName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(EventDetailActivity.this, HomeActivity.class);
-                i.putExtra("event_owner", Parcels.wrap(event));
-                startActivity(i);
+                try {
+                    if (event.getOwner().fetchIfNeeded().getObjectId().equals(ParseUser.getCurrentUser().getObjectId())){
+                        Intent i = new Intent(EventDetailActivity.this, HomeActivity.class);
+                        i.putExtra("profile", Parcels.wrap(event));
+                        startActivity(i);
+                    }else {
+                        Intent i = new Intent(EventDetailActivity.this, HomeActivity.class);
+                        i.putExtra("event_owner", Parcels.wrap(event));
+                        startActivity(i);
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
             }
         });
 
