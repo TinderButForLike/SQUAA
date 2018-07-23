@@ -1,12 +1,12 @@
 package com.example.cgaima.squaa.adapters;
 
 import android.app.Activity;
+import android.arch.paging.PagedListAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
-import android.support.v7.recyclerview.extensions.ListAdapter;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -26,12 +26,11 @@ import com.parse.ParseException;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class EventAdapter extends ListAdapter<Event, EventAdapter.ViewHolder> {
+public class EventAdapter extends PagedListAdapter<Event, EventAdapter.ViewHolder> {
     Context context;
     ArrayList<Event> events = new ArrayList<Event>();
     private final int REQUEST_CODE = 21;
@@ -72,6 +71,8 @@ public class EventAdapter extends ListAdapter<Event, EventAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         //final Event event = events.get(position);
         final Event event = getItem(position);
+
+        if (event == null) { return; }
 
         holder.tvName.setText(event.getEventName());
 //        holder.tvDate.setText(event.getDate().toString());
@@ -153,8 +154,10 @@ public class EventAdapter extends ListAdapter<Event, EventAdapter.ViewHolder> {
         notifyItemInserted(events.size() - 1);
     }
 
+    /*// for ListAdapter
     public void addMoreEvents(List<Event> newEvents) {
         this.events.addAll(newEvents);
-        submitList(events); // DiffUtil takes care of the check
-    }
+        submitList(this.events); // DiffUtil takes care of the check
+    }*/
+
 }

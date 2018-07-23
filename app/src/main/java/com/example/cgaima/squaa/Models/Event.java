@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 @ParseClassName("Event")
-public class Event extends ParseObject{
+public class Event extends ParseObject {
     private static final String KEY_DESCRIPTION = "description";
     private static final String KEY_IMAGE = "event_image";
     private static final String KEY_OWNER = "owner";
@@ -119,7 +119,7 @@ public class Event extends ParseObject{
         }
 
         public Query getTop() {
-            setLimit(20);
+            setLimit(10);
             return this;
         }
 

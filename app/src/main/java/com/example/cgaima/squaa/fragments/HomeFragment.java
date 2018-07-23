@@ -1,6 +1,11 @@
 package com.example.cgaima.squaa.fragments;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
+import android.arch.paging.LivePagedListBuilder;
+import android.arch.paging.PagedList;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -16,8 +21,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.example.cgaima.squaa.EndlessRecyclerViewScrollListener;
 import com.example.cgaima.squaa.Models.Event;
+import com.example.cgaima.squaa.ParseDataSourceFactory;
 import com.example.cgaima.squaa.R;
 import com.example.cgaima.squaa.adapters.EventAdapter;
 import com.parse.FindCallback;
@@ -36,8 +41,8 @@ public class HomeFragment extends Fragment {
 
     private EventAdapter eventAdapter;
     private ArrayList<Event> events;
-    // current offset index
-    private int currentPage = 0;
+    // normally this data should be encapsulated in ViewModels, but shown here for simplicity
+    LiveData<PagedList<Event>> posts;
 
     private FragmentActivity listener;
 
@@ -46,6 +51,27 @@ public class HomeFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
+        PagedList.Config pagedListConfig =
+                new PagedList.Config.Builder().setEnablePlaceholders(true)
+                        .setPrefetchDistance(10)
+                        .setInitialLoadSizeHint(10)
+                        .setPageSize(10).build();
+
+        // initial page size to fetch can also be configured here too
+        PagedList.Config config = new PagedList.Config.Builder().setPageSize(20).build();
+
+        ParseDataSourceFactory sourceFactory = new ParseDataSourceFactory();
+
+        posts = new LivePagedListBuilder(sourceFactory, config).build();
+
+        posts.observe(this, new Observer<PagedList<Event>>() {
+            @Override
+            public void onChanged(@Nullable PagedList<Event> tweets) {
+                eventAdapter.submitList(tweets);
+            }
+        });
+
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
     }
@@ -107,19 +133,6 @@ public class HomeFragment extends Fragment {
         rvEvents.setLayoutManager(linearLayoutManager);
         rvEvents.setAdapter(eventAdapter);
 
-        rvEvents.setOnScrollListener(new EndlessRecyclerViewScrollListener(linearLayoutManager) {
-            @Override
-            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                /*if (!isLoading() && !isLastPage()) {
-                    if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
-                            && firstVisibleItemPosition >= 0) {
-                        loadMoreItems();
-                    }
-                }*/
-                loadMorePosts(page);
-            }
-        });
-
         // setup container view for refresh function
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -143,22 +156,10 @@ public class HomeFragment extends Fragment {
             @Override
             public void done(List<Event> objects, ParseException e) {
                 if (e==null){
-                    eventAdapter.addMoreEvents(objects);
+                    eventAdapter.addAll((ArrayList<Event>) objects);
                 } else { e.printStackTrace(); }
             }
         });
-    }
-
-    private void loadMorePosts(int page) {
-        // send an API request to retrieve appropriate paginated data
-        final Event.Query eventsQuery = new Event.Query();
-        //  --> Send the request including an offset value (i.e `page`) as a query parameter.
-        eventsQuery.setSkip(page*20);
-        //  --> Deserialize and construct new model objects from the API response
-
-        //  --> Append the new data objects to the existing set of items inside the array of items
-
-        //  --> Notify the adapter of the new items made with `notifyDataSetChanged()`
     }
 
     /** fetch event by name
@@ -175,7 +176,7 @@ public class HomeFragment extends Fragment {
             public void done(List<Event> objects, ParseException e) {
                 if (e == null) {
                     Log.e("HomeActivity", String.valueOf(objects));
-                    eventAdapter.addMoreEvents(objects);
+                    eventAdapter.addAll((ArrayList<Event>) objects);
                 } else {
                     e.printStackTrace();
                     Toast.makeText(getContext(), "Search did not match any events", Toast.LENGTH_LONG).show();
