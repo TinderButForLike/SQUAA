@@ -128,6 +128,7 @@ public class HomeActivity extends AppCompatActivity implements
         switch (menuItem.getItemId()) {
             default:
             case R.id.action_home:
+                //supportFinishAfterTransition();
                 viewPager.setCurrentItem(0);
                 break;
             case R.id.action_new_event:
