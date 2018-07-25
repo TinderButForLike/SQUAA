@@ -51,6 +51,7 @@ public class HomeActivity extends AppCompatActivity implements
         // find the toolbar view inside layout and set tool as action bar for activity
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false); // remove default text
 
         if (homeFragment == null) {
             homeFragment = new HomeFragment();

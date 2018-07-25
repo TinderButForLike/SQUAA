@@ -13,7 +13,18 @@
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:elevation="8dp"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+        <TextView
+            android:id="@+id/toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            android:text="squaa"
+            android:textColor="@color/primaryTextColor" />
+    </android.support.v7.widget.Toolbar>
+
+
 
     <android.support.v4.view.ViewPager
         android:id="@+id/viewpager"
@@ -35,5 +46,4 @@
         app:itemTextColor="@color/primaryDarkColor"
         app:labelVisibilityMode="unlabeled"
         app:menu="@menu/bottom_navigation" />
-
 </RelativeLayout>
