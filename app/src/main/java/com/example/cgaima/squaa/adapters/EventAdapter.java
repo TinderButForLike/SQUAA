@@ -1,6 +1,8 @@
 package com.example.cgaima.squaa.adapters;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
@@ -17,8 +19,11 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.cgaima.squaa.Models.Event;
 import com.example.cgaima.squaa.R;
+import com.example.cgaima.squaa.activities.EventDetailActivity;
 import com.parse.GetDataCallback;
 import com.parse.ParseException;
+
+import org.parceler.Parcels;
 
 import java.util.List;
 
@@ -81,7 +86,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
             });
         }
 
-        /*holder.ivPicture.setOnClickListener(new View.OnClickListener() {
+        holder.media_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(context, EventDetailActivity.class);
@@ -89,7 +94,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
                 //i.putExtra("post", post);
                 ((Activity) context).startActivityForResult(i, REQUEST_CODE);
             }
-        });*/
+        });
     }
 
     @Override

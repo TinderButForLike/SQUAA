@@ -3,17 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_home"
-        app:showAsAction="ifRoom"
         android:enabled="true"
-        android:icon="@drawable/ic_instagram_home" />
+        android:icon="@drawable/ic_home"
+        app:showAsAction="ifRoom"
+        android:title="home" />
     <item
         android:id="@+id/action_new_event"
         app:showAsAction="ifRoom"
         android:enabled="true"
-        android:icon="@drawable/ic_instagram_new_post" />
+        android:icon="@drawable/ic_new_post"
+        android:title="new event" />
     <item
         android:id="@+id/action_profile"
         app:showAsAction="ifRoom"
         android:enabled="true"
-        android:icon="@drawable/ic_instagram_profile" />
+        android:icon="@drawable/ic_profile"
+        android:title="profile" />
 </menu>

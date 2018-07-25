@@ -88,8 +88,8 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:scaleType="centerCrop"
-            app:layout_constraintBottom_toTopOf="@+id/primary_text"
             app:layout_constraintDimensionRatio="H,16:9"
+            app:layout_constraintBottom_toTopOf="@+id/primary_text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -115,7 +115,7 @@
             android:layout_marginStart="16dp"
             app:layout_constraintBottom_toBottomOf="@+id/sub_text"
             app:layout_constraintStart_toStartOf="parent"
-            app:srcCompat="@drawable/calendar_icon" />
+            app:srcCompat="@drawable/ic_calendar" />
 
         <ImageView
             android:id="@+id/location_icon"
@@ -124,7 +124,7 @@
             android:layout_marginStart="16dp"
             app:layout_constraintBottom_toBottomOf="@+id/sub_text2"
             app:layout_constraintStart_toStartOf="parent"
-            app:srcCompat="@drawable/location_icon" />
+            app:srcCompat="@drawable/ic_location_pin" />
 
         <TextView
             android:id="@+id/sub_text"
@@ -167,6 +167,7 @@
             android:paddingStart="8dp"
             android:text="join"
             android:visibility="gone"
+            android:backgroundTint="@color/secondaryColor"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
