@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -40,7 +41,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
         View eventView = inflater.inflate(R.layout.item_event, parent, false);
-        return new ExpandableViewHolder(eventView);
+        return new ViewHolder(eventView);
     }
 
     @Override
@@ -50,7 +51,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         holder.event_name.setText(event.getEventName());
         holder.supporting_text.setText(event.getDescription());
         holder.location.setText(event.getLocation());
-        //holder.tvDate.setText(event.getDate().toString());
+        holder.date.setText(event.getDate());
 
         // TODO - set correct variables to UI
         //holder.tvAttendees.setText(event.getString("attendees"));
@@ -102,6 +103,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         @BindView(R.id.supporting_text) TextView supporting_text;
         @BindView(R.id.sub_text) TextView date;
         @BindView(R.id.sub_text2) TextView location;
+        @BindView(R.id.action_button_1) Button action_button_1;
+        @BindView(R.id.expand_button) ImageButton expandButton;
         /*@BindView(R.id.tvDate) TextView tvDate;
         @BindView(R.id.tvLocation) TextView tvLocation;*/
 
@@ -110,16 +113,19 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
             ButterKnife.bind(this, itemView);
         }
 
-        /*@Override
-        public void onClick(View view) {
-            final Event event = (Event) itemView.getTag();
-            Intent intent = new Intent(context, EventDetailActivity.class);
-            intent.putExtra("event", Parcels.wrap(event));
-            //TransitionInflater changeTransform = TransitionInflater.from(context);
-            //TransitionInflater explodeTransform = TransitionInflater.from(context);
-            //ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context, ivEventPic, "eventCard");
-            context.startActivity(intent);//, options.toBundle());
-        }*/
+        @OnClick(R.id.expand_button)
+        public void onExpand() {
+            if (supporting_text.getVisibility() == View.VISIBLE) {
+                expandButton.setImageResource(R.drawable.ic_expand_more_black_36dp);
+                supporting_text.setVisibility(View.GONE);
+                action_button_1.setVisibility(View.GONE);
+            }
+            else {
+                expandButton.setImageResource(R.drawable.ic_expand_less_black_36dp);
+                supporting_text.setVisibility(View.VISIBLE);
+                action_button_1.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
     public void clear() {
@@ -131,30 +137,4 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         this.events = events;
         notifyDataSetChanged();
     }
-
-    public final class ExpandableViewHolder extends ViewHolder {
-        @BindView(R.id.expand_button) ImageButton expandButton;
-        @BindView(R.id.supporting_text) TextView supportingTextView;
-        public ExpandableViewHolder(View itemView) {
-            super(itemView);
-            ButterKnife.bind(this, itemView);
-        }
-
-        @OnClick(R.id.expand_button)
-        public void onExpand() {
-            if (supportingTextView.getVisibility() == View.VISIBLE) {
-                expandButton.setImageResource(R.drawable.ic_expand_less_black_36dp);
-                supportingTextView.setVisibility(View.GONE);
-
-
-            }
-            else {
-                expandButton.setImageResource(R.drawable.ic_expand_more_black_36dp);
-                supportingTextView.setVisibility(View.VISIBLE);
-
-            }
-        }
-    }
-
-
 }

@@ -5,16 +5,15 @@
         android:id="@+id/action_home"
         app:showAsAction="ifRoom"
         android:enabled="true"
-        android:title="home" />
+        android:icon="@drawable/ic_instagram_home" />
     <item
         android:id="@+id/action_new_event"
         app:showAsAction="ifRoom"
         android:enabled="true"
-        android:title="new event" />
+        android:icon="@drawable/ic_instagram_new_post" />
     <item
         android:id="@+id/action_profile"
         app:showAsAction="ifRoom"
-
         android:enabled="true"
-        android:title="profile" />
+        android:icon="@drawable/ic_instagram_profile" />
 </menu>

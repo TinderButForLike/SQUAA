@@ -10,8 +10,7 @@
         android:id="@+id/toolbarEvent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="?attr/actionBarSize"
-        app:titleTextColor="@android:color/white"></android.support.v7.widget.Toolbar>
+        android:minHeight="?attr/actionBarSize" />
 
     <ImageView
         android:id="@+id/ivEventPic"
