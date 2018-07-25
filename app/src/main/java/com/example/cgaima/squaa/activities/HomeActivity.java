@@ -51,6 +51,7 @@ public class HomeActivity extends AppCompatActivity implements
         // find the toolbar view inside layout and set tool as action bar for activity
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false); // remove default text
 
         if (homeFragment == null) {
             homeFragment = new HomeFragment();
@@ -128,6 +129,7 @@ public class HomeActivity extends AppCompatActivity implements
         switch (menuItem.getItemId()) {
             default:
             case R.id.action_home:
+                //supportFinishAfterTransition();
                 viewPager.setCurrentItem(0);
                 break;
             case R.id.action_new_event:
