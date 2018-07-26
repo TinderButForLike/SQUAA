@@ -6,6 +6,9 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,6 +23,7 @@ import com.bumptech.glide.Glide;
 import com.example.cgaima.squaa.Models.Event;
 import com.example.cgaima.squaa.R;
 import com.example.cgaima.squaa.activities.EventDetailActivity;
+import com.example.cgaima.squaa.fragments.OtherProfileFragment;
 import com.parse.GetDataCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
@@ -94,6 +98,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
                 ((Activity) context).startActivityForResult(i, REQUEST_CODE);
             }
         });
+
         holder.join.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -116,6 +121,18 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
                     }
                     holder.numAttend.setText(Integer.toString(event.getAttendees().size()));
                 }
+            }
+        });
+
+        // TODO - launch other profile fragment
+        holder.ownerPic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment someFragment = new OtherProfileFragment();
+                FragmentTransaction transaction = ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container, someFragment ); // give your fragment container id in first parameter
+                transaction.addToBackStack(null);  // if written, this transaction will be added to backstack
+                transaction.commit();
             }
         });
 
@@ -161,7 +178,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         @BindView(R.id.tvOwner) TextView tvOwner;
         @BindView(R.id.ivOwnerPic) ImageView ownerPic;
         @BindViews({R.id.supporting_text, R.id.tvOwner, R.id.ivOwnerPic, R.id.action_button_1,
-                R.id.tvNumAttend}) List<View> expandView;
+                R.id.tvNumAttend, R.id.owner, R.id.attending}) List<View> expandView;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -181,7 +198,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         }
     }
 
-    //custom setter
+    // custom setter
     public static final ButterKnife.Setter<View, Integer> VISIBILITY = new ButterKnife.Setter<View, Integer>() {
         @Override
         public void set(@NonNull View view, Integer value, int index) {

@@ -29,7 +29,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_chainStyle="spread"
-            app:srcCompat="@android:color/darker_gray" />
+            app:srcCompat="@android:color/darker_gray"/>
 
         <TextView
             android:id="@+id/primary_text"
@@ -38,7 +38,7 @@
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
             android:text="primary"
-            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/media_image" />
@@ -50,6 +50,7 @@
             android:layout_marginStart="16dp"
             app:layout_constraintBottom_toBottomOf="@+id/sub_text"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/sub_text"
             app:srcCompat="@drawable/ic_calendar" />
 
         <ImageView
@@ -126,7 +127,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:lineSpacingExtra="8dp"
-            android:padding="16dp"
+            android:layout_margin="16dp"
             android:text="expanded supporting text"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:visibility="gone"
@@ -134,7 +135,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/expand_button" />
 
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/ivOwnerPic"
             android:layout_width="33dp"
             android:layout_height="38dp"
