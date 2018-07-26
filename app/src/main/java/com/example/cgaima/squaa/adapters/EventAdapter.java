@@ -34,6 +34,7 @@ import butterknife.BindViews;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+// TODO - rename variables so that they are consistent
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> {
     Context context;
     List<Event> events;
@@ -64,18 +65,10 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         holder.location.setText(event.getLocation());
         holder.date.setText(event.getDate());
 
-        // TODO - set correct variables to UI
-        //holder.tvAttendees.setText(event.getString("attendees"));
-        //holder.tvDate.setText(event.getDate());
-        //holder.tvLocation.setText(event.getLocation());
+        // TODO - date isn't showing up
 
         if (event.getEventImage()==null) {
-            Glide.with(context).load(
-                    "https://www.google.com/url?sa=i&source=images&cd=&ved=" +
-                            "2ahUKEwiKgcfT56TcAhWzHDQIHZ7ICZgQjRx6BAgBEAU&url=http%3A%2F%2F" +
-                            "www.washingtonpost.com%2Frecipes%2Flunch-box-pasta-salad%2F15483%" +
-                            "2F&psig=AOvVaw3QDPftuCv2CSZjHVzwoXZB&ust=1531871357428835")
-                    .into(holder.media_image);
+            holder.media_image.setImageResource(R.drawable.image_default);
         } else {
             event.getEventImage().getDataInBackground(new GetDataCallback() {
                 @Override
@@ -156,18 +149,19 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+        // TODO - rename these variables
         @BindView(R.id.media_image) ImageView media_image;
         @BindView(R.id.primary_text) TextView event_name;
         @BindView(R.id.supporting_text) TextView supporting_text;
         @BindView(R.id.sub_text) TextView date;
         @BindView(R.id.sub_text2) TextView location;
-        @BindViews({R.id.supporting_text, R.id.tvOwner, R.id.ivOwnerPic, R.id.action_button_1,
-                R.id.tvNumAttend}) List<View> moreView;
         @BindView(R.id.expand_button) ImageButton expandButton;
         @BindView(R.id.action_button_1) Button join;
         @BindView(R.id.tvNumAttend) TextView numAttend;
         @BindView(R.id.tvOwner) TextView tvOwner;
         @BindView(R.id.ivOwnerPic) ImageView ownerPic;
+        @BindViews({R.id.supporting_text, R.id.tvOwner, R.id.ivOwnerPic, R.id.action_button_1,
+                R.id.tvNumAttend}) List<View> expandView;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -178,11 +172,11 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         public void onExpand() {
             if (supporting_text.getVisibility() == View.VISIBLE) {
                 expandButton.setImageResource(R.drawable.ic_expand_more_black_36dp);
-                ButterKnife.apply(moreView, VISIBILITY, View.GONE);
+                ButterKnife.apply(expandView, VISIBILITY, View.GONE);
             }
             else {
                 expandButton.setImageResource(R.drawable.ic_expand_less_black_36dp);
-                ButterKnife.apply(moreView, VISIBILITY, View.VISIBLE);
+                ButterKnife.apply(expandView, VISIBILITY, View.VISIBLE);
             }
         }
     }
