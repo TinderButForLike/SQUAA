@@ -46,8 +46,8 @@ public class User extends ParseObject{
         return attendees;
     }
     // set user friends
-    public void setFriends(ParseUser attendee) {
-        addUnique(KEY_FRIENDS,attendee);
+    public void setFriends(ParseUser friend) {
+        addUnique(KEY_FRIENDS,friend);
         try {
             save();
         } catch (ParseException e) {

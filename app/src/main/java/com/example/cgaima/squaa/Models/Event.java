@@ -62,8 +62,8 @@ public class Event extends ParseObject {
     }
 
     // get event date
-    public Date getDate() {
-        return getDate(KEY_DATE);
+    public String getDate() {
+        return getString(KEY_DATE);
     }
     // get event location
     public String getLocation() {
@@ -110,6 +110,7 @@ public class Event extends ParseObject {
         }
 
     }
+
 
 
     public static class Query extends ParseQuery {

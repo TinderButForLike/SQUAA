@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +47,8 @@ public class ProfileFragment extends Fragment {
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         final ImageView imageInToolbar = (ImageView) toolbar.findViewById(R.id.ivProfilePic);
         ParseUser currentUser =  ParseUser.getCurrentUser();
+
+        Log.e("PROFILE FRAGMENT", "whoah i get created too wtf");
         try {
             Glide.with(this).load(currentUser.fetchIfNeeded().getParseFile("profile_picture").getUrl()).into(imageInToolbar);
         } catch (ParseException e) {
@@ -53,9 +56,6 @@ public class ProfileFragment extends Fragment {
         }
 
 
-        //((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
-
-       // ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         viewPager = (ViewPager) view.findViewById(R.id.vpContainer);
         setupViewPager(viewPager);
@@ -71,7 +71,7 @@ public class ProfileFragment extends Fragment {
         viewPager.setAdapter(adapter);
     }
 
-    class ViewPagerAdapter extends FragmentPagerAdapter {
+    public static class ViewPagerAdapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();
 

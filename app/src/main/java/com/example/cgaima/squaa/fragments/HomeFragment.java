@@ -22,7 +22,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.cgaima.squaa.Models.Event;
-import com.example.cgaima.squaa.ParseDataSourceFactory;
+import com.example.cgaima.squaa.adapters.ParseDataSourceFactory;
 import com.example.cgaima.squaa.R;
 import com.example.cgaima.squaa.adapters.EventAdapter;
 import com.parse.FindCallback;
@@ -74,6 +74,7 @@ public class HomeFragment extends Fragment {
 
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        Log.e("Home Fragment", "Home fragment created");
     }
 
     @Override

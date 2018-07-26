@@ -10,12 +10,15 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.example.cgaima.squaa.R;
 import com.example.cgaima.squaa.fragments.CreateEventFragment;
 import com.example.cgaima.squaa.fragments.HomeFragment;
+import com.example.cgaima.squaa.fragments.OtherProfileFragment;
 import com.example.cgaima.squaa.fragments.ProfileFragment;
 
 import butterknife.BindView;
@@ -24,7 +27,8 @@ import butterknife.ButterKnife;
 public class HomeActivity extends AppCompatActivity implements
         BottomNavigationView.OnNavigationItemSelectedListener {
 
-    @BindView(R.id.bottom_navigation) BottomNavigationView bottomNavigationView;
+    @BindView(R.id.bottom_navigation)
+    BottomNavigationView bottomNavigationView;
     @BindView(R.id.viewpager)
     ViewPager viewPager;
     private PagerAdapter pagerAdapter;
@@ -34,6 +38,8 @@ public class HomeActivity extends AppCompatActivity implements
     public HomeFragment homeFragment;
     public CreateEventFragment eventFragment;
     public ProfileFragment profileFragment;
+    public OtherProfileFragment otherProfileFragment;
+    public int state;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +51,7 @@ public class HomeActivity extends AppCompatActivity implements
         // find the toolbar view inside layout and set tool as action bar for activity
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false); // remove default text
 
         if (homeFragment == null) {
             homeFragment = new HomeFragment();
@@ -57,7 +64,17 @@ public class HomeActivity extends AppCompatActivity implements
             profileFragment = new ProfileFragment();
         }
 
+        if (otherProfileFragment == null) {
+            otherProfileFragment = new OtherProfileFragment();
+        }
+        state = 0;
+
         pagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
+            @Override
+            public int getCount() {
+                return 4;
+            }
+
             @Override
             public Fragment getItem(int i) {
                 switch (i) {
@@ -67,17 +84,36 @@ public class HomeActivity extends AppCompatActivity implements
                     case 1:
                         return eventFragment;
                     case 2:
+
                         return profileFragment;
+                    case 3:
+                        return otherProfileFragment;
                 }
             }
-            @Override
-            public int getCount() { return 3; }
+
         };
 
         viewPager.setAdapter(pagerAdapter);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
-        bottomNavigationView.setSelectedItemId(R.id.action_home);
+
+        if(getIntent().hasExtra("event_owner")){
+
+            Toast.makeText(this,"hey",Toast.LENGTH_LONG);
+            viewPager.setCurrentItem(3);
+
+        } else if (getIntent().hasExtra("locationtext")){
+            Log.d("Home Activity", "we have the goods.....");
+            bottomNavigationView.setSelectedItemId(R.id.action_new_event);
+            //viewPager.setCurrentItem(1);
+        } else if (getIntent().hasExtra("profile")){
+            bottomNavigationView.setSelectedItemId(R.id.action_profile);
+        }
+        else {
+            bottomNavigationView.setSelectedItemId(R.id.action_home);
+        }
     }
+
+
 
 
     @Override
@@ -93,6 +129,7 @@ public class HomeActivity extends AppCompatActivity implements
         switch (menuItem.getItemId()) {
             default:
             case R.id.action_home:
+                //supportFinishAfterTransition();
                 viewPager.setCurrentItem(0);
                 break;
             case R.id.action_new_event:
@@ -104,4 +141,7 @@ public class HomeActivity extends AppCompatActivity implements
         }
         return true;
     }
-}
+    }
+
+
+

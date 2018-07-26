@@ -5,15 +5,19 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.cgaima.squaa.activities.MapsActivity;
 import com.example.cgaima.squaa.Models.Event;
 import com.example.cgaima.squaa.R;
 import com.parse.ParseException;
@@ -38,12 +42,17 @@ public class CreateEventFragment extends Fragment {
     EditText location;
     //@BindView(R.id.date)
     //EditText date;
-    @BindView(R.id.privacy)
-    EditText privacy;
+//    @BindView(R.id.privacy)
+//    EditText privacy;
     @BindView(R.id.description)
     EditText description;
     @BindView(R.id.eventPic)
     ImageView eventPic;
+    @BindView(R.id.privateCheck)
+    CheckBox privateCheck;
+    @BindView(R.id.publicCheck)
+    CheckBox publicCheck;
+
 
     static ParseFile image;
     private int PICK_PHOTO_CODE = 1046;
@@ -52,12 +61,28 @@ public class CreateEventFragment extends Fragment {
     public CreateEventFragment() { }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        location.setText(getActivity().getIntent().getStringExtra("locationtext"));
+
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        Log.e("Event Fragment", "I get created too");
         View view = inflater.inflate(R.layout.fragment_create_event, container, false);
         ButterKnife.bind(this, view);
         return view;
+
+    }
+
+    //launch the map
+    @OnClick(R.id.mapLaunch)
+    public void launchMap() {
+        Intent mapIntent = new Intent(getActivity(), MapsActivity.class);
+        startActivityForResult(mapIntent, 30);
+
     }
 
     // TODO - automatically add new event to home without refresh
@@ -65,10 +90,27 @@ public class CreateEventFragment extends Fragment {
     public void onCreateEvent() {
         String mName = name.getText().toString();
         String mLocation = location.getText().toString();
-        //Date mDate = (Date) date.getText();
+
         String mDescription = description.getText().toString();
 
-        createEvent(mName, mLocation, mDescription);//mDate, mDescription);
+        Boolean mPrivacy;
+        if (privateCheck.isChecked()) {mPrivacy = true; }
+        else { mPrivacy = false; }
+
+        ParseFile mImage = image;
+
+
+
+
+        createEvent(mName, mLocation, mDescription, mPrivacy, mImage);
+
+
+
+
+
+
+
+
 
         // TODO - set fragment to home fragment after creating event
         /*Fragment homeFragment = new HomeFragment();
@@ -79,13 +121,14 @@ public class CreateEventFragment extends Fragment {
     }
 
     //create a new event
-    private void createEvent(String name, String location, String description) { // TODO add privacy, image, date
+    private void createEvent(String name, String location, String description, boolean privacy, ParseFile img) { //TODO add privacy, image, date
         final Event newEvent = new Event();
         newEvent.setEventName(name);
         newEvent.setLocation(location);
         //newEvent.setDate(date);
-        //newEvent.setPrivacy(privacy);
+        newEvent.setPrivacy(privacy);
         newEvent.setDescription(description);
+        newEvent.setEventImage(img);
         // set event owner
         newEvent.setOwner(ParseUser.getCurrentUser());
 
@@ -138,7 +181,7 @@ public class CreateEventFragment extends Fragment {
             }
         }
         else {
-            //make them sad
+            //make the user sad
             Toast.makeText(getContext(), "there was an error uploading your picture. try again!", Toast.LENGTH_SHORT).show();
         }
     }

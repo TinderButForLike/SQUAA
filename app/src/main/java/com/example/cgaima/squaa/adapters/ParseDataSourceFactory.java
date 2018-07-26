@@ -1,4 +1,4 @@
-package com.example.cgaima.squaa;
+package com.example.cgaima.squaa.adapters;
 
 
 import android.arch.paging.DataSource;

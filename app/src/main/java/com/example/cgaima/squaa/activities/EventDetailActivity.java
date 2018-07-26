@@ -1,12 +1,15 @@
 package com.example.cgaima.squaa.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -17,12 +20,16 @@ import com.parse.ParseUser;
 
 import org.parceler.Parcels;
 
+import java.util.Collections;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class EventDetailActivity extends AppCompatActivity {
 
     //resource variables
+    boolean joined;
+    FloatingActionButton fab;
 
     @BindView(R.id.ivEventPic)
     ImageView EventPic;
@@ -40,7 +47,8 @@ public class EventDetailActivity extends AppCompatActivity {
     ImageView ownerPic;
     @BindView(R.id.tvLocation)
     TextView Eventlocal;
-
+    @BindView(R.id.ratingBar1)
+    RatingBar rb;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,17 +57,46 @@ public class EventDetailActivity extends AppCompatActivity {
         Parcelable parcel = this.getIntent().getParcelableExtra("event");
         final Event event = (Event) Parcels.unwrap(parcel);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
+        fab = findViewById(R.id.fab);
+        joined = false;
+        fab.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_join));
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//               Snackbar.make(view, "Here's a Snackbar", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-
+                if (!joined){
                 joinEvent(event);
                 numAttend.setText(Integer.toString(event.getAttendees().size()));
+                joined = true;
+                fab.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_unjoin));
+                }
+                else{
+                    fab.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_join));
+                    joined = false;
+                    ParseUser current = ParseUser.getCurrentUser();
+                    event.removeAll("attendees", Collections.singleton(current));
+                    try {
+                        event.save();
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    numAttend.setText(Integer.toString(event.getAttendees().size()));
+                }
             }
         });
+
+//        rb =(RatingBar)findViewById(R.id.ratingBar1);
+//
+//        rb.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener(){
+//
+//            @Override
+//            public void onRatingChanged(RatingBar ratingBar, float rating,
+//                                        boolean fromUser) {
+//                // TODO Auto-generated method stub
+//                Toast.makeText(getApplicationContext(),Float.toString(rating),Toast.LENGTH_LONG).show();
+//
+//            }
+//
+//        });
 
 
         EventName.setText(event.getEventName());
@@ -80,6 +117,26 @@ public class EventDetailActivity extends AppCompatActivity {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+
+        ownerName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    if (event.getOwner().fetchIfNeeded().getObjectId().equals(ParseUser.getCurrentUser().getObjectId())){
+                        Intent i = new Intent(EventDetailActivity.this, HomeActivity.class);
+                        i.putExtra("profile", Parcels.wrap(event));
+                        startActivity(i);
+                    }else {
+                        Intent i = new Intent(EventDetailActivity.this, HomeActivity.class);
+                        i.putExtra("event_owner", Parcels.wrap(event));
+                        startActivity(i);
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
 
     }
 
