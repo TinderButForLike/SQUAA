@@ -54,8 +54,8 @@ public class OtherProfileFragment extends Fragment {
         Log.e("OtherProfileFragment", "OtherProfile fragment created");
     }
 
-
-
+    // This event is triggered soon after onCreateView().
+    // Any view setup should occur here.  E.g., view lookups and attaching view listeners.
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -111,7 +111,6 @@ public class OtherProfileFragment extends Fragment {
                         fab.setImageDrawable(ContextCompat.getDrawable(((AppCompatActivity)getActivity()).getApplicationContext(),R.drawable.ic_addfriend));
                         added = false;
 
-                    }
 
                 }
             });
@@ -165,5 +164,4 @@ public class OtherProfileFragment extends Fragment {
             return mFragmentTitleList.get(position);
         }
     }
-
 }

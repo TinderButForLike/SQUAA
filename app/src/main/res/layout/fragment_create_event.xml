@@ -43,7 +43,7 @@
         android:layout_margin="5dp"
         android:ems="10"
         android:hint="when is your event?"
-        android:inputType="datetime"
+        android:inputType="date"
         android:textColorHint="@android:color/white"
         android:textSize="14sp" />
 
@@ -123,5 +123,14 @@
         android:layout_margin="5dp"
         android:layout_toEndOf="@+id/privateCheck"
         android:text="public" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="141dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/date"
+        android:layout_alignStart="@+id/mapLaunch"
+        android:text='enter in format "mm/dd/yyyy"'
+        android:textSize="10sp" />
 
 </RelativeLayout>
