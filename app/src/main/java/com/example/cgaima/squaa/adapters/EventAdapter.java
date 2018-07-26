@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -27,6 +29,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> {
     Context context;
@@ -50,22 +53,30 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
 
         final Event event = events.get(position);
-        holder.tvName.setText(event.getEventName());
-        holder.tvDate.setText(event.getDate());
-        holder.tvLocation.setText(event.getLocation());
+        holder.event_name.setText(event.getEventName());
+        holder.supporting_text.setText(event.getDescription());
+        holder.location.setText(event.getLocation());
+        holder.date.setText(event.getDate());
 
         // TODO - set correct variables to UI
         //holder.tvAttendees.setText(event.getString("attendees"));
+        //holder.tvDate.setText(event.getDate());
+        //holder.tvLocation.setText(event.getLocation());
 
         if (event.getEventImage()==null) {
-            Glide.with(context).load("https://www.google.com/url?sa=i&source=images&cd=&ved=2ahUKEwiKgcfT56TcAhWzHDQIHZ7ICZgQjRx6BAgBEAU&url=http%3A%2F%2Fwww.washingtonpost.com%2Frecipes%2Flunch-box-pasta-salad%2F15483%2F&psig=AOvVaw3QDPftuCv2CSZjHVzwoXZB&ust=1531871357428835").into(holder.ivPicture);
+            Glide.with(context).load(
+                    "https://www.google.com/url?sa=i&source=images&cd=&ved=" +
+                            "2ahUKEwiKgcfT56TcAhWzHDQIHZ7ICZgQjRx6BAgBEAU&url=http%3A%2F%2F" +
+                            "www.washingtonpost.com%2Frecipes%2Flunch-box-pasta-salad%2F15483%" +
+                            "2F&psig=AOvVaw3QDPftuCv2CSZjHVzwoXZB&ust=1531871357428835")
+                    .into(holder.media_image);
         } else {
             event.getEventImage().getDataInBackground(new GetDataCallback() {
                 @Override
                 public void done(byte[] data, ParseException e) {
                     if (e == null) {
                         Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
-                        holder.ivPicture.setImageBitmap(bmp);
+                        holder.media_image.setImageBitmap(bmp);
                     }
                     else {
                         Log.d("EventAdapter", "Can't load image");
@@ -75,7 +86,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
             });
         }
 
-        holder.ivPicture.setOnClickListener(new View.OnClickListener() {
+        holder.media_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(context, EventDetailActivity.class);
@@ -91,25 +102,34 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         return events.size();
     }
 
-
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-        @BindView(R.id.ivPicture) ImageView ivPicture;
-        @BindView(R.id.tvName) TextView tvName;
-        @BindView(R.id.tvDate) TextView tvDate;
-        @BindView(R.id.tvLocation) TextView tvLocation;
-
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.media_image) ImageView media_image;
+        @BindView(R.id.primary_text) TextView event_name;
+        @BindView(R.id.supporting_text) TextView supporting_text;
+        @BindView(R.id.sub_text) TextView date;
+        @BindView(R.id.sub_text2) TextView location;
+        @BindView(R.id.action_button_1) Button action_button_1;
+        @BindView(R.id.expand_button) ImageButton expandButton;
+        /*@BindView(R.id.tvDate) TextView tvDate;
+        @BindView(R.id.tvLocation) TextView tvLocation;*/
 
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
 
-        @Override
-        public void onClick(View view) {
-            final Event event = (Event) itemView.getTag();
-            Intent intent = new Intent(context, EventDetailActivity.class);
-            intent.putExtra("event", Parcels.wrap(event));
-            context.startActivity(intent);
+        @OnClick(R.id.expand_button)
+        public void onExpand() {
+            if (supporting_text.getVisibility() == View.VISIBLE) {
+                expandButton.setImageResource(R.drawable.ic_expand_more_black_36dp);
+                supporting_text.setVisibility(View.GONE);
+                action_button_1.setVisibility(View.GONE);
+            }
+            else {
+                expandButton.setImageResource(R.drawable.ic_expand_less_black_36dp);
+                supporting_text.setVisibility(View.VISIBLE);
+                action_button_1.setVisibility(View.VISIBLE);
+            }
         }
     }
 

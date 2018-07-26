@@ -17,9 +17,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.cgaima.squaa.activities.MapsActivity;
 import com.example.cgaima.squaa.Models.Event;
 import com.example.cgaima.squaa.R;
-import com.example.cgaima.squaa.activities.MapsActivity;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
@@ -54,13 +54,11 @@ public class CreateEventFragment extends Fragment {
     CheckBox publicCheck;
 
 
-
-
     static ParseFile image;
     private int PICK_PHOTO_CODE = 1046;
 
     // Required empty public constructor
-    public CreateEventFragment(){}
+    public CreateEventFragment() { }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -74,10 +72,10 @@ public class CreateEventFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        Log.e("Event Fragment", "I get created too");
         View view = inflater.inflate(R.layout.fragment_create_event, container, false);
         ButterKnife.bind(this, view);
         return view;
-
     }
 
     //launch the map
@@ -92,14 +90,13 @@ public class CreateEventFragment extends Fragment {
     @OnClick(R.id.create)
     public void onCreateEvent() {
         String mName = name.getText().toString();
-
         String mLocation = location.getText().toString();
         String mDescription = description.getText().toString();
-
 
         Boolean mPrivacy;
         if (privateCheck.isChecked()) {mPrivacy = true; }
         else { mPrivacy = false; }
+
         ParseFile mImage = image;
         Calendar cal = Calendar.getInstance();
         int year = cal.get(Calendar.YEAR);
@@ -118,9 +115,8 @@ public class CreateEventFragment extends Fragment {
             Log.d("CreateEventFrag", "still null");
         }
 
-        //go back to the timeline
-//        Intent intent = new Intent(getContext(), HomeFragment.class);
-//        startActivityForResult(intent, 12);
+
+
 
 
         // TODO - set fragment to home fragment after creating event

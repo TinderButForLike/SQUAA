@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -19,12 +20,16 @@ import com.parse.ParseUser;
 
 import org.parceler.Parcels;
 
+import java.util.Collections;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class EventDetailActivity extends AppCompatActivity {
 
     //resource variables
+    boolean joined;
+    FloatingActionButton fab;
 
     @BindView(R.id.ivEventPic)
     ImageView EventPic;
@@ -52,15 +57,30 @@ public class EventDetailActivity extends AppCompatActivity {
         Parcelable parcel = this.getIntent().getParcelableExtra("event");
         final Event event = (Event) Parcels.unwrap(parcel);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
+        fab = findViewById(R.id.fab);
+        joined = false;
+        fab.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_join));
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//               Snackbar.make(view, "Here's a Snackbar", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-
+                if (!joined){
                 joinEvent(event);
                 numAttend.setText(Integer.toString(event.getAttendees().size()));
+                joined = true;
+                fab.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_unjoin));
+                }
+                else{
+                    fab.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_join));
+                    joined = false;
+                    ParseUser current = ParseUser.getCurrentUser();
+                    event.removeAll("attendees", Collections.singleton(current));
+                    try {
+                        event.save();
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    numAttend.setText(Integer.toString(event.getAttendees().size()));
+                }
             }
         });
 
@@ -101,9 +121,20 @@ public class EventDetailActivity extends AppCompatActivity {
         ownerName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(EventDetailActivity.this, HomeActivity.class);
-                i.putExtra("event_owner", Parcels.wrap(event));
-                startActivity(i);
+                try {
+                    if (event.getOwner().fetchIfNeeded().getObjectId().equals(ParseUser.getCurrentUser().getObjectId())){
+                        Intent i = new Intent(EventDetailActivity.this, HomeActivity.class);
+                        i.putExtra("profile", Parcels.wrap(event));
+                        startActivity(i);
+                    }else {
+                        Intent i = new Intent(EventDetailActivity.this, HomeActivity.class);
+                        i.putExtra("event_owner", Parcels.wrap(event));
+                        startActivity(i);
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
             }
         });
 

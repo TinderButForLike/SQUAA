@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.example.cgaima.squaa.R;
 import com.example.cgaima.squaa.fragments.CreateEventFragment;
@@ -27,7 +28,8 @@ import butterknife.ButterKnife;
 public class HomeActivity extends AppCompatActivity implements
         BottomNavigationView.OnNavigationItemSelectedListener {
 
-    @BindView(R.id.bottom_navigation) BottomNavigationView bottomNavigationView;
+    @BindView(R.id.bottom_navigation)
+    BottomNavigationView bottomNavigationView;
     @BindView(R.id.viewpager)
     ViewPager viewPager;
     private PagerAdapter pagerAdapter;
@@ -51,6 +53,7 @@ public class HomeActivity extends AppCompatActivity implements
         // find the toolbar view inside layout and set tool as action bar for activity
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false); // remove default text
 
         if (homeFragment == null) {
             homeFragment = new HomeFragment();
@@ -72,6 +75,8 @@ public class HomeActivity extends AppCompatActivity implements
         state = 0;
 
         pagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
+
+
             @Override
             public Fragment getItem(int i) {
                 switch (i) {
@@ -99,12 +104,16 @@ public class HomeActivity extends AppCompatActivity implements
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
         if(getIntent().hasExtra("event_owner")){
+
+            Toast.makeText(this,"hey",Toast.LENGTH_LONG);
             viewPager.setCurrentItem(3);
-        }
-        else if (getIntent().hasExtra("locationtext")){
+
+        } else if (getIntent().hasExtra("locationtext")){
             Log.d("Home Activity", "we have the goods.....");
             bottomNavigationView.setSelectedItemId(R.id.action_new_event);
             //viewPager.setCurrentItem(1);
+        } else if (getIntent().hasExtra("profile")){
+            bottomNavigationView.setSelectedItemId(R.id.action_profile);
         }
         else {
             bottomNavigationView.setSelectedItemId(R.id.action_home);
