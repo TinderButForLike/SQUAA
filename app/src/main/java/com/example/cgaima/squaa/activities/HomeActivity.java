@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import com.example.cgaima.squaa.R;
 import com.example.cgaima.squaa.fragments.CreateEventFragment;
 import com.example.cgaima.squaa.fragments.HomeFragment;
+import com.example.cgaima.squaa.fragments.MapFragment;
 import com.example.cgaima.squaa.fragments.OtherProfileFragment;
 import com.example.cgaima.squaa.fragments.ProfileFragment;
 
@@ -37,6 +38,7 @@ public class HomeActivity extends AppCompatActivity implements
     public CreateEventFragment eventFragment;
     public ProfileFragment profileFragment;
     public OtherProfileFragment otherProfileFragment;
+    public MapFragment mapFragment;
     public int state;
 
     @Override
@@ -64,6 +66,9 @@ public class HomeActivity extends AppCompatActivity implements
         if (otherProfileFragment == null) {
             otherProfileFragment = new OtherProfileFragment();
         }
+        if(mapFragment == null) {
+            mapFragment = new MapFragment();
+        }
         state = 0;
 
         pagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
@@ -81,10 +86,13 @@ public class HomeActivity extends AppCompatActivity implements
                     case 3:
                         getSupportActionBar().hide();
                         return otherProfileFragment;
+                    case 4:
+                        getSupportActionBar().hide();
+                        return mapFragment;
                 }
             }
             @Override
-            public int getCount() { return 4; }
+            public int getCount() { return 5; }
         };
 
         viewPager.setAdapter(pagerAdapter);
@@ -92,14 +100,11 @@ public class HomeActivity extends AppCompatActivity implements
 
         if(getIntent().hasExtra("event_owner")){
             viewPager.setCurrentItem(3);
-        }else {
-            bottomNavigationView.setSelectedItemId(R.id.action_home);
         }
-
-        if (getIntent().hasExtra("locationtext")){
+        else if (getIntent().hasExtra("locationtext")){
             Log.d("Home Activity", "we have the goods.....");
-            bottomNavigationView.setSelectedItemId(R.id.action_profile);
-            viewPager.setCurrentItem(1);
+            bottomNavigationView.setSelectedItemId(R.id.action_new_event);
+            //viewPager.setCurrentItem(1);
         }
         else {
             bottomNavigationView.setSelectedItemId(R.id.action_home);
@@ -129,6 +134,9 @@ public class HomeActivity extends AppCompatActivity implements
                 break;
             case R.id.action_profile:
                 viewPager.setCurrentItem(2);
+                break;
+            case R.id.action_map:
+                viewPager.setCurrentItem(4);
                 break;
         }
         return true;

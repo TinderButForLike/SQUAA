@@ -49,12 +49,14 @@ public class OtherProfileFragment extends Fragment {
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         final ImageView imageInToolbar = (ImageView) toolbar.findViewById(R.id.ivProfilePic);
         Parcelable parcel = getActivity().getIntent().getParcelableExtra("event_owner");
-        final Event event = (Event) Parcels.unwrap(parcel);
-        ParseUser owner =  event.getOwner();
-        try {
-            Glide.with(this).load(owner.fetchIfNeeded().getParseFile("profile_picture").getUrl()).into(imageInToolbar);
-        } catch (ParseException e) {
-            e.printStackTrace();
+        if (parcel != null) {
+            final Event event = (Event) Parcels.unwrap(parcel);
+            ParseUser owner = event.getOwner();
+            try {
+                Glide.with(this).load(owner.fetchIfNeeded().getParseFile("profile_picture").getUrl()).into(imageInToolbar);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
 
 

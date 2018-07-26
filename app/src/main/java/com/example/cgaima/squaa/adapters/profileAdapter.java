@@ -62,10 +62,7 @@ public class profileAdapter extends RecyclerView.Adapter<profileAdapter.ViewHold
 
         // populate the views according to this data
 
-
         Glide.with(context).load(event.getEventImage().getUrl()).into(holder.ivEvent);
-
-
     }
 
     @Override

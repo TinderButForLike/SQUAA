@@ -17,4 +17,10 @@
 
         android:enabled="true"
         android:title="profile" />
+    <item
+        android:id="@+id/action_map"
+        android:enabled="true"
+        android:title="map"
+        app:showAsAction="ifRoom" />
+
 </menu>

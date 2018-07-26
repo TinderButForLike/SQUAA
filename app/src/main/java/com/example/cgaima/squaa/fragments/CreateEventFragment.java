@@ -17,16 +17,18 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.example.cgaima.squaa.activities.MapsActivity;
 import com.example.cgaima.squaa.Models.Event;
 import com.example.cgaima.squaa.R;
+import com.example.cgaima.squaa.activities.MapsActivity;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,10 +42,8 @@ public class CreateEventFragment extends Fragment {
     EditText name;
     @BindView(R.id.location)
     EditText location;
-    //@BindView(R.id.date)
-    //EditText date;
-    @BindView(R.id.privacy)
-    EditText privacy;
+    @BindView(R.id.date)
+    EditText date;
     @BindView(R.id.description)
     EditText description;
     @BindView(R.id.eventPic)
@@ -54,17 +54,21 @@ public class CreateEventFragment extends Fragment {
     CheckBox publicCheck;
 
 
+
+
     static ParseFile image;
     private int PICK_PHOTO_CODE = 1046;
 
     // Required empty public constructor
-    public CreateEventFragment() { }
+    public CreateEventFragment(){}
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         location.setText(getActivity().getIntent().getStringExtra("locationtext"));
-
+        if (getActivity().getIntent().getParcelableExtra("geo") != null) {
+            Log.d("CreateEventFrag", String.valueOf(((ParseGeoPoint) (getActivity().getIntent().getExtras().getParcelable("geo"))).getLatitude()));
+        }
     }
 
     @Override
@@ -73,6 +77,7 @@ public class CreateEventFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_create_event, container, false);
         ButterKnife.bind(this, view);
         return view;
+
     }
 
     //launch the map
@@ -87,26 +92,35 @@ public class CreateEventFragment extends Fragment {
     @OnClick(R.id.create)
     public void onCreateEvent() {
         String mName = name.getText().toString();
-        String mLocation = location.getText().toString();
 
+        String mLocation = location.getText().toString();
         String mDescription = description.getText().toString();
+
 
         Boolean mPrivacy;
         if (privateCheck.isChecked()) {mPrivacy = true; }
         else { mPrivacy = false; }
-
         ParseFile mImage = image;
+        Calendar cal = Calendar.getInstance();
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH);
+        int day = cal.get(Calendar.DATE);
+        String mDate = month + "/" + day + "/" + year;
 
 
+        ParseGeoPoint mParseGeoPoint = getActivity().getIntent().getParcelableExtra("geo");
+//        mParseGeoPoint.setLatitude(eventLatLng.latitude);
+//        mParseGeoPoint.setLongitude(eventLatLng.longitude);
 
+        if (mParseGeoPoint != null) {
+            createEvent(mName, mLocation, mDescription, mPrivacy, mImage, mDate, mParseGeoPoint);
+        } else {
+            Log.d("CreateEventFrag", "still null");
+        }
 
-        createEvent(mName, mLocation, mDescription, mPrivacy, mImage);
-
-
-
-
-
-
+        //go back to the timeline
+//        Intent intent = new Intent(getContext(), HomeFragment.class);
+//        startActivityForResult(intent, 12);
 
 
         // TODO - set fragment to home fragment after creating event
@@ -118,17 +132,18 @@ public class CreateEventFragment extends Fragment {
     }
 
     //create a new event
-    private void createEvent(String name, String location, String description, boolean privacy, ParseFile img) { //TODO add privacy, image, date
+    private void createEvent(String name, String location, String description, boolean privacy, ParseFile img, String date, ParseGeoPoint parseGeoPoint) { //TODO add privacy, image, date
         final Event newEvent = new Event();
         newEvent.setEventName(name);
         newEvent.setLocation(location);
-        //newEvent.setDate(date);
+        newEvent.setDate(date);
         newEvent.setPrivacy(privacy);
         newEvent.setDescription(description);
         newEvent.setEventImage(img);
+        newEvent.setGeoPoint(parseGeoPoint);
+
         // set event owner
         newEvent.setOwner(ParseUser.getCurrentUser());
-
         newEvent.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {

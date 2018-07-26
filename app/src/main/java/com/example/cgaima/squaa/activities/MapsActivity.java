@@ -8,13 +8,12 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.cgaima.squaa.fragments.CreateEventFragment;
 import com.example.cgaima.squaa.R;
+import com.example.cgaima.squaa.fragments.CreateEventFragment;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.Status;
@@ -26,25 +25,26 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.parse.ParseGeoPoint;
 
 import butterknife.BindView;
 
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    MapView gMapView;
-    TextView mapSearch;
     @BindView(R.id.mapSet)
     Button mapSet;
+    MapView gMapView;
+    TextView mapSearch;
     String setLoc = "";
+    LatLng searchLatLng;
+    ParseGeoPoint mPGP = new ParseGeoPoint();
+
 
     private GoogleMap mMap; //new instance of a map
     private static final String MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey";
-
-    int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
-    int MY_LOCATION_REQUEST_CODE = 2;
-    LatLng searchLatLng;
-
+    private static final int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
+    private static final int MY_LOCATION_REQUEST_CODE = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +64,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         gMapView.getMapAsync(this);
         mapSet = findViewById(R.id.mapSet);
 
+        //launch thr autocomplete places text box
         mapSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -81,16 +82,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
+        //move back to the create event fragment upon choosing the location and pass long some intents
         mapSet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent passLoc = new Intent(MapsActivity.this, HomeActivity.class);
                 passLoc.putExtra("locationtext", setLoc);
+                passLoc.putExtra("geo", mPGP);
                 startActivity(passLoc);
             }
         });
-
-
     }
 
     @Override //allow for retrieval of previous state
@@ -102,7 +103,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             mapViewBundle = new Bundle();
             outState.putBundle(MAP_VIEW_BUNDLE_KEY, mapViewBundle);
         }
-
         gMapView.onSaveInstanceState(mapViewBundle);
     }
 
@@ -152,6 +152,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         mMap.setMyLocationEnabled(true);
         mMap.setMinZoomPreference(12);
+
         LatLng ny = new LatLng(40.7143528, -74.0059731);
         mMap.moveCamera(CameraUpdateFactory.newLatLng(ny));
     }
@@ -170,9 +171,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                  mMap.moveCamera(CameraUpdateFactory.newLatLng(searchLatLng));
                  mMap.addMarker(new MarkerOptions().position(searchLatLng));
 
+                 mPGP.setLatitude(searchLatLng.latitude);
+                 mPGP.setLongitude(searchLatLng.longitude);
 
-                Intent myIntent = new Intent(MapsActivity.this, CreateEventFragment.class);
-                myIntent.putExtra("locationtext", mapSearch.getText());
+                //send the lat/long information to the create event fragment to display as the user creates the event
+                Intent searchResultIntent = new Intent(MapsActivity.this, CreateEventFragment.class);
+                searchResultIntent.putExtra("locationtext", mapSearch.getText());
 
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 Status status = PlaceAutocomplete.getStatus(this, data);
