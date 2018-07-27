@@ -143,6 +143,5 @@ public class EventDetailActivity extends AppCompatActivity {
     public void joinEvent(Event event){
         event.setAttendees(ParseUser.getCurrentUser());
         Log.d("EventDetailActivity", "joinEvent: " + event.getAttendees().size());
-
     }
 }
