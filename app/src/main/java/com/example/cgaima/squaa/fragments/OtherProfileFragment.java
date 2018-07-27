@@ -44,8 +44,7 @@ public class OtherProfileFragment extends Fragment {
 
 
     // Required empty public constructor
-    public OtherProfileFragment() {
-    }
+    public OtherProfileFragment() { }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -84,12 +83,11 @@ public class OtherProfileFragment extends Fragment {
             Log.e("OtherProfileFragment", "I GET OPENED");
             final FloatingActionButton fab = view.findViewById(R.id.fabFriend);
             added = false;
-            fab.setImageDrawable(ContextCompat.getDrawable(((AppCompatActivity)getActivity()).getApplicationContext(),R.drawable.ic_addfriend));
+            fab.setImageDrawable(ContextCompat.getDrawable(((AppCompatActivity) getActivity()).getApplicationContext(), R.drawable.ic_addfriend));
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
-                    if(!added) {
+                    if (!added) {
                         ParseUser current = ParseUser.getCurrentUser();
                         current.addUnique("friends", owner);
                         try {
@@ -97,7 +95,7 @@ public class OtherProfileFragment extends Fragment {
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
-                        fab.setImageDrawable(ContextCompat.getDrawable(((AppCompatActivity)getActivity()).getApplicationContext(),R.drawable.ic_unjoin));
+                        fab.setImageDrawable(ContextCompat.getDrawable(((AppCompatActivity) getActivity()).getApplicationContext(), R.drawable.ic_unjoin));
                         added = true;
                     } else {
                         ParseUser current = ParseUser.getCurrentUser();
@@ -108,23 +106,18 @@ public class OtherProfileFragment extends Fragment {
                             e.printStackTrace();
                         }
 
-                        fab.setImageDrawable(ContextCompat.getDrawable(((AppCompatActivity)getActivity()).getApplicationContext(),R.drawable.ic_addfriend));
+                        fab.setImageDrawable(ContextCompat.getDrawable(((AppCompatActivity) getActivity()).getApplicationContext(), R.drawable.ic_addfriend));
                         added = false;
-
-
+                    }
                 }
             });
-
         }
-
-
 
         viewPager = (ViewPager) view.findViewById(R.id.vpContainer);
         setupViewPager(viewPager);
 
         tabLayout = (TabLayout) view.findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
-
 
         return view;
     }
