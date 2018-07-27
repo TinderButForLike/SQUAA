@@ -3,11 +3,13 @@ package com.example.cgaima.squaa.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -23,9 +25,11 @@ import com.bumptech.glide.Glide;
 import com.example.cgaima.squaa.Models.Event;
 import com.example.cgaima.squaa.R;
 import com.example.cgaima.squaa.activities.EventDetailActivity;
+import com.example.cgaima.squaa.activities.HomeActivity;
 import com.example.cgaima.squaa.fragments.OtherProfileFragment;
 import com.parse.GetDataCallback;
 import com.parse.ParseException;
+import com.parse.ParseRelation;
 import com.parse.ParseUser;
 
 import org.parceler.Parcels;
@@ -70,7 +74,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         holder.date.setText(event.getDate());
 
         // TODO - date isn't showing up
-
+        // set event image
         if (event.getEventImage()==null) {
             holder.media_image.setImageResource(R.drawable.image_default);
         } else {
@@ -88,29 +92,24 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
                 }
             });
         }
-
-        holder.media_image.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(context, EventDetailActivity.class);
-                i.putExtra("event", Parcels.wrap(event));
-                //i.putExtra("post", post);
-                ((Activity) context).startActivityForResult(i, REQUEST_CODE);
-            }
-        });
-
+        // allow users to join event
         holder.join.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // TODO - check if current user already joined event
                 joined = false;
-                if (!joined){
-                    joinEvent(event);
+                if (!joined) {
+                    // send event to parse
+                    event.setAttendees(ParseUser.getCurrentUser());
+                    Log.d("EventDetailActivity", "joinEvent: " + event.getAttendees().size());
+                    // set UI
                     holder.numAttend.setText(Integer.toString(event.getAttendees().size()));
                     joined = true;
-                    //fab.setImageDrawable(ContextCompat.getDrawable(context,R.drawable.ic_unjoin));
+                    // TODO - add checkmark to UI
+                    // TODO - change button background tint
+                    holder.join.setText("unjoin?");
                 }
                 else{
-                    //fab.setImageDrawable(ContextCompat.getDrawable(context,R.drawable.ic_join));
                     joined = false;
                     ParseUser current = ParseUser.getCurrentUser();
                     event.removeAll("attendees", Collections.singleton(current));
@@ -123,6 +122,18 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
                 }
             }
         });
+        try {
+            holder.tvOwner.setText(event.getOwner().fetchIfNeeded().getUsername());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        holder.numAttend.setText(Integer.toString(event.getAttendees().size()));
+        try {
+            Glide.with(context).load(event.getOwner().fetchIfNeeded()
+                    .getParseFile("profile_picture").getUrl()).into(holder.ownerPic);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
         // TODO - launch other profile fragment
         /*holder.ownerPic.setOnClickListener(new View.OnClickListener() {
@@ -136,29 +147,9 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
             }
         });*/
 
-        try {
-            holder.tvOwner.setText(event.getOwner().fetchIfNeeded().getUsername());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
 
-        int num = event.getAttendees().size();
-        holder.numAttend.setText(Integer.toString(num));
 
-        try {
-            Glide.with(context).load(event.getOwner().fetchIfNeeded()
-                    .getParseFile("profile_picture").getUrl()).into(holder.ownerPic);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
     }
-
-
-    public void joinEvent(Event event){
-        event.setAttendees(ParseUser.getCurrentUser());
-        Log.d("EventDetailActivity", "joinEvent: " + event.getAttendees().size());
-    }
-
 
     @Override
     public int getItemCount() {
@@ -198,7 +189,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         }
     }
 
-    // custom setter
+    // custom setter to toggle event details
     public static final ButterKnife.Setter<View, Integer> VISIBILITY = new ButterKnife.Setter<View, Integer>() {
         @Override
         public void set(@NonNull View view, Integer value, int index) {
@@ -215,4 +206,6 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         this.events = events;
         notifyDataSetChanged();
     }
+
+
 }
