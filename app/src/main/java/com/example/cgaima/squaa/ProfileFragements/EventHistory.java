@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 
 import com.example.cgaima.squaa.Models.Event;
 import com.example.cgaima.squaa.R;
-import com.example.cgaima.squaa.adapters.profileAdapter;
+import com.example.cgaima.squaa.adapters.ProfileAdapter;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 
@@ -25,7 +25,7 @@ import butterknife.ButterKnife;
 
 public class EventHistory extends Fragment {
     @BindView(R.id.rvEventHistory) RecyclerView rvGrid;
-    private profileAdapter mAdapter;
+    private ProfileAdapter mAdapter;
     private List<Event> events;
 
 
@@ -64,7 +64,7 @@ public class EventHistory extends Fragment {
         events = new ArrayList<>();
 
         // Create an adapter
-        mAdapter = new profileAdapter(events);
+        mAdapter = new ProfileAdapter(events);
 
         // Bind adapter to list
         rvGrid.setAdapter(mAdapter);

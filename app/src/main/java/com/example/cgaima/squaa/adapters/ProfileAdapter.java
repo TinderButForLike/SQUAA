@@ -15,13 +15,13 @@ import com.example.cgaima.squaa.R;
 
 import java.util.List;
 
-public class profileAdapter extends RecyclerView.Adapter<profileAdapter.ViewHolder> {
+public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHolder> {
     private List<Event> mEvents;
     Context context;
     private final int REQUEST_CODE = 21;
     private final int REQUEST_CODE_1 = 22;
     // pass in the Tweets array in the constructor
-    public profileAdapter(List<Event> events) {
+    public ProfileAdapter(List<Event> events) {
         mEvents = events;
 
     }
