@@ -84,6 +84,7 @@ public class EventDetailActivity extends AppCompatActivity {
             }
         });
 
+        // TODO - rating bar
 //        rb =(RatingBar)findViewById(R.id.ratingBar1);
 //
 //        rb.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener(){
@@ -91,13 +92,12 @@ public class EventDetailActivity extends AppCompatActivity {
 //            @Override
 //            public void onRatingChanged(RatingBar ratingBar, float rating,
 //                                        boolean fromUser) {
-//                // TODO Auto-generated method stub
+//
 //                Toast.makeText(getApplicationContext(),Float.toString(rating),Toast.LENGTH_LONG).show();
 //
 //            }
 //
 //        });
-
 
         EventName.setText(event.getEventName());
         description.setText(event.getDescription());
@@ -134,15 +134,12 @@ public class EventDetailActivity extends AppCompatActivity {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-
             }
         });
-
     }
 
-    public void joinEvent(Event event){
+    public void joinEvent(Event event) {
         event.setAttendees(ParseUser.getCurrentUser());
         Log.d("EventDetailActivity", "joinEvent: " + event.getAttendees().size());
-
     }
 }

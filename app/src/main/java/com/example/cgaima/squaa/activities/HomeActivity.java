@@ -34,8 +34,6 @@ public class HomeActivity extends AppCompatActivity implements
     ViewPager viewPager;
     private PagerAdapter pagerAdapter;
 
-
-    // TODO - change eventFragment and profileFragment
     public HomeFragment homeFragment;
     public CreateEventFragment eventFragment;
     public ProfileFragment profileFragment;
@@ -58,7 +56,6 @@ public class HomeActivity extends AppCompatActivity implements
         if (homeFragment == null) {
             homeFragment = new HomeFragment();
         }
-        // TODO - change eventFragment and profileFragment
         if (eventFragment == null) {
             eventFragment = new CreateEventFragment();
         }

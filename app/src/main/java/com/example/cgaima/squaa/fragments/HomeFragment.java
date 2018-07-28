@@ -50,7 +50,6 @@ public class HomeFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        // TODO - for yelp style search bar: https://stackoverflow.com/questions/50708072/android-customized-searchview-layout/50764908
         MenuItem searchItem = menu.findItem(R.id.action_search);
 
         final SearchView searchView = (SearchView) searchItem.getActionView();
@@ -113,8 +112,9 @@ public class HomeFragment extends Fragment {
 
         return view;
     }
-    /** loads top 20 events */
-    // TODO - make infinite scrolling work
+
+    // TODO - make infinite scrolling work with query
+    // load top 20 events
     private void loadTopPosts() {
         final Event.Query eventsQuery = new Event.Query();
         eventsQuery.getTop().withOwner();
@@ -128,9 +128,8 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    /** fetch event by name
-     * now case sensitive and searches for all that contains the search query word.
-     * cannot go back to main screen after search */
+    // TODO - make this not case sensitive and search by more fields
+    // fetch event by name
     private void fetchQueryEvents(String query) {
         // clear adapter
         eventAdapter.clear();

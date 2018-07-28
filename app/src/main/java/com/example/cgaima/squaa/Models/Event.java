@@ -58,7 +58,7 @@ public class Event extends ParseObject implements Place{
         put(KEY_LATLNG, geoPoint);
     }
 
-    // get the event image
+    //    // get the event image
     public ParseFile getEventImage() {
         return getParseFile(KEY_IMAGE);
     }
@@ -116,6 +116,7 @@ public class Event extends ParseObject implements Place{
         }
         return attendees;
     }
+
     // set event attendees
     public void setAttendees(ParseUser attendee) {
           addUnique(KEY_ATTENDEES,attendee);
@@ -225,7 +226,5 @@ public class Event extends ParseObject implements Place{
             whereContains(KEY_NAME, query);
             return this;
         }
-
     }
-
 }
