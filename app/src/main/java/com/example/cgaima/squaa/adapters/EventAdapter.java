@@ -67,11 +67,14 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
 
         final Event event = events.get(position);
+
+        // set event name, description, location, date
         holder.event_name.setText(event.getEventName());
         holder.supporting_text.setText(event.getDescription());
         holder.location.setText(event.getLocation());
         holder.date.setText(event.getDate());
 
+        // set media image
         if (event.getEventImage()==null) {
             holder.media_image.setImageResource(R.drawable.image_default);
         } else {
@@ -90,21 +93,14 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
             });
         }
 
-        /*holder.media_image.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(context, EventDetailActivity.class);
-                i.putExtra("event", Parcels.wrap(event));
-                //i.putExtra("post", post);
-                ((Activity) context).startActivityForResult(i, REQUEST_CODE);
-            }
-        });*/
+        // set owner name
         try {
             holder.tvOwner.setText(event.getOwner().fetchIfNeeded().getUsername());
         } catch (ParseException e) {
             e.printStackTrace();
         }
 
+        // set owner profile picture
         try {
             Glide.with(context).load(event.getOwner().fetchIfNeeded()
                     .getParseFile("profile_picture").getUrl()).into(holder.ownerPic);

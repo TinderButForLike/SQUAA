@@ -25,11 +25,10 @@
     </android.support.v7.widget.Toolbar>
 
 
-
-    <android.support.v4.view.ViewPager
-        android:id="@+id/viewpager"
+    <FrameLayout
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_above="@id/bottom_navigation"
         android:layout_below="@+id/toolbar"
         android:layout_alignParentStart="true" />
@@ -40,6 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
+        android:background="@android:color/white"
         android:elevation="8dp"
         android:minHeight="?attr/actionBarSize"
         app:itemIconTint="@color/primaryDarkColor"
