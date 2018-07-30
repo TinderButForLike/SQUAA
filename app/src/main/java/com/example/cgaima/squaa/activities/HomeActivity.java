@@ -43,6 +43,7 @@ public class HomeActivity extends AppCompatActivity {
         final HomeFragment homeFragment = new HomeFragment();
         final CreateEventFragment createEventFragment = new CreateEventFragment();
         final ProfileFragment profileFragment = new ProfileFragment();
+        final MapFragment mapFragment = new MapFragment();
 
         // initialize fragment manager
         fragmentManager.beginTransaction().replace(R.id.fragment_container, homeFragment).commit();
@@ -66,6 +67,10 @@ public class HomeActivity extends AppCompatActivity {
                     case R.id.action_profile:
                         fragmentTransaction = fragmentManager.beginTransaction();
                         fragmentTransaction.replace(R.id.fragment_container, profileFragment).commit();
+                        return true;
+                    case R.id.action_map:
+                        fragmentTransaction = fragmentManager.beginTransaction();
+                        fragmentTransaction.replace(R.id.fragment_container, mapFragment).commit();
                         return true;
                 }
 

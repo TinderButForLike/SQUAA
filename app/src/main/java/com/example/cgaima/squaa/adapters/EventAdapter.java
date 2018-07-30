@@ -142,16 +142,15 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         });
 
         // TODO - launch other profile fragment
-        /*holder.ownerPic.setOnClickListener(new View.OnClickListener() {
+        holder.ownerPic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment someFragment = new OtherProfileFragment();
-                FragmentTransaction transaction = ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_container, someFragment ); // give your fragment container id in first parameter
-                transaction.addToBackStack(null);  // if written, this transaction will be added to backstack
-                transaction.commit();
+
+                Fragment otherProfileFragment = new OtherProfileFragment();
+                FragmentTransaction fragmentTransaction = ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container, otherProfileFragment).commit();
             }
-        });*/
+        });
     }
 
     @Override
