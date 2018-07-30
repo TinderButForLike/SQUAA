@@ -23,23 +23,34 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.cgaima.squaa.Models.Event;
+import com.example.cgaima.squaa.Models.EventAttendance;
 import com.example.cgaima.squaa.R;
 import com.example.cgaima.squaa.activities.EventDetailActivity;
+import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.example.cgaima.squaa.activities.HomeActivity;
 import com.example.cgaima.squaa.fragments.OtherProfileFragment;
 import com.parse.GetDataCallback;
+import com.parse.Parse;
+import com.parse.ParseClassName;
 import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseRelation;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import org.parceler.Parcels;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
+import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 
 // TODO - rename variables so that they are consistent
@@ -47,10 +58,6 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
     Context context;
     List<Event> events;
     private final int REQUEST_CODE = 21;
-
-    //resource variables
-    boolean joined;
-
     public EventAdapter(List<Event> events) {
         this.events = events;
     }
@@ -68,13 +75,14 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
 
         final Event event = events.get(position);
+
+        // set event name, description, location, date
         holder.event_name.setText(event.getEventName());
         holder.supporting_text.setText(event.getDescription());
         holder.location.setText(event.getLocation());
         holder.date.setText(event.getDate());
 
-        // TODO - date isn't showing up
-        // set event image
+        // set media image
         if (event.getEventImage()==null) {
             holder.media_image.setImageResource(R.drawable.image_default);
         } else {
@@ -92,48 +100,46 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
                 }
             });
         }
-        // allow users to join event
-        holder.join.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // TODO - check if current user already joined event
-                joined = false;
-                if (!joined) {
-                    // send event to parse
-                    event.setAttendees(ParseUser.getCurrentUser());
-                    Log.d("EventDetailActivity", "joinEvent: " + event.getAttendees().size());
-                    // set UI
-                    holder.numAttend.setText(Integer.toString(event.getAttendees().size()));
-                    joined = true;
-                    // TODO - add checkmark to UI
-                    // TODO - change button background tint
-                    holder.join.setText("unjoin?");
-                }
-                else{
-                    joined = false;
-                    ParseUser current = ParseUser.getCurrentUser();
-                    event.removeAll("attendees", Collections.singleton(current));
-                    try {
-                        event.save();
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                    holder.numAttend.setText(Integer.toString(event.getAttendees().size()));
-                }
-            }
-        });
+
+        // set owner name
         try {
             holder.tvOwner.setText(event.getOwner().fetchIfNeeded().getUsername());
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        holder.numAttend.setText(Integer.toString(event.getAttendees().size()));
+
+        // set owner profile picture
         try {
             Glide.with(context).load(event.getOwner().fetchIfNeeded()
                     .getParseFile("profile_picture").getUrl()).into(holder.ownerPic);
         } catch (ParseException e) {
             e.printStackTrace();
         }
+
+        // set button and numAttended initial UI
+        holder.numAttend.setText(String.valueOf(getNumAttending(event)));
+        final boolean joined = isAttending(event);
+        if (joined) { holder.join.setText("unjoin?"); }
+        Log.d("EventAdapter", "Joined status " + joined);
+
+        // after current user clicks join
+        holder.join.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final boolean joined = isAttending(event);
+                if (!joined){
+                    joinEvent(event);
+                    holder.numAttend.setText(String.valueOf(getNumAttending(event)));
+                    holder.join.setText("unjoin?");
+                    // TODO - put check mark on media image and make button gray
+                }
+                else{
+                    unjoinEvent(event);
+                    holder.numAttend.setText(String.valueOf(getNumAttending(event)));
+                    holder.join.setText("join");
+                }
+            }
+        });
 
         // TODO - launch other profile fragment
         /*holder.ownerPic.setOnClickListener(new View.OnClickListener() {
@@ -146,9 +152,6 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
                 transaction.commit();
             }
         });*/
-
-
-
     }
 
     @Override
@@ -168,6 +171,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         @BindView(R.id.tvNumAttend) TextView numAttend;
         @BindView(R.id.tvOwner) TextView tvOwner;
         @BindView(R.id.ivOwnerPic) ImageView ownerPic;
+        @BindViews({R.id.action_button_1, R.id.tvNumAttend}) List<View> joinView;
         @BindViews({R.id.supporting_text, R.id.tvOwner, R.id.ivOwnerPic, R.id.action_button_1,
                 R.id.tvNumAttend, R.id.owner, R.id.attending}) List<View> expandView;
 
@@ -189,7 +193,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         }
     }
 
-    // custom setter to toggle event details
+    // custom setter to toggle expand view
     public static final ButterKnife.Setter<View, Integer> VISIBILITY = new ButterKnife.Setter<View, Integer>() {
         @Override
         public void set(@NonNull View view, Integer value, int index) {
@@ -207,5 +211,58 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         notifyDataSetChanged();
     }
 
+    public void joinEvent(Event event) {
+        final EventAttendance newEventAttendance = new EventAttendance();
+        newEventAttendance.put("attendee", ParseUser.getCurrentUser());
+        newEventAttendance.put("event", event);
+        newEventAttendance.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e == null) {
+                    Log.d("EventAdapter", "Successfully joined event. :) ");
+                } else {
+                    Log.e("EventAdapter", "Failed to join event");
+                }
+            }
+        });
+    }
 
+    // check if current user is attending event
+    public boolean isAttending(Event event) {
+        EventAttendance.Query query = new EventAttendance.Query();
+        query.findEventAttendance(ParseUser.getCurrentUser(), event);
+        try {
+            List eventAttendance = query.find();
+            return !eventAttendance.isEmpty();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        // defaults to not attending
+        return false;
+    }
+
+    public void unjoinEvent(Event event) {
+        EventAttendance.Query query = new EventAttendance.Query();
+        query.findEventAttendance(ParseUser.getCurrentUser(), event);
+        try {
+            query.getFirst().delete();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // get total number of attendees for event
+    public int getNumAttending(Event event) {
+        // defaults num attending to 0
+        int numAttending = 0;
+        EventAttendance.Query query = new EventAttendance.Query();
+        query.findAllEventAttendance(event);
+        try {
+            List eventAttendance = query.find();
+            numAttending = eventAttendance.size();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return numAttending;
+    }
 }
