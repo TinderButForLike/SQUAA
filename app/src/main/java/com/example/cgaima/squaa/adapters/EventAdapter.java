@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.cgaima.squaa.Models.Event;
@@ -120,7 +121,6 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         holder.numAttend.setText(String.valueOf(getNumAttending(event)));
         final boolean joined = isAttending(event);
         if (joined) { holder.join.setText("unjoin?"); }
-        Log.d("EventAdapter", "Joined status " + joined);
 
         // after current user clicks join
         holder.join.setOnClickListener(new View.OnClickListener() {
@@ -128,15 +128,34 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
             public void onClick(View view) {
                 final boolean joined = isAttending(event);
                 if (!joined){
-                    joinEvent(event);
-                    holder.numAttend.setText(String.valueOf(getNumAttending(event)));
-                    holder.join.setText("unjoin?");
-                    // TODO - put check mark on media image and make button gray
+                    final EventAttendance newEventAttendance = new EventAttendance();
+                    newEventAttendance.setEventAttendance(ParseUser.getCurrentUser(), event);
+                    newEventAttendance.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            if (e == null) {
+                                holder.join.setText("unjoin?");
+                                holder.numAttend.setText(String.valueOf(getNumAttending(event)));
+                                Log.d("EventAdapter", "Successfully joined event. :) ");
+                            } else {
+                                Toast.makeText(context,"Failed to join event", Toast.LENGTH_LONG).show();
+                                Log.e("EventAdapter", e.toString());
+                            }
+                        }
+                    });
+                    // TODO - put check mark on media image and make button gray or remove from home screen
                 }
                 else{
-                    unjoinEvent(event);
-                    holder.numAttend.setText(String.valueOf(getNumAttending(event)));
-                    holder.join.setText("join");
+                    EventAttendance.Query query = new EventAttendance.Query();
+                    query.findEventAttendance(ParseUser.getCurrentUser(), event);
+                    try {
+                        query.getFirst().deleteInBackground();
+                        holder.join.setText("join");
+                        holder.numAttend.setText(String.valueOf(getNumAttending(event)));
+                        Log.d("EventAdapter", "Successfully unjoined event. ");
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
@@ -210,22 +229,6 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         notifyDataSetChanged();
     }
 
-    public void joinEvent(Event event) {
-        final EventAttendance newEventAttendance = new EventAttendance();
-        newEventAttendance.put("attendee", ParseUser.getCurrentUser());
-        newEventAttendance.put("event", event);
-        newEventAttendance.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if (e == null) {
-                    Log.d("EventAdapter", "Successfully joined event. :) ");
-                } else {
-                    Log.e("EventAdapter", "Failed to join event");
-                }
-            }
-        });
-    }
-
     // check if current user is attending event
     public boolean isAttending(Event event) {
         EventAttendance.Query query = new EventAttendance.Query();
@@ -240,15 +243,6 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         return false;
     }
 
-    public void unjoinEvent(Event event) {
-        EventAttendance.Query query = new EventAttendance.Query();
-        query.findEventAttendance(ParseUser.getCurrentUser(), event);
-        try {
-            query.getFirst().delete();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-    }
 
     // get total number of attendees for event
     public int getNumAttending(Event event) {

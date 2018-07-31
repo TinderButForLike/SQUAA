@@ -3,6 +3,7 @@ package com.example.cgaima.squaa.Models;
 
 import android.net.Uri;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.maps.model.LatLng;
@@ -19,6 +20,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -30,7 +33,8 @@ public class Event extends ParseObject implements Place{
     private static final String KEY_ATTENDEES = "attendees";
     private static final String KEY_LOCATION = "location";
     private static final String KEY_DATE = "date";
-    private static final String KEY_PRIVACY = "privacy";
+    //
+    private static final String KEY_PRIVACY = "public";
     private static final String KEY_NAME = "event_name";
     private static final String KEY_LATLNG = "latlng";
     LatLng mpk = new LatLng(37.4529, -122.148244);
@@ -82,6 +86,8 @@ public class Event extends ParseObject implements Place{
 
     // get event date
     public String getDate() { return getString(KEY_DATE); }
+
+    public Date getToDate() { return getDate("toDate"); }
     // get event location
     public String getLocation() {
         return getString(KEY_LOCATION);
@@ -125,9 +131,7 @@ public class Event extends ParseObject implements Place{
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
     }
-
 
     @Override
     public String getId() {

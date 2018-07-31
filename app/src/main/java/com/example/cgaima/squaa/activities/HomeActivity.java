@@ -73,7 +73,6 @@ public class HomeActivity extends AppCompatActivity {
                         fragmentTransaction.replace(R.id.fragment_container, mapFragment).commit();
                         return true;
                 }
-
             }
         });
 

@@ -29,8 +29,10 @@ import com.parse.SaveCallback;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.List;
 
 import butterknife.BindView;
+import butterknife.BindViews;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -114,10 +116,6 @@ public class CreateEventFragment extends Fragment {
         } else {
             Log.d("CreateEventFrag", "still null");
         }
-
-
-
-
 
         // TODO - set fragment to home fragment after creating event
         /*Fragment homeFragment = new HomeFragment();
@@ -205,5 +203,4 @@ public class CreateEventFragment extends Fragment {
             e.printStackTrace();
         }
     }
-
 }

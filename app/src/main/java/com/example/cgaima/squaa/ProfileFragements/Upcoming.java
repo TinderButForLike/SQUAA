@@ -1,5 +1,7 @@
 package com.example.cgaima.squaa.ProfileFragements;
 
+import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -11,11 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.cgaima.squaa.Models.Event;
-import com.example.cgaima.squaa.Models.EventAttendance;
 import com.example.cgaima.squaa.R;
 import com.example.cgaima.squaa.adapters.ProfileAdapter;
 import com.parse.FindCallback;
-import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -29,17 +29,15 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-
-public class EventHistory extends Fragment {
+public class Upcoming extends Fragment {
     @BindView(R.id.rvEventHistory) RecyclerView rvGrid;
     private ProfileAdapter mAdapter;
     private List<Event> events;
 
-
     private FragmentActivity listener;
 
     // Required empty public constructor
-    public EventHistory() {}
+    public Upcoming() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,39 +46,28 @@ public class EventHistory extends Fragment {
         Log.e("EventHistory", "Event history fragment created");
     }
 
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_event_history, container, false);
         ButterKnife.bind(this, view);
-
         rvGrid = (RecyclerView) view.findViewById(R.id.rvEventHistory);
-
         // allows for optimizations
         rvGrid.setHasFixedSize(true);
-
         // Define 2 column grid layout
         final GridLayoutManager layout = new GridLayoutManager(getActivity(), 2);
-
         rvGrid.setLayoutManager(layout);
-
         // get data
         events = new ArrayList<>();
-
         // Create an adapter
         mAdapter = new ProfileAdapter(events);
-
         // Bind adapter to list
         rvGrid.setAdapter(mAdapter);
-
-        getEventHistory();
-
+        getUpcoming();
         return view;
     }
-    public void getEventHistory() {
+    public void getUpcoming() {
         // query event attendance of the current user
         ParseQuery<ParseObject> query = ParseQuery.getQuery("EventAttendance");
         query.include("event");
@@ -91,11 +78,11 @@ public class EventHistory extends Fragment {
                 if(e==null) {
                     for (int i = 0; i < objects.size(); i++) {
                         Event event = (Event) objects.get(i).getParseObject("event");
-                        Date eventEndDate = event.getDate("toDate");
+                        Date eventStartDate = event.getDate("fromDate");
                         Calendar cal = Calendar.getInstance();
                         Date today= cal.getTime();
-                        // check if date is before today and add to adapter if it is
-                        if (eventEndDate.before(today)) {
+                        // check if start date is after today and add to adapter if it is
+                        if (eventStartDate.after(today)) {
                             mAdapter.add(event);
                         }
                     }

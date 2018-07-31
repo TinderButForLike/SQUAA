@@ -52,6 +52,12 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
         notifyDataSetChanged();
     }
 
+    // Add a list of items -- change to type used
+    public void add(Event event) {
+        mEvents.add(event);
+        notifyItemInserted(mEvents.size()-1);
+    }
+
 
     // bind the values based on the position of the element
 
