@@ -19,7 +19,8 @@
         android:hint="what's your event called?"
         android:inputType="text"
         android:textColorHint="@android:color/white"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        />
 
     <EditText
         android:id="@+id/location"

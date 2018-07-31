@@ -2,6 +2,8 @@ package com.example.cgaima.squaa.fragments;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,9 +21,13 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.FindCallback;
+import com.parse.GetDataCallback;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 
@@ -39,6 +45,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     GoogleMap mMap;
     List<Event> events;
     EventAdapter mAdapter;
+    LatLng ewc = new LatLng(37.3903,-122.0945);
 
     private static final String MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey";
     private static final int MY_LOCATION_REQUEST_CODE = 2;
@@ -101,8 +108,24 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         mAdapter.notifyDataSetChanged();
                         ParseGeoPoint parseGeoPoint = events.get(i).getGeoPoint();
                         LatLng mylatlng = new LatLng(parseGeoPoint.getLatitude(), parseGeoPoint.getLongitude()); //"convert" the parse geopoint object to a google latlng object
-                        mMap.addMarker(new MarkerOptions().position(mylatlng));
-                        mMap.moveCamera(CameraUpdateFactory.newLatLng(mylatlng));
+
+                        final Marker marker = mMap.addMarker(new MarkerOptions()
+                                .position(mylatlng)
+                                .title(events.get(i).getEventName()) //displays event name on first click
+                                //.snippet(events.get(i).getDescription())
+                        );
+                        events.get(i).getEventImage().getDataInBackground(new GetDataCallback() {
+                            @Override
+                            public void done(byte[] data, ParseException e) {
+                                if (e == null) {
+                                    Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
+                                    Bitmap resizedBmp = Bitmap.createScaledBitmap(bmp, 80, 80, false);
+                                    marker.setIcon(BitmapDescriptorFactory.fromBitmap(resizedBmp));
+                                }
+                            }
+                        });
+
+
                     }
                 } else {
                     e.printStackTrace();
@@ -148,21 +171,25 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
      @Override //set a default map
     public void onMapReady(GoogleMap googleMap) {
          mMap = googleMap;
+         mMap.moveCamera(CameraUpdateFactory.newLatLng(ewc));
+
+         UiSettings uiSettings = mMap.getUiSettings();
+         uiSettings.setZoomControlsEnabled(true);
+
          try {
              getPosts();
          } catch (ParseException e) {
              e.printStackTrace();
          }
          if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_LOCATION_REQUEST_CODE); //request permissions
             return;
-        } else {
+         } else {
             mMap.setMyLocationEnabled(true);
-        }
+         }
 
-        mMap.setMyLocationEnabled(true);
-        mMap.setMinZoomPreference(30);
+        //mMap.setMyLocationEnabled(true);
+        mMap.setMinZoomPreference(9);
 
      }
 

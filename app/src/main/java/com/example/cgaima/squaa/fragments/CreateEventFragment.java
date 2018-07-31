@@ -63,7 +63,15 @@ public class CreateEventFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        if(savedInstanceState != null) {
+            name.setText(savedInstanceState.getString("eventName"));
+        } else {
+            Log.d("CreateEventFragment: ", "couldn't restore values");
+        }
+
         location.setText(getActivity().getIntent().getStringExtra("locationtext"));
+
         if (getActivity().getIntent().getParcelableExtra("geo") != null) {
             Log.d("CreateEventFrag", String.valueOf(((ParseGeoPoint) (getActivity().getIntent().getExtras().getParcelable("geo"))).getLatitude()));
         }
@@ -76,6 +84,12 @@ public class CreateEventFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_create_event, container, false);
         ButterKnife.bind(this, view);
         return view;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("eventName", name.getText().toString());
     }
 
     //launch the map
@@ -106,9 +120,6 @@ public class CreateEventFragment extends Fragment {
 
 
         ParseGeoPoint mParseGeoPoint = getActivity().getIntent().getParcelableExtra("geo");
-//        mParseGeoPoint.setLatitude(eventLatLng.latitude);
-//        mParseGeoPoint.setLongitude(eventLatLng.longitude);
-
         if (mParseGeoPoint != null) {
             createEvent(mName, mLocation, mDescription, mPrivacy, mImage, mDate, mParseGeoPoint);
         } else {

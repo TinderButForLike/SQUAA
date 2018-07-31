@@ -84,12 +84,12 @@ public class OtherProfileFragment extends Fragment {
             Log.e("OtherProfileFragment", "I GET OPENED");
             final FloatingActionButton fab = view.findViewById(R.id.fabFriend);
             added = false;
-            fab.setImageDrawable(ContextCompat.getDrawable(((AppCompatActivity)getActivity()).getApplicationContext(),R.drawable.ic_addfriend));
+            fab.setImageDrawable(ContextCompat.getDrawable(((AppCompatActivity) getActivity()).getApplicationContext(), R.drawable.ic_addfriend));
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
-                    if(!added) {
+                    if (!added) {
                         ParseUser current = ParseUser.getCurrentUser();
                         current.addUnique("friends", owner);
                         try {
@@ -97,7 +97,7 @@ public class OtherProfileFragment extends Fragment {
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
-                        fab.setImageDrawable(ContextCompat.getDrawable(((AppCompatActivity)getActivity()).getApplicationContext(),R.drawable.ic_unjoin));
+                        fab.setImageDrawable(ContextCompat.getDrawable(((AppCompatActivity) getActivity()).getApplicationContext(), R.drawable.ic_unjoin));
                         added = true;
                     } else {
                         ParseUser current = ParseUser.getCurrentUser();
@@ -108,60 +108,60 @@ public class OtherProfileFragment extends Fragment {
                             e.printStackTrace();
                         }
 
-                        fab.setImageDrawable(ContextCompat.getDrawable(((AppCompatActivity)getActivity()).getApplicationContext(),R.drawable.ic_addfriend));
+                        fab.setImageDrawable(ContextCompat.getDrawable(((AppCompatActivity) getActivity()).getApplicationContext(), R.drawable.ic_addfriend));
                         added = false;
 
 
+                    }
                 }
+
             });
+        }
 
+            viewPager = (ViewPager) view.findViewById(R.id.vpContainer);
+            setupViewPager(viewPager);
+
+            tabLayout = (TabLayout) view.findViewById(R.id.tabs);
+            tabLayout.setupWithViewPager(viewPager);
+
+
+            return view;
         }
 
 
-
-        viewPager = (ViewPager) view.findViewById(R.id.vpContainer);
-        setupViewPager(viewPager);
-
-        tabLayout = (TabLayout) view.findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(viewPager);
-
-
-        return view;
-    }
-
-    private void setupViewPager(ViewPager viewPager) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(((AppCompatActivity)getActivity()).getSupportFragmentManager());
-        adapter.addFragment(new EventHistory(), "Event History");
-        adapter.addFragment(new AboutUser(), "About");
-        viewPager.setAdapter(adapter);
-    }
-
-    class ViewPagerAdapter extends FragmentPagerAdapter {
-        private final List<Fragment> mFragmentList = new ArrayList<>();
-        private final List<String> mFragmentTitleList = new ArrayList<>();
-
-        public ViewPagerAdapter(FragmentManager manager) {
-            super(manager);
+        private void setupViewPager(ViewPager viewPager) {
+            ProfileFragment.ViewPagerAdapter adapter = new ProfileFragment.ViewPagerAdapter(((AppCompatActivity) getActivity()).getSupportFragmentManager());
+            adapter.addFragment(new EventHistory(), "Event History");
+            adapter.addFragment(new AboutUser(), "About");
+            viewPager.setAdapter(adapter);
         }
 
-        @Override
-        public Fragment getItem(int position) {
-            return mFragmentList.get(position);
-        }
+        class ViewPagerAdapter extends FragmentPagerAdapter {
+            private final List<Fragment> mFragmentList = new ArrayList<>();
+            private final List<String> mFragmentTitleList = new ArrayList<>();
 
-        @Override
-        public int getCount() {
-            return mFragmentList.size();
-        }
+            public ViewPagerAdapter(FragmentManager manager) {
+                super(manager);
+            }
 
-        public void addFragment(Fragment fragment, String title) {
-            mFragmentList.add(fragment);
-            mFragmentTitleList.add(title);
-        }
+            @Override
+            public Fragment getItem(int position) {
+                return mFragmentList.get(position);
+            }
 
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return mFragmentTitleList.get(position);
+            @Override
+            public int getCount() {
+                return mFragmentList.size();
+            }
+
+            public void addFragment(Fragment fragment, String title) {
+                mFragmentList.add(fragment);
+                mFragmentTitleList.add(title);
+            }
+
+            @Override
+            public CharSequence getPageTitle(int position) {
+                return mFragmentTitleList.get(position);
+            }
         }
-    }
 }
