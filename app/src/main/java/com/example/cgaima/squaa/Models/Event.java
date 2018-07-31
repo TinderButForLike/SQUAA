@@ -19,6 +19,7 @@ import com.parse.ParseUser;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -26,7 +27,7 @@ import java.util.List;
 import java.util.Locale;
 
 @ParseClassName("Event")
-public class Event extends ParseObject implements Place{
+public class Event extends ParseObject implements Place {
     private static final String KEY_DESCRIPTION = "description";
     private static final String KEY_IMAGE = "event_image";
     private static final String KEY_OWNER = "owner";
