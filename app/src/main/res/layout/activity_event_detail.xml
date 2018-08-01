@@ -125,4 +125,11 @@
         app:backgroundTint="#c0c0c0"
         app:rippleColor="#525e72" />
 
+    <com.lyft.lyftbutton.LyftButton
+        android:id="@+id/lyft_button"
+        android:layout_width="234dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvDescription"
+        android:layout_toEndOf="@+id/owner"
+        android:background="@drawable/button_shape"/>
 </RelativeLayout>

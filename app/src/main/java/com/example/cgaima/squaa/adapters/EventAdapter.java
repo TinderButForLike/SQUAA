@@ -3,13 +3,11 @@ package com.example.cgaima.squaa.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -27,31 +25,19 @@ import com.example.cgaima.squaa.Models.Event;
 import com.example.cgaima.squaa.Models.EventAttendance;
 import com.example.cgaima.squaa.R;
 import com.example.cgaima.squaa.activities.EventDetailActivity;
-import com.parse.FindCallback;
-import com.parse.GetCallback;
-import com.example.cgaima.squaa.activities.HomeActivity;
 import com.example.cgaima.squaa.fragments.OtherProfileFragment;
 import com.parse.GetDataCallback;
-import com.parse.Parse;
-import com.parse.ParseClassName;
 import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
-import com.parse.ParseRelation;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import org.parceler.Parcels;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
-import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 
 // TODO - rename variables so that they are consistent
@@ -160,14 +146,24 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
             }
         });
 
-        // TODO - launch other profile fragment
+        // launch other profile fragment
         holder.ownerPic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 Fragment otherProfileFragment = new OtherProfileFragment();
                 FragmentTransaction fragmentTransaction = ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.fragment_container, otherProfileFragment).commit();
+            }
+        });
+
+        // launch event details view
+        holder.media_image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(context, EventDetailActivity.class);
+                i.putExtra("event", Parcels.wrap(event));
+                //i.putExtra("post", post);
+                ((Activity) context).startActivityForResult(i, REQUEST_CODE);
             }
         });
     }

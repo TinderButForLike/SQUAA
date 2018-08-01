@@ -1,9 +1,17 @@
 package com.example.cgaima.squaa.activities;
 
+import android.Manifest;
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -11,11 +19,20 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.cgaima.squaa.Models.Event;
 import com.example.cgaima.squaa.R;
+
+import com.google.android.gms.maps.model.LatLng;
+import com.lyft.lyftbutton.LyftButton;
+import com.lyft.lyftbutton.RideParams;
+import com.lyft.lyftbutton.RideTypeEnum;
+import com.lyft.networking.ApiConfig;
+
 import com.parse.ParseException;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
 
 import org.parceler.Parcels;
@@ -29,13 +46,16 @@ public class EventDetailActivity extends AppCompatActivity {
 
     //resource variables
     boolean joined;
+    private static final String TAG = "lyft:Example";
+    private static final String CLIENT_ID = "rzupE13z8Yo2";
+    private static final String LYFT_PACKAGE = "me.lyft.android";
     FloatingActionButton fab;
 
     @BindView(R.id.ivEventPic)
     ImageView EventPic;
     @BindView(R.id.tvEventName)
     TextView EventName;
-//    @BindView(R.id.tvDate)
+    //    @BindView(R.id.tvDate)
 //    TextView date;
     @BindView(R.id.tvDescription)
     TextView description;
@@ -49,13 +69,42 @@ public class EventDetailActivity extends AppCompatActivity {
     TextView Eventlocal;
     @BindView(R.id.ratingBar1)
     RatingBar rb;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_detail);
-        ButterKnife.bind(this); //bind butterknife after
+        ButterKnife.bind(this);
         Parcelable parcel = this.getIntent().getParcelableExtra("event");
         final Event event = (Event) Parcels.unwrap(parcel);
+
+        ApiConfig apiConfig = new ApiConfig.Builder()
+                .setClientId(CLIENT_ID)
+                .setClientToken("4IA9raWjUI3rr3igs0SNcIEzrvWmUhl8EAZGaajBtVeEGrg7CBj+tzqmri6pDEP2yC3QN/D/23/Bc6Ew0DEX5IfLXfJv0bZt2JYBNIf1aNeXazxXU8T32NU=")
+                .build();
+
+        LyftButton lyftButton = findViewById(R.id.lyft_button);
+        lyftButton.setApiConfig(apiConfig);
+        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        // check location permission
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(this, "Turn on permissions to call Lyft from our app!", Toast.LENGTH_LONG).show();
+            lyftButton.setVisibility(View.GONE); // hide lyft button
+            return;
+        }
+        else{
+            Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            ParseGeoPoint parseGeoPoint = event.getGeoPoint();
+
+            RideParams.Builder rideParamsBuilder = new RideParams.Builder()
+                    .setPickupLocation(location.getLatitude(), location.getLongitude())
+                    .setDropoffLocation(parseGeoPoint.getLatitude(), parseGeoPoint.getLongitude());
+            rideParamsBuilder.setRideTypeEnum(RideTypeEnum.CLASSIC);
+            lyftButton.setRideParams(rideParamsBuilder.build());
+
+            lyftButton.load();
+        }
 
         fab = findViewById(R.id.fab);
         joined = false;
@@ -86,17 +135,12 @@ public class EventDetailActivity extends AppCompatActivity {
 
         // TODO - rating bar
 //        rb =(RatingBar)findViewById(R.id.ratingBar1);
-//
 //        rb.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener(){
-//
 //            @Override
 //            public void onRatingChanged(RatingBar ratingBar, float rating,
 //                                        boolean fromUser) {
-//
 //                Toast.makeText(getApplicationContext(),Float.toString(rating),Toast.LENGTH_LONG).show();
-//
 //            }
-//
 //        });
 
         EventName.setText(event.getEventName());
@@ -142,4 +186,34 @@ public class EventDetailActivity extends AppCompatActivity {
         event.setAttendees(ParseUser.getCurrentUser());
         Log.d("EventDetailActivity", "joinEvent: " + event.getAttendees().size());
     }
+
+    /*private void deepLinkIntoLyft() {
+        if (isPackageInstalled(this, LYFT_PACKAGE)) {
+            // TODO - set lyft destination here
+            openLink(this, "lyft://");
+            Log.d(TAG, "Lyft is already installed on your phone.");
+        } else {
+            openLink(this, String.format("https://www.lyft.com/signup/SDKSIGNUP?clientId=%s&sdkName=android_direct", CLIENT_ID));
+
+            Log.d(TAG, "Lyft is not currently installed on your phone..");
+        }
+    }
+
+    static void openLink(Activity activity, String link) {
+        Intent playStoreIntent = new Intent(Intent.ACTION_VIEW);
+        playStoreIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        playStoreIntent.setData(Uri.parse(link));
+        activity.startActivity(playStoreIntent);
+    }
+
+    static boolean isPackageInstalled(Context context, String packageId) {
+        PackageManager pm = context.getPackageManager();
+        try {
+            pm.getPackageInfo(packageId, PackageManager.GET_ACTIVITIES);
+            return true;
+        } catch (PackageManager.NameNotFoundException e) {
+            // ignored.
+        }
+        return false;
+    }*/
 }
