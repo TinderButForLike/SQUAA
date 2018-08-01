@@ -104,15 +104,15 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         }
 
         // set button and numAttended initial UI
-        holder.numAttend.setText(String.valueOf(getNumAttending(event)));
-        final boolean joined = isAttending(event);
+        holder.numAttend.setText(String.valueOf(EventAttendance.getNumAttending(event)));
+        final boolean joined = EventAttendance.isAttending(event);
         if (joined) { holder.join.setText("unjoin?"); }
 
         // after current user clicks join
         holder.join.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final boolean joined = isAttending(event);
+                final boolean joined = EventAttendance.isAttending(event);
                 // join event if not already joined
                 if (!joined){
                     final EventAttendance newEventAttendance = new EventAttendance();
@@ -122,7 +122,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
                         public void done(ParseException e) {
                             if (e == null) {
                                 holder.join.setText("unjoin?");
-                                holder.numAttend.setText(String.valueOf(getNumAttending(event)));
+                                holder.numAttend.setText(String.valueOf(EventAttendance.getNumAttending(event)));
                                 Log.d("EventAdapter", "Successfully joined event. :) ");
                             } else {
                                 Toast.makeText(context,"Failed to join event", Toast.LENGTH_LONG).show();
@@ -139,7 +139,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
                     try {
                         query.getFirst().deleteInBackground();
                         holder.join.setText("join");
-                        holder.numAttend.setText(String.valueOf(getNumAttending(event)));
+                        holder.numAttend.setText(String.valueOf(EventAttendance.getNumAttending(event)));
                         Log.d("EventAdapter", "Successfully unjoined event. ");
                     } catch (ParseException e) {
                         e.printStackTrace();
@@ -225,35 +225,5 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
     public void setItems(List<Event> events) {
         this.events = events;
         notifyDataSetChanged();
-    }
-
-    // check if current user is attending event
-    public boolean isAttending(Event event) {
-        EventAttendance.Query query = new EventAttendance.Query();
-        query.findEventAttendance(ParseUser.getCurrentUser(), event);
-        try {
-            List eventAttendance = query.find();
-            return !eventAttendance.isEmpty();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        // defaults to not attending
-        return false;
-    }
-
-
-    // get total number of attendees for event
-    public int getNumAttending(Event event) {
-        // defaults num attending to 0
-        int numAttending = 0;
-        EventAttendance.Query query = new EventAttendance.Query();
-        query.findAllEventAttendance(event);
-        try {
-            List eventAttendance = query.find();
-            numAttending = eventAttendance.size();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return numAttending;
     }
 }

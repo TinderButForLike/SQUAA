@@ -34,8 +34,6 @@ import com.parse.SaveCallback;
 
 import org.parceler.Parcels;
 
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -102,7 +100,7 @@ public class EventDetailActivity extends AppCompatActivity {
         joined = false;
         fab.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_join));
 
-        joined = isAttending(event);
+        joined = EventAttendance.isAttending(event);
         fab.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_join));
 
         // TODO - rating bar
@@ -155,7 +153,7 @@ public class EventDetailActivity extends AppCompatActivity {
 
     @OnClick(R.id.fab)
     public void onJoin() {
-        final boolean joined = isAttending(event);
+        final boolean joined = EventAttendance.isAttending(event);
         // join event if not already joined
         if (!joined){
             final EventAttendance newEventAttendance = new EventAttendance();
@@ -165,7 +163,7 @@ public class EventDetailActivity extends AppCompatActivity {
                 public void done(ParseException e) {
                     if (e == null) {
                         fab.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_unjoin));
-                        numAttend.setText(String.valueOf(getNumAttending(event)));
+                        numAttend.setText(String.valueOf(EventAttendance.getNumAttending(event)));
                         Log.d("EventAdapter", "Successfully joined event. :) ");
                     } else {
                         Toast.makeText(getApplicationContext(), "Failed to join event", Toast.LENGTH_LONG).show();
@@ -182,41 +180,11 @@ public class EventDetailActivity extends AppCompatActivity {
             try {
                 fab.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_join));
                 query.getFirst().deleteInBackground();
-                numAttend.setText(String.valueOf(getNumAttending(event)));
+                numAttend.setText(String.valueOf(EventAttendance.getNumAttending(event)));
                 Log.d("EventAdapter", "Successfully unjoined event. ");
             } catch (ParseException e) {
                 e.printStackTrace();
             }
         }
-    }
-
-    // check if current user is attending event
-    public boolean isAttending(Event event) {
-        EventAttendance.Query query = new EventAttendance.Query();
-        query.findEventAttendance(ParseUser.getCurrentUser(), event);
-        try {
-            List eventAttendance = query.find();
-            return !eventAttendance.isEmpty();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        // defaults to not attending
-        return false;
-    }
-
-
-    // get total number of attendees for event
-    public int getNumAttending(Event event) {
-        // defaults num attending to 0
-        int numAttending = 0;
-        EventAttendance.Query query = new EventAttendance.Query();
-        query.findAllEventAttendance(event);
-        try {
-            List eventAttendance = query.find();
-            numAttending = eventAttendance.size();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return numAttending;
     }
 }
