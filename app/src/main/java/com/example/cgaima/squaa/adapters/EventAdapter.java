@@ -113,6 +113,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
             @Override
             public void onClick(View view) {
                 final boolean joined = isAttending(event);
+                // join event if not already joined
                 if (!joined){
                     final EventAttendance newEventAttendance = new EventAttendance();
                     newEventAttendance.setEventAttendance(ParseUser.getCurrentUser(), event);
@@ -131,6 +132,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
                     });
                     // TODO - put check mark on media image and make button gray or remove from home screen
                 }
+                // unjoin event if already joined
                 else{
                     EventAttendance.Query query = new EventAttendance.Query();
                     query.findEventAttendance(ParseUser.getCurrentUser(), event);
