@@ -41,7 +41,7 @@ public class AboutUser extends Fragment {
 
         Parcelable parcel = getActivity().getIntent().getParcelableExtra("event_owner");
         String name;
-        Integer age;
+        String age;
         String bio;
         String hometown;
 
@@ -49,6 +49,9 @@ public class AboutUser extends Fragment {
             final Event event = (Event) Parcels.unwrap(parcel);
             ParseUser owner = event.getOwner();
             name = owner.getUsername().toString() + ',';
+            age = owner.getString("age");
+            bio = owner.getString("bio");
+            hometown = owner.getString("hometown");
 
 
         } else {
@@ -56,12 +59,15 @@ public class AboutUser extends Fragment {
 
             ParseUser currentUser = ParseUser.getCurrentUser();
             name = currentUser.getUsername().toString() + ',';
+            age = "21";
+            bio = "I was born in Puerto Rico and moved to the United States when I was 4. I love to eat and bike around the " +
+                    "city. Proudly latina";
+            hometown = "San Andreas";
         }
             Name.setText(name);
-            Age.setText("21");
-            Bio.setText("I was born in Puerto Rico and moved to the United States when I was 4. I love to eat and bike around the " +
-                    "city. Proudly latina");
-            home.setText("San Andreas");
+            Age.setText(age);
+            Bio.setText(bio);
+            home.setText(hometown);
 
     }
 }

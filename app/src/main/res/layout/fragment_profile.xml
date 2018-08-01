@@ -25,7 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="217dp"
             android:layout_weight="1"
-            android:background="?attr/colorPrimary"
+            android:background="#a9a9a9"
             app:layout_scrollFlags="scroll|enterAlways"
             app:popupTheme="@style/AppTheme.PopupOverlay"
             >
@@ -43,14 +43,22 @@
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tabs"
+            android:background="#a9a9a9"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
+            <android.support.design.widget.TabItem
+                android:id="@+id/upcoming"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Upcoming events" />
 
             <android.support.design.widget.TabItem
                 android:id="@+id/tiHistory"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Event History" />
+
 
             <android.support.design.widget.TabItem
                 android:id="@+id/tiAbout"
@@ -59,10 +67,11 @@
                 android:text="about me" />
 
             <android.support.design.widget.TabItem
-                android:id="@+id/Friends"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="log out" />
+            android:id="@+id/Friends"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="log out" />
+
 
         </android.support.design.widget.TabLayout>
     </android.support.design.widget.AppBarLayout>

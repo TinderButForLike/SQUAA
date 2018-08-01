@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="5dp"
-    android:background="@android:color/holo_blue_light"
+    android:background="#f0F0F0"
     tools:context=".fragments.CreateEventFragment">
 
     <EditText
@@ -18,7 +18,7 @@
         android:ems="10"
         android:hint="what's your event called?"
         android:inputType="text"
-        android:textColorHint="@android:color/white"
+        android:textColorHint="#c0c0c0"
         android:textSize="14sp" />
 
     <EditText
@@ -31,7 +31,7 @@
         android:ems="10"
         android:hint="where is your event?"
         android:inputType="text"
-        android:textColorHint="@android:color/white"
+        android:textColorHint="#c0c0c0"
         android:textSize="14sp" />
 
     <EditText
@@ -44,7 +44,7 @@
         android:ems="10"
         android:hint="when is your event?"
         android:inputType="datetime"
-        android:textColorHint="@android:color/white"
+        android:textColorHint="#c0c0c0"
         android:textSize="14sp" />
 
     <EditText
@@ -57,16 +57,17 @@
         android:ems="10"
         android:hint="tell the world a little more about your event."
         android:inputType="text|textPersonName"
-        android:textColorHint="@android:color/white"
+        android:textColorHint="#c0c0c0"
         android:textSize="14sp" />
 
     <Button
         android:id="@+id/create"
         android:layout_width="136dp"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_alignStart="@+id/launchGalBtn"
-        android:layout_below="@+id/launchGalBtn"
-        android:layout_marginTop="-5dp"
+        android:layout_marginBottom="175dp"
+        android:background="#f0c0c0"
         android:text="create event" />
 
     <TextView
@@ -86,7 +87,7 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/imagePrompt"
         android:layout_margin="5dp"
-        app:srcCompat="@android:color/holo_red_light" />
+        app:srcCompat="@drawable/ic_takepic" />
 
     <Button
         android:id="@+id/launchGalBtn"
@@ -95,6 +96,7 @@
         android:layout_below="@+id/imagePrompt"
         android:layout_margin="5dp"
         android:layout_toEndOf="@+id/eventPic"
+        android:background="#F0c0c0"
         android:text="launch gallery" />
 
     <Button
@@ -104,6 +106,7 @@
         android:layout_alignTop="@+id/location"
         android:layout_margin="5dp"
         android:layout_toEndOf="@+id/name"
+        android:background="#F0C0C0"
         android:text="launch map " />
 
     <CheckBox

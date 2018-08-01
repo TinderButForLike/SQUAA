@@ -33,6 +33,8 @@ public class EventDetailActivity extends AppCompatActivity {
 
     @BindView(R.id.ivEventPic)
     ImageView EventPic;
+    @BindView(R.id.ivChat)
+    ImageView ChatIcon;
     @BindView(R.id.tvEventName)
     TextView EventName;
 //    @BindView(R.id.tvDate)
@@ -49,6 +51,8 @@ public class EventDetailActivity extends AppCompatActivity {
     TextView Eventlocal;
     @BindView(R.id.ratingBar1)
     RatingBar rb;
+    @BindView(R.id.ivCal)
+    ImageView calendar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,19 +88,22 @@ public class EventDetailActivity extends AppCompatActivity {
             }
         });
 
-//        rb =(RatingBar)findViewById(R.id.ratingBar1);
-//
-//        rb.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener(){
-//
-//            @Override
-//            public void onRatingChanged(RatingBar ratingBar, float rating,
-//                                        boolean fromUser) {
-//                // TODO Auto-generated method stub
-//                Toast.makeText(getApplicationContext(),Float.toString(rating),Toast.LENGTH_LONG).show();
-//
-//            }
-//
-//        });
+        calendar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // do google calendar stuff
+
+            }
+        });
+        ChatIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(EventDetailActivity.this, ChatActivity.class);
+                startActivity(i);
+            }
+        });
+
+
 
 
         EventName.setText(event.getEventName());

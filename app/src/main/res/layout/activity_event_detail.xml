@@ -124,4 +124,21 @@
         app:backgroundTint="#c0c0c0"
         app:rippleColor="#525e72" />
 
+    <ImageView
+        android:id="@+id/ivCal"
+        android:layout_width="44dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/ivEventPic"
+        app:srcCompat="@drawable/ic_calenadar" />
+
+    <ImageView
+        android:id="@+id/ivChat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/ivOwnerPic"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="48dp"
+        app:srcCompat="@drawable/ic_chat" />
+
 </RelativeLayout>

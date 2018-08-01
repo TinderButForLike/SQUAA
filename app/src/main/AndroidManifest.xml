@@ -2,8 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.cgaima.squaa">
 
+    <uses-sdk android:minSdkVersion="14" />
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
+    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
 
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
@@ -11,6 +15,9 @@
          location permissions for the 'MyLocation' functionality.
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:name=".ParseApp"
@@ -26,22 +33,23 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
-        <activity android:name=".activities.HomeActivity">
-        </activity>
+        <activity android:name=".activities.HomeActivity"></activity>
         <activity android:name=".activities.SignUpActivity" />
         <activity android:name=".activities.EventDetailActivity" />
         <activity android:name=".activities.MapsActivity" />
-        <activity android:name=".activities.EventActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar">
-        </activity>
+        <activity
+            android:name=".activities.EventActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
         <activity
             android:name=".activities.ProfileLandingActivity"
+            android:theme="@style/AppTheme" />
 
-            android:theme="@style/AppTheme"></activity>
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyC1wzsdt6OMMNuW4PBHBHQOFXd_gjtwy2Y" />
 
-        <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyC1wzsdt6OMMNuW4PBHBHQOFXd_gjtwy2Y"/>
+        <activity android:name=".activities.ChatActivity"></activity>
     </application>
 
 </manifest>

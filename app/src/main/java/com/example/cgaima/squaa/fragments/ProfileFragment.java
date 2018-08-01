@@ -13,10 +13,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.cgaima.squaa.ProfileFragements.AboutUser;
 import com.example.cgaima.squaa.ProfileFragements.EventHistory;
+import com.example.cgaima.squaa.ProfileFragements.EventUpcoming;
 import com.example.cgaima.squaa.ProfileFragements.Logout;
 import com.example.cgaima.squaa.R;
 import com.parse.ParseException;
@@ -55,6 +57,15 @@ public class ProfileFragment extends Fragment {
             e.printStackTrace();
         }
 
+        imageInToolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getActivity(), "change profile picture", Toast.LENGTH_LONG).show();
+                //TODO : ALLOW USER TO CHANGE PROFILE PICTURE
+
+            }
+        });
+
 
 
         viewPager = (ViewPager) view.findViewById(R.id.vpContainer);
@@ -65,6 +76,7 @@ public class ProfileFragment extends Fragment {
     }
     private void setupViewPager(ViewPager viewPager) {
        ViewPagerAdapter adapter = new ViewPagerAdapter(((AppCompatActivity)getActivity()).getSupportFragmentManager());
+        adapter.addFragment(new EventUpcoming(), "My Upcoming");
         adapter.addFragment(new EventHistory(), "Event History");
         adapter.addFragment(new AboutUser(), "About User");
         adapter.addFragment(new Logout(), "Logout");

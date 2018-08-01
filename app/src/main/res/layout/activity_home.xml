@@ -10,6 +10,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#eff0f2"
         android:minHeight="?attr/actionBarSize" />
 
     <android.support.design.widget.BottomNavigationView
@@ -19,8 +20,8 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
         android:minHeight="?attr/actionBarSize"
-        app:itemBackground="@color/colorPrimary"
-        app:itemIconTint="@color/colorAccent"
+        app:itemBackground="@color/lightGrey"
+        app:itemIconTint="@color/babyPink"
         app:menu="@menu/bottom_navigation" />
 
     <android.support.v4.view.ViewPager
