@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -57,7 +56,7 @@ public class EventDetailActivity extends AppCompatActivity {
     @BindView(R.id.tvOwner) TextView ownerName;
     @BindView(R.id.ivOwnerPic) ImageView ownerPic;
     @BindView(R.id.tvLocation) TextView Eventlocal;
-    @BindView(R.id.ratingBar1) RatingBar rb;
+    @BindView(R.id.ratingBar) RatingBar rb;
 
 
     @Override
@@ -97,12 +96,8 @@ public class EventDetailActivity extends AppCompatActivity {
         }
 
         fab = findViewById(R.id.fab);
-        joined = false;
-        fab.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_join));
-
         joined = EventAttendance.isAttending(event);
-        fab.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_join));
-
+        if (joined) { fab.setImageResource(R.drawable.ic_unjoin_event); }
         // TODO - rating bar
 //        rb =(RatingBar)findViewById(R.id.ratingBar1);
 //        rb.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener(){
@@ -162,7 +157,7 @@ public class EventDetailActivity extends AppCompatActivity {
                 @Override
                 public void done(ParseException e) {
                     if (e == null) {
-                        fab.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_unjoin));
+                        fab.setImageResource(R.drawable.ic_unjoin_event);
                         numAttend.setText(String.valueOf(EventAttendance.getNumAttending(event)));
                         Log.d("EventAdapter", "Successfully joined event. :) ");
                     } else {
@@ -178,7 +173,7 @@ public class EventDetailActivity extends AppCompatActivity {
             EventAttendance.Query query = new EventAttendance.Query();
             query.findEventAttendance(ParseUser.getCurrentUser(), event);
             try {
-                fab.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_join));
+                fab.setImageResource(R.drawable.ic_join_event);
                 query.getFirst().deleteInBackground();
                 numAttend.setText(String.valueOf(EventAttendance.getNumAttending(event)));
                 Log.d("EventAdapter", "Successfully unjoined event. ");

@@ -46,7 +46,7 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textStyle="italic" />
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/ivOwnerPic"
         android:layout_width="33dp"
         android:layout_height="38dp"
@@ -82,7 +82,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/ivOwnerPic"
         android:layout_toEndOf="@+id/tvEventName"
-        android:text="Attending"
+        android:text="Attended"
         android:textAlignment="center" />
 
     <TextView
@@ -103,24 +103,6 @@
         android:text="Owner"
         android:textAlignment="viewStart" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@+id/ivEventPic"
-        android:layout_gravity="end|bottom"
-        android:src="@drawable/ic_join_event"
-        app:backgroundTint="@color/secondaryColor"
-        app:rippleColor="@color/secondaryDarkColor"/>
-    <com.lyft.lyftbutton.LyftButton
-        android:id="@+id/lyft_button"
-        android:layout_width="234dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tvDescription"
-        android:layout_centerHorizontal="true"
-        android:background="@drawable/button_shape" />
-
     <RatingBar
         android:id="@+id/ratingBar"
         android:layout_width="wrap_content"
@@ -128,4 +110,20 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/ivEventPic"
         android:numStars="5" />
+
+    <TextView
+        android:id="@+id/tvDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvDescription"
+        android:layout_centerHorizontal="true"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvDate"
+        android:layout_centerHorizontal="true"
+        android:text="This event has already past. " />
 </RelativeLayout>
