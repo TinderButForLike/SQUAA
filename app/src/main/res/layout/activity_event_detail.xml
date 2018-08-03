@@ -27,9 +27,9 @@
         android:id="@+id/tvEventName"
         android:layout_width="157dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/ratingBar"
+        android:layout_below="@+id/ivEventPic"
         android:layout_centerHorizontal="true"
-        android:text="TextView"
+        android:text="event name"
         android:textAlignment="center"
         android:textAllCaps="true"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
@@ -41,12 +41,12 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvLocation"
         android:layout_centerHorizontal="true"
-        android:text="TextView"
+        android:text="description"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textStyle="italic" />
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/ivOwnerPic"
         android:layout_width="33dp"
         android:layout_height="38dp"
@@ -91,7 +91,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvEventName"
         android:layout_centerHorizontal="true"
-        android:text="TextView"
+        android:text="location"
         android:textAlignment="center" />
 
     <TextView
@@ -113,11 +113,12 @@
         android:src="@drawable/ic_join_event"
         app:backgroundTint="@color/secondaryColor"
         app:rippleColor="@color/secondaryDarkColor"/>
+
     <com.lyft.lyftbutton.LyftButton
         android:id="@+id/lyft_button"
         android:layout_width="234dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tvDescription"
+        android:layout_below="@+id/tvDate"
         android:layout_centerHorizontal="true"
         android:background="@drawable/button_shape" />
 
@@ -125,7 +126,24 @@
         android:id="@+id/ratingBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/ivEventPic"
+        android:layout_below="@+id/tvRate"
+        android:layout_centerHorizontal="true"
         android:numStars="5" />
+
+    <TextView
+        android:id="@+id/tvRate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/lyft_button"
+        android:layout_centerHorizontal="true"
+        android:text="rate this event!" />
+
+    <TextView
+        android:id="@+id/tvDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvDescription"
+        android:layout_centerHorizontal="true"
+        android:text="date" />
+
 </RelativeLayout>

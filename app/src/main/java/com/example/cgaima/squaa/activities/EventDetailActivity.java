@@ -42,8 +42,10 @@ public class EventDetailActivity extends AppCompatActivity {
     //resource variables
     boolean joined;
     private static final String TAG = "lyft:Example";
-    private static final String CLIENT_ID = "rzupE13z8Yo2";
     private static final String LYFT_PACKAGE = "me.lyft.android";
+    private static final String CLIENT_ID = "rzupE13z8Yo2";
+    private static final String CLIENT_TOKEN = "4IA9raWjUI3rr3igs0SNcIEzrvWmUhl8EAZGaajBtVeEGrg7CBj+tzqmri6pDEP2yC3QN/D/23/Bc6Ew0DEX5IfLXfJv0bZt2JYBNIf1aNeXazxXU8T32NU=";
+
     FloatingActionButton fab;
     Event event;
 
@@ -55,7 +57,7 @@ public class EventDetailActivity extends AppCompatActivity {
     @BindView(R.id.tvNumAttend) TextView numAttend;
     @BindView(R.id.tvOwner) TextView ownerName;
     @BindView(R.id.ivOwnerPic) ImageView ownerPic;
-    @BindView(R.id.tvLocation) TextView Eventlocal;
+    @BindView(R.id.tvLocation) TextView location;
     @BindView(R.id.ratingBar) RatingBar rb;
 
 
@@ -71,7 +73,7 @@ public class EventDetailActivity extends AppCompatActivity {
 
         ApiConfig apiConfig = new ApiConfig.Builder()
                 .setClientId(CLIENT_ID)
-                .setClientToken("4IA9raWjUI3rr3igs0SNcIEzrvWmUhl8EAZGaajBtVeEGrg7CBj+tzqmri6pDEP2yC3QN/D/23/Bc6Ew0DEX5IfLXfJv0bZt2JYBNIf1aNeXazxXU8T32NU=")
+                .setClientToken(CLIENT_TOKEN)
                 .build();
 
         LyftButton lyftButton = findViewById(R.id.lyft_button);
@@ -80,7 +82,7 @@ public class EventDetailActivity extends AppCompatActivity {
 
         // check location permission
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(this, "Turn on permissions to call Lyft from our app!", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Turn on permissions to call Lyft from our app!", Toast.LENGTH_SHORT).show();
             lyftButton.setVisibility(View.GONE); // hide lyft button
         }
         else{
@@ -95,18 +97,30 @@ public class EventDetailActivity extends AppCompatActivity {
             lyftButton.load();
         }
 
+        // set join event initial UI
         fab = findViewById(R.id.fab);
         joined = EventAttendance.isAttending(event);
         if (joined) { fab.setImageResource(R.drawable.ic_unjoin_event); }
-        // TODO - rating bar
-//        rb =(RatingBar)findViewById(R.id.ratingBar1);
-//        rb.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener(){
-//            @Override
-//            public void onRatingChanged(RatingBar ratingBar, float rating,
-//                                        boolean fromUser) {
-//                Toast.makeText(getApplicationContext(),Float.toString(rating),Toast.LENGTH_LONG).show();
-//            }
-//        });
+
+        rb.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener(){
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, final float rating,
+                                        boolean fromUser) {
+                event.put("rating", rating);
+                event.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if (e == null) {
+                            Toast.makeText(getApplicationContext(), String.format("Successfully rated event %.1f stars", rating),Toast.LENGTH_LONG).show();
+                        }
+                        else {
+                            Log.e("EventDetailActivity", e.toString());
+                            Toast.makeText(getApplicationContext(), "Failed to rate the event try again later",Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+            }
+        });
 
         EventName.setText(event.getEventName());
         description.setText(event.getDescription());
@@ -115,7 +129,7 @@ public class EventDetailActivity extends AppCompatActivity {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        Eventlocal.setText(event.getLocation());
+        location.setText(event.getLocation());
         int num = event.getAttendees().size();
         numAttend.setText(Integer.toString(num));
 
