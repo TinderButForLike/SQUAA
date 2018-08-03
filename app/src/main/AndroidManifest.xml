@@ -34,9 +34,6 @@
         <activity android:name=".activities.SignUpActivity" />
         <activity android:name=".activities.EventDetailActivity" />
         <activity android:name=".activities.MapsActivity" />
-        <activity
-            android:name=".activities.ProfileLandingActivity"
-            android:theme="@style/AppTheme" />
 
         <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyC1wzsdt6OMMNuW4PBHBHQOFXd_gjtwy2Y"/>
     </application>
