@@ -11,11 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.cgaima.squaa.Models.Event;
-import com.example.cgaima.squaa.Models.EventAttendance;
 import com.example.cgaima.squaa.R;
 import com.example.cgaima.squaa.adapters.ProfileAdapter;
 import com.parse.FindCallback;
-import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -80,7 +78,9 @@ public class EventHistory extends Fragment {
 
         return view;
     }
+
     public void getEventHistory() {
+        Log.e("EventHistory", "get event history");
         // query event attendance of the current user
         ParseQuery<ParseObject> query = ParseQuery.getQuery("EventAttendance");
         query.include("event");

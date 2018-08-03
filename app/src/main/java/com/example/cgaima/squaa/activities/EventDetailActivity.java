@@ -101,7 +101,9 @@ public class EventDetailActivity extends AppCompatActivity {
         fab = findViewById(R.id.fab);
         joined = EventAttendance.isAttending(event);
         if (joined) { fab.setImageResource(R.drawable.ic_unjoin_event); }
+        numAttend.setText(String.valueOf(EventAttendance.getNumAttending(event)));
 
+        // set rating bar
         rb.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener(){
             @Override
             public void onRatingChanged(RatingBar ratingBar, final float rating,

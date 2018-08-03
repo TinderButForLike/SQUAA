@@ -9,7 +9,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 
@@ -17,7 +16,6 @@ import com.example.cgaima.squaa.R;
 import com.example.cgaima.squaa.fragments.CreateEventFragment;
 import com.example.cgaima.squaa.fragments.HomeFragment;
 import com.example.cgaima.squaa.fragments.MapFragment;
-import com.example.cgaima.squaa.fragments.OtherProfileFragment;
 import com.example.cgaima.squaa.fragments.ProfileFragment;
 
 import butterknife.BindView;
@@ -82,10 +80,10 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-    // inflate the menu, adds items to the action bar
+    /*// inflate the menu, adds items to the action bar
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_toolbar, menu);
+        getMenuInflater().inflate(R.menu.menu_fragment_home, menu);
         return true;
-    }
+    }*/
 }

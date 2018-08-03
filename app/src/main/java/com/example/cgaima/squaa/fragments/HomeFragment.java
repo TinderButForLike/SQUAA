@@ -6,7 +6,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -14,11 +13,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.support.v7.widget.SearchView;
 import android.widget.Toast;
 
-import com.example.cgaima.squaa.adapters.EventAdapter;
 import com.example.cgaima.squaa.Models.Event;
 import com.example.cgaima.squaa.R;
+import com.example.cgaima.squaa.adapters.EventAdapter;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 
@@ -50,39 +50,46 @@ public class HomeFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        // TODO - make search view show up for home fragment
-        MenuItem searchItem = menu.findItem(R.id.action_search);
+        // make search view show up for home fragment only
+        inflater.inflate(R.menu.menu_fragment_home, menu);
 
+        final MenuItem searchItem = menu.findItem(R.id.action_search);
         final SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // disable refresh during search view
+                swipeContainer.setEnabled(false);
+                swipeContainer.setRefreshing(false);
+                // perform query
+                fetchQueryEvents(query);
+                // avoid issues with firing twice
+                searchView.clearFocus();
+                return true;
+            }
 
-        searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+            @Override
+            public boolean onQueryTextChange(String s) {
+                return false;
+            }
+        });
+       /*searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem menuItem) {
-                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                    @Override
-                    public boolean onQueryTextSubmit(String query) {
-                        // perform query
-                        fetchQueryEvents(query);
-                        // avoid issues with firing twice
-                        searchView.clearFocus();
-                        return true;
-                    }
 
-                    @Override
-                    public boolean onQueryTextChange(String s) {
-                        return false;
-                    }
-
-                });
                 return true;
             }
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem menuItem) {
                 loadTopPosts();
+                // enable refresh after menu closed
+                swipeContainer.setEnabled(true);
+                swipeContainer.setRefreshing(true);
+                searchItem.collapseActionView();
                 return true;
             }
-        });
+        });*/
     }
 
     @Override

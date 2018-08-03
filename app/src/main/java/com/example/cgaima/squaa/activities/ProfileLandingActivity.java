@@ -30,8 +30,8 @@ public class ProfileLandingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_landing);
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        final ImageView imageInToolbar = (ImageView) toolbar.findViewById(R.id.ivProfilePic);
+        toolbar = findViewById(R.id.toolbar);
+        final ImageView imageInToolbar = toolbar.findViewById(R.id.ivProfilePic);
         ParseUser currentUser =  ParseUser.getCurrentUser();
 
 //        imageInToolbar.setParseFile

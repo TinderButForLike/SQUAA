@@ -3,8 +3,6 @@ package com.example.cgaima.squaa.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -26,7 +24,7 @@ import com.example.cgaima.squaa.Models.EventAttendance;
 import com.example.cgaima.squaa.R;
 import com.example.cgaima.squaa.activities.EventDetailActivity;
 import com.example.cgaima.squaa.fragments.OtherProfileFragment;
-import com.parse.GetDataCallback;
+import com.parse.DeleteCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
@@ -40,11 +38,11 @@ import butterknife.BindViews;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-// TODO - rename variables so that they are consistent
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> {
     Context context;
     List<Event> events;
     private final int REQUEST_CODE = 21;
+
     public EventAdapter(List<Event> events) {
         this.events = events;
     }
@@ -69,39 +67,16 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         holder.location.setText(event.getLocation());
         holder.date.setText(event.getDate());
 
-        // set media image
-        if (event.getEventImage()==null) {
-            holder.media_image.setImageResource(R.drawable.image_default);
-        } else {
-            event.getEventImage().getDataInBackground(new GetDataCallback() {
-                @Override
-                public void done(byte[] data, ParseException e) {
-                    if (e == null) {
-                        Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
-                        holder.media_image.setImageBitmap(bmp);
-                    }
-                    else {
-                        Log.d("EventAdapter", "Can't load image");
-                        e.printStackTrace();
-                    }
-                }
-            });
-        }
-
-        // set owner name
+        // set owner name, profile picture, media image
         try {
             holder.tvOwner.setText(event.getOwner().fetchIfNeeded().getUsername());
+            Glide.with(context).load(event.getOwner().fetchIfNeeded()
+                    .getParseFile("profile_picture").getUrl()).into(holder.ownerPic);
+            Glide.with(context).load(event.getEventImage().getUrl()).into(holder.media_image);
         } catch (ParseException e) {
             e.printStackTrace();
         }
 
-        // set owner profile picture
-        try {
-            Glide.with(context).load(event.getOwner().fetchIfNeeded()
-                    .getParseFile("profile_picture").getUrl()).into(holder.ownerPic);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
 
         // set button and numAttended initial UI
         holder.numAttend.setText(String.valueOf(EventAttendance.getNumAttending(event)));
@@ -122,7 +97,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
                         public void done(ParseException e) {
                             if (e == null) {
                                 holder.join.setText("unjoin?");
-                                holder.numAttend.setText(String.valueOf(EventAttendance.getNumAttending(event)));
+                                holder.numAttend.setText(String.valueOf(String.valueOf(EventAttendance.getNumAttending(event))));
                                 Log.d("EventAdapter", "Successfully joined event. :) ");
                             } else {
                                 Toast.makeText(context,"Failed to join event", Toast.LENGTH_LONG).show();
@@ -137,11 +112,22 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
                     EventAttendance.Query query = new EventAttendance.Query();
                     query.findEventAttendance(ParseUser.getCurrentUser(), event);
                     try {
-                        query.getFirst().deleteInBackground();
-                        holder.join.setText("join");
-                        holder.numAttend.setText(String.valueOf(EventAttendance.getNumAttending(event)));
-                        Log.d("EventAdapter", "Successfully unjoined event. ");
+                        query.getFirst().deleteInBackground(new DeleteCallback() {
+                            @Override
+                            public void done(ParseException e) {
+                                if (e == null) {
+                                    holder.join.setText("join");
+                                    holder.numAttend.setText(String.valueOf(String.valueOf(EventAttendance.getNumAttending(event))));
+                                    Log.d("EventAdapter", "Successfully unjoined event. ");
+                                }
+                                else {
+                                    Toast.makeText(context,"Failed to unjoin event", Toast.LENGTH_LONG).show();
+                                    Log.e("EventAdapter", e.toString());
+                                }
+                            }
+                        });
                     } catch (ParseException e) {
+                        Toast.makeText(context,"Failed to unjoin event", Toast.LENGTH_LONG).show();
                         e.printStackTrace();
                     }
                 }

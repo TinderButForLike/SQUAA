@@ -78,16 +78,20 @@ public class EventAttendance extends ParseObject {
 
     // get total number of attendees for event
     public static int getNumAttending(Event event) {
-        // defaults num attending to 0
-        int numAttending = 0;
         EventAttendance.Query query = new EventAttendance.Query();
         query.findAllEventAttendance(event);
         try {
+            return query.count();
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return -1;
+        }
+        /*try {
             List eventAttendance = query.find();
             numAttending = eventAttendance.size();
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        return numAttending;
+        return numAttending;*/
     }
 }
