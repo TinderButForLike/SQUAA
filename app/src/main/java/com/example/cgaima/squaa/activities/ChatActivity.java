@@ -2,15 +2,19 @@ package com.example.cgaima.squaa.activities;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.cgaima.squaa.Models.Event;
 import com.example.cgaima.squaa.Models.Message;
 import com.example.cgaima.squaa.R;
 import com.example.cgaima.squaa.adapters.ChatAdapter;
@@ -20,7 +24,8 @@ import com.parse.ParseAnonymousUtils;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
+
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,13 +38,17 @@ public class ChatActivity extends AppCompatActivity {
     static final int MAX_CHAT_MESSAGES_TO_SHOW = 50;
 
 
+
+
     EditText etMessage;
+    TextView title;
     Button btSend;
     RecyclerView rvChat;
     ArrayList<Message> mMessages;
     ChatAdapter mAdapter;
     // Keep track of initial load to scroll to the bottom of the ListView
     boolean mFirstLoad;
+    Event event;
 
     // Create a handler which can run code periodically
     static final int POLL_INTERVAL = 1000; // milliseconds
@@ -59,14 +68,20 @@ public class ChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chatbox);
+        this.getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         // User login
         if (ParseUser.getCurrentUser() != null) { // start with existing user
             startWithCurrentUser();
         } else { // If not logged in, login as a new anonymous user
             login();
         }
-        myHandler.postDelayed(mRefreshMessagesRunnable, POLL_INTERVAL);
+        title = findViewById(R.id.toolbar_title);
 
+        myHandler.postDelayed(mRefreshMessagesRunnable, POLL_INTERVAL);
+        Parcelable parcel = this.getIntent().getParcelableExtra("event_chat");
+        event = (Event) Parcels.unwrap(parcel);
+        title.setText(event.getEventName());
 
 
 
@@ -117,25 +132,35 @@ public class ChatActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String data = etMessage.getText().toString();
 
-                Message message = new Message();
-                message.setBody(data);
-                message.setUserId(ParseUser.getCurrentUser().getObjectId());
+                Log.e("message", String.valueOf(data.length()));
 
-                message.saveInBackground(new SaveCallback() {
-                    @Override
-                    public void done(ParseException e) {
-                        if(e == null) {
-                            Toast.makeText(ChatActivity.this, "Successfully created message on Parse",
-                                    Toast.LENGTH_SHORT).show();
-                            refreshMessages();
-                        } else {
-                            Log.e(TAG, "Failed to save message", e);
-                        }
+                if (data.length() > 0) {
+                    final Message message = new Message();
+                    message.setBody(data);
+                    message.setUserId(ParseUser.getCurrentUser().getObjectId());
+                    message.setOwner(ParseUser.getCurrentUser());
+                    String eventId = event.getObjectId();
+                    message.setEvent(eventId);
+
+                    try {
+                        message.save();
+                        Toast.makeText(ChatActivity.this, "Successfully created message on Parse",
+                                Toast.LENGTH_SHORT).show();
+
+                        refreshMessages();
+
+                    } catch (ParseException e) {
+                        e.printStackTrace();
                     }
-                });
-                etMessage.setText(null);
+                    etMessage.setText(null);
+
+                } else {
+                    Toast.makeText(ChatActivity.this, "Please type something first",
+                            Toast.LENGTH_SHORT).show();
+                }
             }
         });
+
     }
 
     // Query messages from Parse so we can load them into the chat adapter
@@ -145,6 +170,7 @@ public class ChatActivity extends AppCompatActivity {
         ParseQuery<Message> query = ParseQuery.getQuery(Message.class);
         // Configure limit and sort order
         query.setLimit(MAX_CHAT_MESSAGES_TO_SHOW);
+        query.whereEqualTo("eventId", event.getObjectId());
 
         // get the latest 50 messages, order will show up newest to oldest of this group
         query.orderByDescending("createdAt");
@@ -167,8 +193,9 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
     }
+    }
 
 
 
 
-}
+

@@ -45,7 +45,8 @@
             android:id="@+id/tabs"
             android:background="#a9a9a9"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            app:tabTextColor="@color/secondaryTextColor">
 
             <android.support.design.widget.TabItem
                 android:id="@+id/upcoming"

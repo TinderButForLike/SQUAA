@@ -45,10 +45,16 @@
             android:layout_height="wrap_content">
 
             <android.support.design.widget.TabItem
-                android:id="@+id/tiHistory"
+            android:id="@+id/tiHistory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="History" />
+
+            <android.support.design.widget.TabItem
+                android:id="@+id/tiUpcoming"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Event History" />
+                android:text="Upcoming" />
 
             <android.support.design.widget.TabItem
                 android:id="@+id/tiAbout"

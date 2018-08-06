@@ -4,7 +4,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.example.cgaima.squaa"
-        minSdkVersion 27
+        minSdkVersion 25
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -64,7 +64,6 @@ dependencies {
     // circular imageview
     implementation 'de.hdodenhof:circleimageview:2.2.0'
 
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.8.1'
     // for logging API calls to LogCat
 
     // google calendar
@@ -80,5 +79,10 @@ dependencies {
 //    implementation('com.google.apis:google-api-services-calendar:v3-rev330-1.23.0') {
 //        exclude group: 'org.apache.httpcomponents'
     // }
+
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.8.1'
+
+    // lyft
+    implementation 'com.lyft:lyft-android-sdk:1.0.3'
 
 }

@@ -1,5 +1,6 @@
 package com.example.cgaima.squaa.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
@@ -10,8 +11,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.cgaima.squaa.Models.Message;
 import com.example.cgaima.squaa.R;
+import com.parse.ParseException;
+import com.parse.ParseUser;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -38,6 +42,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
         return viewHolder;
     }
 
+    @SuppressLint("ResourceAsColor")
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Message message = mMessages.get(position);
@@ -46,16 +51,30 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
         if (isMe) {
             holder.imageMe.setVisibility(View.VISIBLE);
             holder.imageOther.setVisibility(View.GONE);
+            //holder.imageMe.setBackgroundResource(R.drawable.button_shape);
             holder.body.setGravity(Gravity.CENTER_VERTICAL | Gravity.RIGHT);
+           // holder.body.setBackgroundColor(R.color.primaryLightColor);
         } else {
             holder.imageOther.setVisibility(View.VISIBLE);
             holder.imageMe.setVisibility(View.GONE);
+           // holder.imageOther.setBackgroundResource(circle);
             holder.body.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
+            //holder.body.setBackgroundColor(R.color.light_gray);
         }
 
         final ImageView profileView = isMe ? holder.imageMe : holder.imageOther;
         Glide.with(mContext).load(getProfileUrl(message.getUserId())).into(profileView);
         holder.body.setText(message.getBody());
+        /* final ImageView profileView = isMe ? holder.imageMe : holder.imageOther; */
+        try {
+            ParseUser owner = message.getOwner();
+            Glide.with(mContext).load(owner.fetchIfNeeded().getParseFile("profile_picture").getUrl()).apply(RequestOptions.circleCropTransform()).into(profileView);
+        } catch (ParseException e) {
+           e.printStackTrace();
+       }
+        holder.body.setText(message.getBody());
+        //holder.body.setBackgroundColor(R.color.primaryLightColor);
+        //currentUser.fetchIfNeeded().getParseFile("profile_picture").getUrl()
     }
 
     // Create a gravatar image based on the hash value obtained from userId

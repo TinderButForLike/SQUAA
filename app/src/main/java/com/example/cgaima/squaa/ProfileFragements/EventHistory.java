@@ -12,11 +12,16 @@ import android.view.ViewGroup;
 
 import com.example.cgaima.squaa.Models.Event;
 import com.example.cgaima.squaa.R;
-import com.example.cgaima.squaa.adapters.profileAdapter;
+import com.example.cgaima.squaa.adapters.ProfileAdapter;
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -25,7 +30,7 @@ import butterknife.ButterKnife;
 
 public class EventHistory extends Fragment {
     @BindView(R.id.rvEventHistory) RecyclerView rvGrid;
-    private profileAdapter mAdapter;
+    private ProfileAdapter mAdapter;
     private List<Event> events;
 
 
@@ -64,36 +69,36 @@ public class EventHistory extends Fragment {
         events = new ArrayList<>();
 
         // Create an adapter
-        mAdapter = new profileAdapter(events);
+        mAdapter = new ProfileAdapter(events);
 
         // Bind adapter to list
         rvGrid.setAdapter(mAdapter);
-        getPosts();
+
+        getEventHistory();
 
         return view;
     }
-    public void getPosts(){
-        final Event.Query query = new Event.Query();
-        query.getTop().withOwner();
-        query.findInBackground(new FindCallback<Event>() {
+    public void getEventHistory() {
+        // query event attendance of the current user
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("EventAttendance");
+        query.include("event");
+        query.whereEqualTo("attendee", ParseUser.getCurrentUser());
+        query.findInBackground(new FindCallback<ParseObject>() {
             @Override
-            public void done(List<Event> objects, ParseException e) {
-                if (e == null){
-                    events.clear();
-                    // mAdapter.addAll(objects);
-                    for (int i = 0; i < objects.size(); i++){
-
-                        events.add(objects.get(i));
-                        mAdapter.notifyDataSetChanged();
-
+            public void done(List<ParseObject> objects, ParseException e) {
+                if(e==null) {
+                    for (int i = 0; i < objects.size(); i++) {
+                        Event event = (Event) objects.get(i).getParseObject("event");
+                        Date eventEndDate = event.getDate("toDate");
+                        Calendar cal = Calendar.getInstance();
+                        Date today= cal.getTime();
+                        // check if date is before today and add to adapter if it is
+                        if (eventEndDate.before(today)) {
+                            mAdapter.add(event);
+                        }
                     }
-                } else {
-                    e.printStackTrace();
-                    Log.e("EventHistory", "Failed to get Events");
                 }
             }
         });
     }
-
-
 }

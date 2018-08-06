@@ -29,6 +29,9 @@ public class EventDetailActivity extends AppCompatActivity {
 
     //resource variables
     boolean joined;
+    private static final String TAG = "lyft:Example";
+    private static final String CLIENT_ID = "rzupE13z8Yo2";
+    private static final String LYFT_PACKAGE = "me.lyft.android";
     FloatingActionButton fab;
 
     @BindView(R.id.ivEventPic)
@@ -53,13 +56,42 @@ public class EventDetailActivity extends AppCompatActivity {
     RatingBar rb;
     @BindView(R.id.ivCal)
     ImageView calendar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_detail);
-        ButterKnife.bind(this); //bind butterknife after
+        ButterKnife.bind(this);
         Parcelable parcel = this.getIntent().getParcelableExtra("event");
         final Event event = (Event) Parcels.unwrap(parcel);
+
+//        ApiConfig apiConfig = new ApiConfig.Builder()
+//                .setClientId(CLIENT_ID)
+//                .setClientToken("4IA9raWjUI3rr3igs0SNcIEzrvWmUhl8EAZGaajBtVeEGrg7CBj+tzqmri6pDEP2yC3QN/D/23/Bc6Ew0DEX5IfLXfJv0bZt2JYBNIf1aNeXazxXU8T32NU=")
+//                .build();
+//
+//        LyftButton lyftButton = findViewById(R.id.lyft_button);
+//        lyftButton.setApiConfig(apiConfig);
+//        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+//
+//        // check location permission
+//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//            Toast.makeText(this, "Turn on permissions to call Lyft from our app!", Toast.LENGTH_LONG).show();
+//            lyftButton.setVisibility(View.GONE); // hide lyft button
+//            return;
+//        }
+//        else{
+//            Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+//            ParseGeoPoint parseGeoPoint = event.getGeoPoint();
+//
+//            RideParams.Builder rideParamsBuilder = new RideParams.Builder()
+//                    .setPickupLocation(location.getLatitude(), location.getLongitude())
+//                    .setDropoffLocation(parseGeoPoint.getLatitude(), parseGeoPoint.getLongitude());
+//            rideParamsBuilder.setRideTypeEnum(RideTypeEnum.CLASSIC);
+//            lyftButton.setRideParams(rideParamsBuilder.build());
+//
+//            lyftButton.load();
+//        }
 
         fab = findViewById(R.id.fab);
         joined = false;
@@ -99,12 +131,21 @@ public class EventDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(EventDetailActivity.this, ChatActivity.class);
+                i.putExtra("event_chat", Parcels.wrap(event));
                 startActivity(i);
             }
         });
 
 
-
+        // TODO - rating bar
+//        rb =(RatingBar)findViewById(R.id.ratingBar1);
+//        rb.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener(){
+//            @Override
+//            public void onRatingChanged(RatingBar ratingBar, float rating,
+//                                        boolean fromUser) {
+//                Toast.makeText(getApplicationContext(),Float.toString(rating),Toast.LENGTH_LONG).show();
+//            }
+//        });
 
         EventName.setText(event.getEventName());
         description.setText(event.getDescription());
@@ -141,15 +182,42 @@ public class EventDetailActivity extends AppCompatActivity {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-
             }
         });
-
     }
 
-    public void joinEvent(Event event){
+    public void joinEvent(Event event) {
         event.setAttendees(ParseUser.getCurrentUser());
         Log.d("EventDetailActivity", "joinEvent: " + event.getAttendees().size());
-
     }
+
+    /*private void deepLinkIntoLyft() {
+        if (isPackageInstalled(this, LYFT_PACKAGE)) {
+            // TODO - set lyft destination here
+            openLink(this, "lyft://");
+            Log.d(TAG, "Lyft is already installed on your phone.");
+        } else {
+            openLink(this, String.format("https://www.lyft.com/signup/SDKSIGNUP?clientId=%s&sdkName=android_direct", CLIENT_ID));
+
+            Log.d(TAG, "Lyft is not currently installed on your phone..");
+        }
+    }
+
+    static void openLink(Activity activity, String link) {
+        Intent playStoreIntent = new Intent(Intent.ACTION_VIEW);
+        playStoreIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        playStoreIntent.setData(Uri.parse(link));
+        activity.startActivity(playStoreIntent);
+    }
+
+    static boolean isPackageInstalled(Context context, String packageId) {
+        PackageManager pm = context.getPackageManager();
+        try {
+            pm.getPackageInfo(packageId, PackageManager.GET_ACTIVITIES);
+            return true;
+        } catch (PackageManager.NameNotFoundException e) {
+            // ignored.
+        }
+        return false;
+    }*/
 }

@@ -15,13 +15,13 @@ import com.example.cgaima.squaa.R;
 
 import java.util.List;
 
-public class profileAdapter extends RecyclerView.Adapter<profileAdapter.ViewHolder> {
+public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHolder> {
     private List<Event> mEvents;
     Context context;
     private final int REQUEST_CODE = 21;
     private final int REQUEST_CODE_1 = 22;
     // pass in the Tweets array in the constructor
-    public profileAdapter(List<Event> events) {
+    public ProfileAdapter(List<Event> events) {
         mEvents = events;
 
     }
@@ -52,6 +52,12 @@ public class profileAdapter extends RecyclerView.Adapter<profileAdapter.ViewHold
         notifyDataSetChanged();
     }
 
+    // Add a list of items -- change to type used
+    public void add(Event event) {
+        mEvents.add(event);
+        notifyItemInserted(mEvents.size()-1);
+    }
+
 
     // bind the values based on the position of the element
 
@@ -62,10 +68,7 @@ public class profileAdapter extends RecyclerView.Adapter<profileAdapter.ViewHold
 
         // populate the views according to this data
 
-
         Glide.with(context).load(event.getEventImage().getUrl()).into(holder.ivEvent);
-
-
     }
 
     @Override
