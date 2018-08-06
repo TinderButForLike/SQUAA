@@ -15,8 +15,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:theme="@style/AppTheme.AppBarOverlay"
-        android:background="@color/primaryColor">
+        android:background="@color/primaryColor"
+        android:theme="@style/AppTheme.AppBarOverlay">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/ivProfilePic"
@@ -29,22 +29,22 @@
 
         <RatingBar
             android:id="@+id/rbUserRating"
-            style="@android:style/Widget.Material.Light.RatingBar.Indicator"
+            style="@android:style/Widget.Material.Light.RatingBar.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/ivProfilePic"
             android:layout_centerHorizontal="true"
             android:isIndicator="true"
             android:numStars="5"
-            android:rating="4" />
+            android:rating="0" />
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tabs"
-            app:tabTextColor="@color/black"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
-            android:layout_below="@+id/rbUserRating">
+            android:layout_below="@+id/avgRating"
+            app:tabTextColor="@color/black">
 
             <android.support.design.widget.TabItem
                 android:id="@+id/tiHistory"
@@ -62,14 +62,23 @@
                 android:id="@+id/tiAbout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="about me" />
+                android:text="About Me" />
 
             <android.support.design.widget.TabItem
                 android:id="@+id/Friends"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="log out" />
+                android:text="Log Out" />
         </android.support.design.widget.TabLayout>
+
+        <TextView
+            android:id="@+id/avgRating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rbUserRating"
+            android:layout_centerHorizontal="true"
+            android:text="avg rating"
+            android:textColor="@color/black" />
     </RelativeLayout>
 
     <android.support.v4.view.ViewPager

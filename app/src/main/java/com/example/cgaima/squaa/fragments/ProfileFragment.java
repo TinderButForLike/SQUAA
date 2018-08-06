@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.cgaima.squaa.ProfileFragements.AboutUser;
@@ -32,6 +34,8 @@ public class ProfileFragment extends Fragment {
     private TabLayout tabLayout;
     private ViewPager viewPager;
     @BindView(R.id.ivProfilePic) ImageView profilePic;
+    @BindView(R.id.avgRating) TextView avgRating;
+    @BindView(R.id.rbUserRating) RatingBar rb;
     // The onCreateView method is called when Fragment should create its View object hierarchy,
     // either dynamically or via XML layout inflation.
     @Override
@@ -48,7 +52,9 @@ public class ProfileFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         // Setup any handles to view objects here
         ParseUser currentUser =  ParseUser.getCurrentUser();
-
+        float rating = (float) currentUser.getDouble("rating");
+        avgRating.setText(String.valueOf(rating));
+        rb.setRating(rating);
         Log.e("PROFILE FRAGMENT", "whoah i get created too wtf");
         try {
             Glide.with(this).load(currentUser.fetchIfNeeded().getParseFile("profile_picture").getUrl()).into(profilePic);
@@ -56,10 +62,10 @@ public class ProfileFragment extends Fragment {
             e.printStackTrace();
         }
 
-        viewPager = (ViewPager) view.findViewById(R.id.vpContainer);
+        viewPager = view.findViewById(R.id.vpContainer);
         setupViewPager(viewPager);
 
-        tabLayout = (TabLayout) view.findViewById(R.id.tabs);
+        tabLayout = view.findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
     }
     private void setupViewPager(ViewPager viewPager) {

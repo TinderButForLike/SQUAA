@@ -42,7 +42,6 @@ public class LoginActivity extends AppCompatActivity {
         SignupBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 // to avoid ParseUser Exception: invalid session token
                 if (ParseUser.getCurrentUser() != null ) {
                     ParseUser.logOut();

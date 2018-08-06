@@ -4,6 +4,7 @@ package com.example.cgaima.squaa.activities;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +17,7 @@ import com.example.cgaima.squaa.R;
 import com.example.cgaima.squaa.fragments.CreateEventFragment;
 import com.example.cgaima.squaa.fragments.HomeFragment;
 import com.example.cgaima.squaa.fragments.MapFragment;
+import com.example.cgaima.squaa.fragments.OtherProfileFragment;
 import com.example.cgaima.squaa.fragments.ProfileFragment;
 
 import butterknife.BindView;
@@ -77,6 +79,16 @@ public class HomeActivity extends AppCompatActivity {
         if (getIntent().hasExtra("locationtext")){
             Log.d("Home Activity", "we have the goods.....");
             bottomNavigationView.setSelectedItemId(R.id.action_new_event);
+        }
+        // from event details activity to own profile
+        else if (getIntent().hasExtra("profile")) {
+            bottomNavigationView.setSelectedItemId(R.id.action_profile);
+        }
+        // from event details activity to event owner profile
+        else if (getIntent().hasExtra("eventOwner")) {
+            Fragment otherProfileFragment = new OtherProfileFragment();
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, otherProfileFragment).commit();
         }
     }
 

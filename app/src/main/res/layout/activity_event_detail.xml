@@ -26,44 +26,47 @@
 
     <TextView
         android:id="@+id/tvEventName"
-        android:layout_width="157dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/ivEventPic"
         android:layout_centerHorizontal="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:padding="5dp"
         android:text="event name"
         android:textAlignment="center"
-        android:textAllCaps="true"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textStyle="bold" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
 
     <TextView
         android:id="@+id/tvDescription"
-        android:layout_width="303dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvLocation"
         android:layout_centerHorizontal="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:padding="5dp"
         android:text="description"
-        android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:textStyle="italic" />
+        android:textAlignment="center" />
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/ivOwnerPic"
-        android:layout_width="33dp"
-        android:layout_height="38dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignStart="@+id/tvDescription"
-        android:layout_marginBottom="22dp"
+        android:layout_width="30dp"
+        android:layout_height="29dp"
+        android:layout_above="@+id/tvOwner"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="2dp"
+        android:layout_marginLeft="10dp"
         app:srcCompat="@android:drawable/sym_def_app_icon" />
 
     <TextView
         android:id="@+id/tvOwner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/tvDescription"
-        android:layout_below="@+id/ivOwnerPic"
-        android:layout_marginTop="-25dp"
-        android:text="TextView"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="10dp"
+        android:text="username"
         android:textAlignment="viewStart"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textStyle="bold" />
@@ -72,8 +75,9 @@
         android:id="@+id/tvNumAttend"
         android:layout_width="85dp"
         android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
         android:layout_alignTop="@+id/ivOwnerPic"
-        android:layout_toEndOf="@+id/tvEventName"
+        android:layout_marginRight="10dp"
         android:textAlignment="center"
         android:textStyle="bold" />
 
@@ -81,17 +85,21 @@
         android:id="@+id/attending"
         android:layout_width="85dp"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/ivOwnerPic"
-        android:layout_toEndOf="@+id/tvEventName"
+        android:layout_above="@+id/ivOwnerPic"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="10dp"
         android:text="Attending"
         android:textAlignment="center" />
 
     <TextView
         android:id="@+id/tvLocation"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tvEventName"
+        android:layout_below="@+id/tvDate"
         android:layout_centerHorizontal="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:padding="5dp"
         android:text="location"
         android:textAlignment="center" />
 
@@ -100,7 +108,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/ivOwnerPic"
-        android:layout_alignStart="@+id/tvDescription"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="10dp"
         android:text="Owner"
         android:textAlignment="viewStart" />
 
@@ -112,24 +121,28 @@
         android:layout_below="@+id/ivEventPic"
         android:layout_gravity="end|bottom"
         android:src="@drawable/ic_join_event"
+        android:visibility="gone"
         app:backgroundTint="@color/secondaryColor"
-        app:rippleColor="@color/secondaryDarkColor"/>
+        app:rippleColor="@color/secondaryDarkColor" />
 
     <com.lyft.lyftbutton.LyftButton
         android:id="@+id/lyft_button"
-        android:layout_width="234dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tvDate"
+        android:layout_below="@+id/tvDescription"
         android:layout_centerHorizontal="true"
-        android:background="@drawable/button_shape" />
+        android:background="@drawable/button_shape"
+        android:visibility="gone" />
 
     <RatingBar
         android:id="@+id/ratingBar"
+        style="@android:style/Widget.Material.RatingBar.Indicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvRate"
         android:layout_centerHorizontal="true"
-        android:numStars="5" />
+        android:numStars="5"
+        android:visibility="visible" />
 
     <TextView
         android:id="@+id/tvRate"
@@ -137,14 +150,19 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/lyft_button"
         android:layout_centerHorizontal="true"
-        android:text="rate this event!" />
+        android:text="rate this event!"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/tvDate"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tvDescription"
+        android:layout_below="@+id/tvEventName"
         android:layout_centerHorizontal="true"
-        android:text="date" />
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:padding="5dp"
+        android:text="date"
+        android:textAlignment="center" />
 
 </RelativeLayout>

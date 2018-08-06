@@ -133,6 +133,7 @@ public class CreateEventFragment extends Fragment {
         newEvent.setDescription(description);
         newEvent.setEventImage(img);
         newEvent.setGeoPoint(parseGeoPoint);
+        newEvent.put("numRating", 0);
 
         // set event owner
         newEvent.setOwner(ParseUser.getCurrentUser());

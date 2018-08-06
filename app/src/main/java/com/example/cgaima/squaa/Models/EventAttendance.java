@@ -44,9 +44,6 @@ public class EventAttendance extends ParseObject {
             whereEqualTo("event", event);
             return this;
         }
-        // TODO - find profile event history
-
-        // TODO - find profile upcoming events
 
         public Query includeDetails() {
             include("attendee");
