@@ -1,8 +1,6 @@
 package com.example.cgaima.squaa.adapters;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.icu.text.SimpleDateFormat;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -29,8 +27,6 @@ import com.parse.DeleteCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
-
-import org.parceler.Parcels;
 
 import java.util.Date;
 import java.util.List;
@@ -167,11 +163,9 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         holder.media_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(context, EventDetailActivity.class);
-                i.putExtra("event", Parcels.wrap(event));
-                i.putExtra("eventAttendance", Parcels.wrap(finalEventAttendance1));
-                //i.putExtra("post", post);
-                ((Activity) context).startActivityForResult(i, REQUEST_CODE);
+                Fragment eventDetailActivity = EventDetailActivity.newInstance(event, finalEventAttendance1);
+                FragmentTransaction fragmentTransaction = ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container, eventDetailActivity).commit();
             }
         });
     }

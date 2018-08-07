@@ -2,19 +2,21 @@ package com.example.cgaima.squaa.activities;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.icu.text.SimpleDateFormat;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Parcelable;
+import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -25,6 +27,8 @@ import com.example.cgaima.squaa.Models.Event;
 import com.example.cgaima.squaa.Models.EventAttendance;
 import com.example.cgaima.squaa.Models.GlideApp;
 import com.example.cgaima.squaa.R;
+import com.example.cgaima.squaa.fragments.OtherProfileFragment;
+import com.example.cgaima.squaa.fragments.ProfileFragment;
 import com.lyft.lyftbutton.LyftButton;
 import com.lyft.lyftbutton.RideParams;
 import com.lyft.lyftbutton.RideTypeEnum;
@@ -43,12 +47,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class EventDetailActivity extends AppCompatActivity {
+public class EventDetailActivity extends Fragment {
 
     //resource variables
     boolean joined;
-    private static final String TAG = "lyft:Example";
-    private static final String LYFT_PACKAGE = "me.lyft.android";
     private static final String CLIENT_ID = "rzupE13z8Yo2";
     private static final String CLIENT_TOKEN = "4IA9raWjUI3rr3igs0SNcIEzrvWmUhl8EAZGaajBtVeEGrg7CBj+tzqmri6pDEP2yC3QN/D/23/Bc6Ew0DEX5IfLXfJv0bZt2JYBNIf1aNeXazxXU8T32NU=";
 
@@ -66,22 +68,36 @@ public class EventDetailActivity extends AppCompatActivity {
     @BindView(R.id.ratingBar) RatingBar rb;
     @BindView(R.id.fab) FloatingActionButton fab;
     @BindView(R.id.tvRate) TextView tvRate;
+    @BindView(R.id.lyft_button) LyftButton lyftButton;
 
     public EventDetailActivity() {}
 
+    public static EventDetailActivity newInstance(Event event, EventAttendance eventAttendance) {
+        EventDetailActivity eventDetailActivity = new EventDetailActivity();
+        Bundle args = new Bundle();
+        args.putParcelable("event", Parcels.wrap(event));
+        args.putParcelable("eventAttendance", Parcels.wrap(eventAttendance));
+        eventDetailActivity.setArguments(args);
+
+        return eventDetailActivity;
+
+    }
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_event_detail);
 
-        ButterKnife.bind(this);
+        // get arguments
+        event = Parcels.unwrap(getArguments().getParcelable("event"));
+        eventAttendance = Parcels.unwrap(getArguments().getParcelable("eventAttendance"));
+    }
 
-
-        Parcelable parcel = this.getIntent().getParcelableExtra("event");
-        event = Parcels.unwrap(parcel);
-
-        Parcelable parcel1 = this.getIntent().getParcelableExtra("eventAttendance");
-        eventAttendance = Parcels.unwrap(parcel1);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.activity_event_detail, container, false);
+        ButterKnife.bind(this, view);
 
         Calendar cal = Calendar.getInstance();
         Date today= cal.getTime();
@@ -108,13 +124,12 @@ public class EventDetailActivity extends AppCompatActivity {
                     .setClientToken(CLIENT_TOKEN)
                     .build();
 
-            LyftButton lyftButton = findViewById(R.id.lyft_button);
             lyftButton.setApiConfig(apiConfig);
-            LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            LocationManager lm = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
 
             // check location permission
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "Turn on permissions to call Lyft from our app!", Toast.LENGTH_SHORT).show();
+            if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(getContext(), "Turn on permissions to call Lyft from our app!", Toast.LENGTH_SHORT).show();
                 lyftButton.setVisibility(View.GONE); // hide lyft button
             }
             else{
@@ -147,11 +162,11 @@ public class EventDetailActivity extends AppCompatActivity {
                         @Override
                         public void done(ParseException e) {
                             if (e == null) {
-                                Toast.makeText(getApplicationContext(), String.format("Successfully rated event %.1f stars", rating),Toast.LENGTH_LONG).show();
+                                Toast.makeText(getContext(), String.format("Successfully rated event %.1f stars", rating),Toast.LENGTH_LONG).show();
                             }
                             else {
                                 Log.e("EventDetailActivity", e.toString());
-                                Toast.makeText(getApplicationContext(), "Failed to rate the event try again later",Toast.LENGTH_LONG).show();
+                                Toast.makeText(getContext(), "Failed to rate the event try again later",Toast.LENGTH_LONG).show();
                             }
                         }
                     });
@@ -161,7 +176,7 @@ public class EventDetailActivity extends AppCompatActivity {
 
         // if past event and user didn't attend - show only event details
         else if (toDate.after(today) && toDate.before(tmrw) && eventAttendance == null) {
-            Toast.makeText(this, "This event has already past and rating is not available yet. Check back in one day!", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "This event has already past and rating is not available yet. Check back in one day!", Toast.LENGTH_LONG).show();
         }
 
         // if past event after one day
@@ -173,7 +188,7 @@ public class EventDetailActivity extends AppCompatActivity {
             int rating = event.getInt("rating");
             rb.setRating(rating);
 
-            Toast.makeText(this, "This event has already past!", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "This event has already past!", Toast.LENGTH_LONG).show();
         }
 
 
@@ -211,20 +226,23 @@ public class EventDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 try {
+                    // if current user
                     if (event.getOwner().fetchIfNeeded().getObjectId().equals(ParseUser.getCurrentUser().getObjectId())){
-                        Intent i = new Intent(EventDetailActivity.this, HomeActivity.class);
-                        i.putExtra("profile", Parcels.wrap(event));
-                        startActivity(i);
+                        Fragment otherProfileFragment = new ProfileFragment();
+                        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                        fragmentTransaction.replace(R.id.fragment_container, otherProfileFragment).commit();
                     } else {
-                        Intent i = new Intent(EventDetailActivity.this, HomeActivity.class);
-                        i.putExtra("eventOwner", Parcels.wrap(event));
-                        startActivity(i);
+                        Fragment otherProfileFragment = new OtherProfileFragment();
+                        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                        fragmentTransaction.replace(R.id.fragment_container, otherProfileFragment).commit();
                     }
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
             }
         });
+
+        return view;
     }
 
     @OnClick(R.id.fab)
@@ -242,7 +260,7 @@ public class EventDetailActivity extends AppCompatActivity {
                         numAttend.setText(String.valueOf(EventAttendance.getNumAttending(event)));
                         Log.d("EventAdapter", "Successfully joined event. :) ");
                     } else {
-                        Toast.makeText(getApplicationContext(), "Failed to join event", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), "Failed to join event", Toast.LENGTH_LONG).show();
                         Log.e("EventAdapter", e.toString());
                     }
                 }
