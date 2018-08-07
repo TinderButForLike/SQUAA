@@ -4,12 +4,12 @@ package com.example.cgaima.squaa.activities;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 
@@ -79,12 +79,22 @@ public class HomeActivity extends AppCompatActivity {
             Log.d("Home Activity", "we have the goods.....");
             bottomNavigationView.setSelectedItemId(R.id.action_new_event);
         }
+        // from event details activity to own profile
+        else if (getIntent().hasExtra("profile")) {
+            bottomNavigationView.setSelectedItemId(R.id.action_profile);
+        }
+        // from event details activity to event owner profile
+        else if (getIntent().hasExtra("eventOwner")) {
+            Fragment otherProfileFragment = new OtherProfileFragment();
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, otherProfileFragment).commit();
+        }
     }
 
-    // inflate the menu, adds items to the action bar
+    /*// inflate the menu, adds items to the action bar
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_toolbar, menu);
+        getMenuInflater().inflate(R.menu.menu_fragment_home, menu);
         return true;
-    }
+    }*/
 }

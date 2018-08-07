@@ -38,6 +38,7 @@
         </activity>
 
         <activity android:name=".activities.HomeActivity"></activity>
+
         <activity android:name=".activities.SignUpActivity" />
         <activity android:name=".activities.EventDetailActivity" />
         <activity android:name=".activities.MapsActivity" />
