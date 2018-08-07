@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.cgaima.squaa.R;
 import com.parse.LogInCallback;
@@ -28,8 +29,8 @@ public class LoginActivity extends AppCompatActivity {
         passwordInput = findViewById(R.id.etPassword);
         loginBtn = findViewById(R.id.btLogin);
         SignupBtn = findViewById(R.id.btSignUp);
-        loginBtn.setOnClickListener(new View.OnClickListener() {
 
+        loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 final String username = usernameInput.getText().toString();
@@ -57,14 +58,9 @@ public class LoginActivity extends AppCompatActivity {
             final Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
             startActivity(intent);
             finish();
-
-        } else {
-            // show the signup or login screen
         }
         Log.d("LoginActivity", "Current user is " + currentUser);
     }
-
-
 
     private void login(String username, String password) {
         // to avoid ParseUser Exception: invalid session token
@@ -76,13 +72,12 @@ public class LoginActivity extends AppCompatActivity {
             public void done(ParseUser user, ParseException e) {
                 if (e == null) {
                     Log.d("LoginActivity", "Login successful");
-
                     final Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                     startActivity(intent);
                     finish();
                 } else {
                     Log.e("LoginActivity", "Login failure");
-                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), "Login failed: " + e.toString(), Toast.LENGTH_SHORT).show();
                 }
             }
         });

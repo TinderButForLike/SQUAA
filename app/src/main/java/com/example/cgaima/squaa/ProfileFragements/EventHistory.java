@@ -11,11 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.cgaima.squaa.Models.Event;
-import com.example.cgaima.squaa.Models.EventAttendance;
 import com.example.cgaima.squaa.R;
 import com.example.cgaima.squaa.adapters.ProfileAdapter;
 import com.parse.FindCallback;
-import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -48,8 +46,6 @@ public class EventHistory extends Fragment {
         Log.e("EventHistory", "Event history fragment created");
     }
 
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -57,7 +53,7 @@ public class EventHistory extends Fragment {
         View view = inflater.inflate(R.layout.fragment_event_history, container, false);
         ButterKnife.bind(this, view);
 
-        rvGrid = (RecyclerView) view.findViewById(R.id.rvEventHistory);
+        rvGrid = view.findViewById(R.id.rvEventHistory);
 
         // allows for optimizations
         rvGrid.setHasFixedSize(true);
@@ -80,7 +76,9 @@ public class EventHistory extends Fragment {
 
         return view;
     }
+
     public void getEventHistory() {
+        Log.e("EventHistory", "get event history");
         // query event attendance of the current user
         ParseQuery<ParseObject> query = ParseQuery.getQuery("EventAttendance");
         query.include("event");

@@ -8,64 +8,48 @@
     tools:context=".activities.LoginActivity">
 
 
-
-
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/etUsernameLayout"
+    <android.support.design.widget.TextInputEditText
+        android:id="@+id/etUsername"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="120dp"
-        android:padding="10dp">
+        android:layout_above="@+id/etPassword"
+        android:layout_alignParentStart="true"
+        android:layout_margin="10dp"
+        android:hint="Enter your username" />
 
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/etUsername"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Enter your username" />
-    </android.support.design.widget.TextInputLayout>
-
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/etPasswordLayout"
+    <android.support.design.widget.TextInputEditText
+        android:id="@+id/etPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/etUsernameLayout"
-        android:layout_centerHorizontal="true"
-        android:inputType="textPassword"
-        android:padding="10dp">
-
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/etPassword"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Enter your password" />
-    </android.support.design.widget.TextInputLayout>
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_margin="10dp"
+        android:hint="Enter your password"
+        android:inputType="textPassword" />
 
     <Button
         android:id="@+id/btLogin"
         android:layout_width="325dp"
         android:layout_height="wrap_content"
-        android:layout_above="@id/btSignUp"
+        android:layout_below="@+id/etPassword"
         android:layout_centerHorizontal="true"
-        android:layout_margin="10dp"
+        android:layout_marginTop="50dp"
         android:background="@drawable/button_shape"
+        android:backgroundTint="@color/primaryColor"
         android:text="Log in"
-        android:textColor="@color/primaryTextColor"
-        android:backgroundTint="@color/primaryColor"/>
+        android:textColor="@color/primaryTextColor" />
 
     <Button
         android:id="@+id/btSignUp"
         android:layout_width="325dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/btLogin"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="100dp"
+        android:layout_margin="10dp"
         android:background="@drawable/button_shape"
+        android:backgroundTint="@color/primaryColor"
         android:text="Sign up"
-        android:textColor="@color/primaryTextColor"
-        android:backgroundTint="@color/primaryColor"/>
+        android:textColor="@color/primaryTextColor" />
 
 </RelativeLayout>
 

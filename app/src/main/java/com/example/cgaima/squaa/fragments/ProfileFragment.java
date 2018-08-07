@@ -6,13 +6,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.cgaima.squaa.ProfileFragements.AboutUser;
@@ -26,18 +26,24 @@ import com.parse.ParseUser;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class ProfileFragment extends Fragment {
 
-    private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
-
+    @BindView(R.id.ivProfilePic) ImageView profilePic;
+    @BindView(R.id.avgRating) TextView avgRating;
+    @BindView(R.id.rbUserRating) RatingBar rb;
     // The onCreateView method is called when Fragment should create its View object hierarchy,
     // either dynamically or via XML layout inflation.
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_profile, parent, false);
+        ButterKnife.bind(this, view);
         // Defines the xml file for the fragment
-        return inflater.inflate(R.layout.fragment_profile, parent, false);
+        return view;
     }
 
     // This event is triggered soon after onCreateView().
@@ -45,25 +51,25 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         // Setup any handles to view objects here
-        toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        final ImageView imageInToolbar = toolbar.findViewById(R.id.ivProfilePic);
         ParseUser currentUser =  ParseUser.getCurrentUser();
-
+        float rating = (float) currentUser.getDouble("rating");
+        avgRating.setText(String.valueOf(rating));
+        rb.setRating(rating);
         Log.e("PROFILE FRAGMENT", "whoah i get created too wtf");
         try {
-            Glide.with(this).load(currentUser.fetchIfNeeded().getParseFile("profile_picture").getUrl()).into(imageInToolbar);
+            Glide.with(this).load(currentUser.fetchIfNeeded().getParseFile("profile_picture").getUrl()).into(profilePic);
         } catch (ParseException e) {
             e.printStackTrace();
         }
 
-        viewPager = (ViewPager) view.findViewById(R.id.vpContainer);
+        viewPager = view.findViewById(R.id.vpContainer);
         setupViewPager(viewPager);
 
-        tabLayout = (TabLayout) view.findViewById(R.id.tabs);
+        tabLayout = view.findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
     }
     private void setupViewPager(ViewPager viewPager) {
-       ViewPagerAdapter adapter = new ViewPagerAdapter(getActivity().getSupportFragmentManager());
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
         adapter.addFragment(new EventHistory(), "History");
         adapter.addFragment(new Upcoming(), "Upcoming");
         adapter.addFragment(new AboutUser(), "About");

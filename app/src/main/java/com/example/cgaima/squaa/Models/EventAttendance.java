@@ -1,16 +1,14 @@
 package com.example.cgaima.squaa.Models;
 
-import android.util.Log;
-
-import com.parse.FindCallback;
 import com.parse.ParseClassName;
+import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
+import java.util.List;
 
 @ParseClassName("EventAttendance")
 public class EventAttendance extends ParseObject {
@@ -46,9 +44,6 @@ public class EventAttendance extends ParseObject {
             whereEqualTo("event", event);
             return this;
         }
-        // TODO - find profile event history
-
-        // TODO - find profile upcoming events
 
         public Query includeDetails() {
             include("attendee");
@@ -62,7 +57,38 @@ public class EventAttendance extends ParseObject {
             whereGreaterThanOrEqualTo("fromDate", today);
             return this;
         }
+    }
 
+    // check if current user is attending event
+    public static boolean isAttending(Event event) {
+        EventAttendance.Query query = new EventAttendance.Query();
+        query.findEventAttendance(ParseUser.getCurrentUser(), event);
+        try {
+            List eventAttendance = query.find();
+            return !eventAttendance.isEmpty();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        // defaults to not attending
+        return false;
+    }
 
+    // get total number of attendees for event
+    public static int getNumAttending(Event event) {
+        EventAttendance.Query query = new EventAttendance.Query();
+        query.findAllEventAttendance(event);
+        try {
+            return query.count();
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return -1;
+        }
+        /*try {
+            List eventAttendance = query.find();
+            numAttending = eventAttendance.size();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return numAttending;*/
     }
 }
