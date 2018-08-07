@@ -23,6 +23,7 @@ import com.example.cgaima.squaa.Models.GlideApp;
 import com.example.cgaima.squaa.R;
 import com.example.cgaima.squaa.activities.EventDetailActivity;
 import com.example.cgaima.squaa.fragments.OtherProfileFragment;
+import com.example.cgaima.squaa.fragments.ProfileFragment;
 import com.parse.DeleteCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
@@ -152,9 +153,20 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         holder.ownerPic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment otherProfileFragment = new OtherProfileFragment();
-                FragmentTransaction fragmentTransaction = ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.fragment_container, otherProfileFragment).commit();
+                try {
+                    // if current user
+                    if (event.getOwner().fetchIfNeeded().getObjectId().equals(ParseUser.getCurrentUser().getObjectId())){
+                        Fragment otherProfileFragment = new ProfileFragment();
+                        FragmentTransaction fragmentTransaction = ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction();
+                        fragmentTransaction.replace(R.id.fragment_container, otherProfileFragment).commit();
+                    } else {
+                        Fragment otherProfileFragment = OtherProfileFragment.newInstance(event);
+                        FragmentTransaction fragmentTransaction = ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction();
+                        fragmentTransaction.replace(R.id.fragment_container, otherProfileFragment).commit();
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
         });
 

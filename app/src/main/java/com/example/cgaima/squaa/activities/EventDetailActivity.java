@@ -8,7 +8,6 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -37,8 +36,6 @@ import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
-
-import org.parceler.Parcels;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -75,8 +72,8 @@ public class EventDetailActivity extends Fragment {
     public static EventDetailActivity newInstance(Event event, EventAttendance eventAttendance) {
         EventDetailActivity eventDetailActivity = new EventDetailActivity();
         Bundle args = new Bundle();
-        args.putParcelable("event", Parcels.wrap(event));
-        args.putParcelable("eventAttendance", Parcels.wrap(eventAttendance));
+        args.putParcelable("event", event);
+        args.putParcelable("eventAttendance", eventAttendance);
         eventDetailActivity.setArguments(args);
 
         return eventDetailActivity;
@@ -88,8 +85,8 @@ public class EventDetailActivity extends Fragment {
         super.onCreate(savedInstanceState);
 
         // get arguments
-        event = Parcels.unwrap(getArguments().getParcelable("event"));
-        eventAttendance = Parcels.unwrap(getArguments().getParcelable("eventAttendance"));
+        event = getArguments().getParcelable("event");
+        eventAttendance = getArguments().getParcelable("eventAttendance");
     }
 
     @Override
@@ -109,10 +106,11 @@ public class EventDetailActivity extends Fragment {
         // if future event - allow user to join / unjoin and call event
         if (fromDate.after(today)) {
             // set join event initial UI
-            CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
+            /*CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
             params.setBehavior(new FloatingActionButton.Behavior());
             params.setAnchorId(R.id.fab);
-            fab.setLayoutParams(params);
+            fab.setLayoutParams(params);*/
+            //fab.setVisibility(View.VISIBLE);
             joined = EventAttendance.isAttending(event);
             if (joined) { fab.setImageResource(R.drawable.ic_unjoin_event); }
             numAttend.setText(String.valueOf(EventAttendance.getNumAttending(event)));
@@ -232,7 +230,7 @@ public class EventDetailActivity extends Fragment {
                         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
                         fragmentTransaction.replace(R.id.fragment_container, otherProfileFragment).commit();
                     } else {
-                        Fragment otherProfileFragment = new OtherProfileFragment();
+                        Fragment otherProfileFragment = OtherProfileFragment.newInstance(event);
                         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
                         fragmentTransaction.replace(R.id.fragment_container, otherProfileFragment).commit();
                     }
