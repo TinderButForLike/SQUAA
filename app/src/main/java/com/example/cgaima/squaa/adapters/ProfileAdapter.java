@@ -2,6 +2,9 @@ package com.example.cgaima.squaa.adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,12 +14,20 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.cgaima.squaa.Models.Event;
+import com.example.cgaima.squaa.Models.EventAttendance;
 import com.example.cgaima.squaa.R;
+import com.example.cgaima.squaa.activities.EventDetailActivity;
+import com.parse.ParseException;
+import com.parse.ParseUser;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHolder> {
-    private List<Event> mEvents;
+    List<Event> mEvents;
     Context context;
     private final int REQUEST_CODE = 21;
     private final int REQUEST_CODE_1 = 22;
@@ -33,8 +44,8 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
         context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
-        View tweetView = inflater.inflate(R.layout.item_event2, parent, false);
-        ViewHolder viewHolder = new ViewHolder(tweetView);
+        View view = inflater.inflate(R.layout.item_event2, parent, false);
+        ViewHolder viewHolder = new ViewHolder(view);
         return viewHolder;
     }
 
@@ -67,7 +78,6 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
         final Event event = mEvents.get(position);
 
         // populate the views according to this data
-
         Glide.with(context).load(event.getEventImage().getUrl()).into(holder.ivEvent);
     }
 
@@ -79,23 +89,35 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
 
     // create the ViewHolder class
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        public ImageView ivEvent;
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.ivEvent) ImageView ivEvent;
         public TextView tvUsername;
         public TextView tvDescription;
+
+
         //public ImageButton reply;
 
         public ViewHolder(View itemView) {
             super(itemView);
-
-            ivEvent = (ImageView) itemView.findViewById(R.id.ivEvent);
+            ButterKnife.bind(this, itemView);
+        }
+        @OnClick
+        public void launchEventDetails() {
+            int position = getAdapterPosition();
+            if (position != RecyclerView.NO_POSITION) {
+                Event event = mEvents.get(position);
+                EventAttendance eventAttendance = null;
+                try {
+                    eventAttendance = (EventAttendance) new EventAttendance.Query().findEventAttendance(ParseUser.getCurrentUser(), event).getFirst();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                Fragment eventDetailActivity = EventDetailActivity.newInstance(event, eventAttendance);
+                FragmentTransaction fragmentTransaction = ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container, eventDetailActivity).commit();
+            }
 
         }
-
-
-
     }
-
-
 }
 

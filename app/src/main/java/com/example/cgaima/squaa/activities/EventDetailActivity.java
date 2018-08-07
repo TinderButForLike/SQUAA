@@ -278,6 +278,7 @@ public class EventDetailActivity extends Fragment {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
+
         }
     }
 }
