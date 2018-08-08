@@ -18,8 +18,10 @@
             android:id="@+id/toolbar_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_gravity="left"
+            android:padding="2dp"
             android:text="squaa"
+            android:layout_marginLeft="8dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
             android:textColor="@color/primaryTextColor" />
     </android.support.v7.widget.Toolbar>
