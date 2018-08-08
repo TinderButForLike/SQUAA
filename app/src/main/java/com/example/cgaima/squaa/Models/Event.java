@@ -262,5 +262,11 @@ public class Event extends ParseObject implements Place {
             whereContains(KEY_NAME, query);
             return this;
         }
+
+        public Query getTopNear(ParseGeoPoint userLocation) {
+            setLimit(10);
+            whereNear("latlng", userLocation);
+            return this;
+        }
     }
 }

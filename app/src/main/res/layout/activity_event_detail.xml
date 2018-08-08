@@ -147,7 +147,6 @@
         android:layout_marginBottom="16dp"
         android:numStars="5"
         android:visibility="gone" />
-
     <Button
         android:id="@+id/join"
         android:layout_width="wrap_content"
