@@ -25,6 +25,7 @@ public class HomeActivity extends AppCompatActivity {
 
     @BindView(R.id.bottom_navigation) BottomNavigationView bottomNavigationView;
     @BindView(R.id.fragment_container) FrameLayout fragment_container;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +36,8 @@ public class HomeActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false); // remove default text
+        /*getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);*/
 
         final FragmentManager fragmentManager = getSupportFragmentManager();
 
@@ -87,11 +90,11 @@ public class HomeActivity extends AppCompatActivity {
             fragmentTransaction.replace(R.id.fragment_container, otherProfileFragment).commit();
         }*/
     }
-
     /*// inflate the menu, adds items to the action bar
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_fragment_home, menu);
         return true;
     }*/
+
 }
