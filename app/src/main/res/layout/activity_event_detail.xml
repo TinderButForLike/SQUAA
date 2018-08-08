@@ -118,35 +118,6 @@
         android:textAlignment="center"
         android:textStyle="bold" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@+id/ivEventPic"
-        android:layout_gravity="end|bottom"
-        android:src="@drawable/ic_join_event"
-        android:visibility="gone"
-        app:backgroundTint="@color/secondaryColor"
-        app:rippleColor="@color/secondaryDarkColor" />
-
-    <ImageView
-        android:id="@+id/ivCal"
-        android:layout_width="44dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/ivEventPic"
-        app:srcCompat="@drawable/ic_calenadar" />
-
-    <ImageView
-        android:id="@+id/ivChat"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/ivOwnerPic"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="48dp"
-        app:srcCompat="@drawable/ic_chat" />
-
     <com.lyft.lyftbutton.LyftButton
         android:id="@+id/lyft_button"
         android:layout_width="wrap_content"
@@ -161,6 +132,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/ratingBar"
+        android:layout_alignTop="@+id/ivOwnerPic"
         android:layout_centerHorizontal="true"
         android:text="rate this event!"
         android:visibility="gone" />
@@ -176,7 +148,21 @@
         android:numStars="5"
         android:visibility="gone" />
 
-
-
+    <Button
+        android:id="@+id/join"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_below="@+id/ivOwnerPic"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/button_shape"
+        android:backgroundTint="@color/secondaryColor"
+        android:minWidth="0dp"
+        android:paddingEnd="8dp"
+        android:paddingStart="8dp"
+        android:text="join"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </RelativeLayout>
 </ScrollView>
