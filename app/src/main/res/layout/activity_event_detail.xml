@@ -83,9 +83,10 @@
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/ivOwnerPic"
         android:layout_width="30dp"
-        android:layout_height="29dp"
+        android:layout_height="32dp"
         android:layout_alignStart="@+id/tvEventName"
         android:layout_below="@+id/owner"
+        android:layout_marginTop="-4dp"
         app:srcCompat="@android:drawable/sym_def_app_icon" />
 
     <TextView
@@ -104,8 +105,8 @@
         android:id="@+id/attending"
         android:layout_width="85dp"
         android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/ivOwnerPic"
         android:layout_alignEnd="@+id/tvEventName"
-        android:layout_below="@+id/lyft_button"
         android:text="Attending"
         android:textAlignment="center" />
 
@@ -114,7 +115,7 @@
         android:layout_width="85dp"
         android:layout_height="wrap_content"
         android:layout_alignEnd="@+id/tvEventName"
-        android:layout_alignTop="@+id/ivOwnerPic"
+        android:layout_below="@+id/ivOwnerPic"
         android:textAlignment="center"
         android:textStyle="bold" />
 
@@ -142,9 +143,9 @@
         android:id="@+id/ivChat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/ivOwnerPic"
+        android:layout_alignBottom="@+id/owner"
         android:layout_alignParentEnd="true"
-        android:layout_marginEnd="48dp"
+        android:layout_marginEnd="41dp"
         app:srcCompat="@drawable/ic_chat" />
 
     <com.lyft.lyftbutton.LyftButton

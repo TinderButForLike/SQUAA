@@ -8,6 +8,7 @@ import android.icu.text.SimpleDateFormat;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -33,8 +34,11 @@ import com.lyft.lyftbutton.RideParams;
 import com.lyft.lyftbutton.RideTypeEnum;
 import com.lyft.networking.ApiConfig;
 import com.parse.ParseException;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+
+import org.parceler.Parcels;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -77,6 +81,10 @@ public class EventDetailActivity extends Fragment {
     TextView tvRate;
     @BindView(R.id.lyft_button)
     LyftButton lyftButton;
+    @BindView(R.id.ivChat)
+    ImageView ChatIcon;
+    @BindView(R.id.ivCal)
+    ImageView calendar;
 
     public EventDetailActivity() {
     }
@@ -211,7 +219,8 @@ public class EventDetailActivity extends Fragment {
             ChatIcon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent i = new Intent(EventDetailActivity.this, ChatActivity.class);
+                    Intent i;
+                    i = new Intent(getActivity(), ChatActivity.class);
                     i.putExtra("event_chat", Parcels.wrap(event));
                     startActivity(i);
                 }
@@ -317,4 +326,3 @@ public class EventDetailActivity extends Fragment {
             }
         }
     }
-}

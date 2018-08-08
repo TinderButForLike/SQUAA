@@ -17,6 +17,7 @@ import com.example.cgaima.squaa.R;
 import com.example.cgaima.squaa.fragments.CreateEventFragment;
 import com.example.cgaima.squaa.fragments.HomeFragment;
 import com.example.cgaima.squaa.fragments.MapFragment;
+import com.example.cgaima.squaa.fragments.OtherProfileFragment;
 import com.example.cgaima.squaa.fragments.ProfileFragment;
 
 import butterknife.BindView;
