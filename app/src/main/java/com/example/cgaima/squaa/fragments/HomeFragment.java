@@ -67,16 +67,32 @@ public class HomeFragment extends Fragment {
         searchView = (SearchView) searchItem.getActionView();
 
         /*SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));*/
-
-
-       /*searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+        searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem menuItem) {
+                Log.e("HomeFragment", "open!");
+                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                    @Override
+                    public boolean onQueryTextSubmit(String query) {
+                        Log.e("HomeFragment", "search!");
+                        // disable refresh during search view
+                        swipeContainer.setEnabled(false);
+                        swipeContainer.setRefreshing(false);
+                        // perform query
+                        fetchQueryEvents(query);
+                        // avoid issues with firing twice
+                        searchView.clearFocus();
+                        return true;
+                    }
 
+                    @Override
+                    public boolean onQueryTextChange(String s) {
+                        return false;
+                    }
+                });
                 return true;
             }
-
             @Override
             public boolean onMenuItemActionCollapse(MenuItem menuItem) {
                 loadTopPosts();
@@ -87,6 +103,26 @@ public class HomeFragment extends Fragment {
                 return true;
             }
         });*/
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Log.e("HomeFragment", "search!");
+                // disable refresh during search view
+                /*swipeContainer.setEnabled(false);
+                swipeContainer.setRefreshing(false);*/
+                // perform query
+                fetchQueryEvents(query);
+                // avoid issues with firing twice
+                searchView.clearFocus();
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                return false;
+            }
+        });
     }
 
     @Override
@@ -105,24 +141,7 @@ public class HomeFragment extends Fragment {
                 break;
         }
 
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                // disable refresh during search view
-                swipeContainer.setEnabled(false);
-                swipeContainer.setRefreshing(false);
-                // perform query
-                fetchQueryEvents(query);
-                // avoid issues with firing twice
-                searchView.clearFocus();
-                return true;
-            }
 
-            @Override
-            public boolean onQueryTextChange(String s) {
-                return false;
-            }
-        });
 
         return super.onOptionsItemSelected(item);
     }

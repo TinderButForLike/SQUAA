@@ -1,163 +1,172 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_margin="5dp"
-    android:background="@color/white"
-    tools:context=".fragments.CreateEventFragment">
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <EditText
-        android:id="@+id/name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/date"
-        android:layout_below="@+id/textView2"
-        android:ems="10"
-        android:hint="what's your event called?"
-        android:inputType="text"
-        android:textColorHint="@android:color/white"
-        android:textSize="14sp" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="5dp"
+        android:layout_marginBottom="10dp"
+        android:background="@color/white"
+        tools:context=".fragments.CreateEventFragment">
 
-    <EditText
-        android:id="@+id/location"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignStart="@+id/description"
-        android:layout_marginTop="272dp"
-        android:ems="10"
-        android:inputType="text"
-        android:textColorHint="@android:color/white"
-        android:textSize="14sp" />
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/nameLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_margin="2dp">
 
-    <EditText
-        android:id="@+id/date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignStart="@+id/location"
-        android:layout_marginTop="131dp"
-        android:ems="10"
-        android:inputType="date"
-        android:textColorHint="@android:color/white"
-        android:textSize="14sp" />
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:ems="10"
+                android:hint="event name"
+                android:inputType="text"
+                android:textColorHint="@android:color/white"
+                android:textSize="14sp" />
+        </android.support.design.widget.TextInputLayout>
 
-    <EditText
-        android:id="@+id/description"
-        android:layout_width="336dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/location"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="241dp"
-        android:ems="10"
-        android:hint="tell us about your event"
-        android:inputType="text|textPersonName"
-        android:textColorHint="@android:color/darker_gray"
-        android:textSize="14sp" />
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/dateLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/nameLayout"
+            android:layout_margin="2dp">
 
-    <Button
-        android:id="@+id/create"
-        android:layout_width="136dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignStart="@+id/launchGalBtn"
-        android:layout_marginBottom="84dp"
-        android:background="@drawable/textbox"
-        android:text="create event" />
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_margin="5dp"
+                android:ems="10"
+                android:hint="date"
+                android:inputType="date"
+                android:textColorHint="@android:color/white"
+                android:textSize="14sp" />
+        </android.support.design.widget.TextInputLayout>
 
-    <TextView
-        android:id="@+id/imagePrompt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignStart="@+id/name"
-        android:layout_marginBottom="203dp"
-        android:text="Add a picture to your event"
-        android:textColor="@android:color/white" />
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/locationLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/dateLayout"
+            android:layout_margin="2dp"
+            android:hint="location">
 
-    <ImageView
-        android:id="@+id/eventPic"
-        android:layout_width="121dp"
-        android:layout_height="123dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignStart="@+id/name"
-        android:layout_marginBottom="65dp"
-        android:background="@drawable/ic_cam" />
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_margin="5dp"
+                android:ems="10"
+                android:inputType="text"
+                android:textColorHint="@android:color/white"
+                android:textSize="14sp" />
+        </android.support.design.widget.TextInputLayout>
 
-    <Button
-        android:id="@+id/launchGalBtn"
-        android:layout_width="136dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignTop="@+id/eventPic"
-        android:layout_marginEnd="86dp"
-        android:background="@drawable/textbox"
-        android:text="launch gallery" />
 
-    <Button
-        android:id="@+id/mapLaunch"
-        android:layout_width="136dp"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/location"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="42dp"
-        android:background="@drawable/textbox"
-        android:text="launch map " />
+        <EditText
+            android:id="@+id/description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/privateCheck"
+            android:layout_margin="5dp"
+            android:ems="10"
+            android:hint="tell us about your event"
+            android:inputType="text|textPersonName"
+            android:textColorHint="@android:color/darker_gray"
+            android:textSize="14sp" />
 
-    <CheckBox
-        android:id="@+id/privateCheck"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignStart="@+id/location"
-        android:layout_marginTop="182dp"
-        android:text="private" />
+        <Button
+            android:id="@+id/create"
+            android:layout_width="150dp"
+            android:layout_height="36dp"
+            android:layout_alignParentBottom="true"
+            android:layout_below="@+id/eventPic"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/button_shape"
+            android:backgroundTint="@color/primaryColor"
+            android:text="create event" />
 
-    <CheckBox
-        android:id="@+id/publicCheck"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/privateCheck"
-        android:layout_toEndOf="@+id/eventPic"
-        android:text="public" />
+        <TextView
+            android:id="@+id/imagePrompt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/description"
+            android:layout_marginTop="-5dp"
+            android:text="Add a picture"
+            android:textColor="@color/black" />
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="141dp"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/date"
-        android:layout_toEndOf="@+id/name"
-        android:text='enter in format "mm/dd/yyyy"'
-        android:textSize="10sp" />
+        <Button
+            android:id="@+id/launchGalBtn"
+            android:layout_width="150dp"
+            android:layout_height="36dp"
+            android:layout_below="@+id/imagePrompt"
+            android:layout_toEndOf="@+id/eventPic"
+            android:background="@drawable/button_shape"
+            android:backgroundTint="@color/primaryColor"
+            android:text="launch gallery" />
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignStart="@+id/location"
-        android:layout_marginTop="35dp"
-        android:text="Title?" />
+        <ImageView
+            android:id="@+id/eventPic"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintDimensionRatio="H,16:9"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/imagePrompt"
+            android:background="@drawable/ic_cam" />
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/date"
-        android:layout_alignStart="@+id/name"
-        android:layout_marginBottom="-131dp"
-        android:text="When?" />
+        <Button
+            android:id="@+id/mapLaunch"
+            android:layout_width="150dp"
+            android:layout_height="36dp"
+            android:layout_above="@+id/privateCheck"
+            android:layout_toEndOf="@+id/nameLayout"
+            android:background="@drawable/button_shape"
+            android:backgroundTint="@color/primaryColor"
+            android:text="launch map " />
 
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/location"
-        android:layout_alignStart="@+id/name"
-        android:layout_marginBottom="-272dp"
-        android:text="Where?" />
+        <CheckBox
+            android:id="@+id/privateCheck"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/nameLayout"
+            android:layout_below="@+id/locationLayout"
+            android:padding="16dp"
+            android:text="private" />
 
-</RelativeLayout>
+        <CheckBox
+            android:id="@+id/publicCheck"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/locationLayout"
+            android:layout_toEndOf="@+id/nameLayout"
+            android:padding="16dp"
+            android:text="public" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/dateLayout"
+            android:layout_toEndOf="@+id/nameLayout"
+            android:text='enter in format "mm/dd/yyyy"'
+            android:textSize="10sp" />
+
+    </RelativeLayout>
+
+</ScrollView>

@@ -256,7 +256,6 @@ public class EventDetailActivity extends Fragment {
                 }
             }
         });
-
         return view;
     }
 
@@ -296,6 +295,7 @@ public class EventDetailActivity extends Fragment {
     public void toggleJoinButton(boolean toggle) {
         if (toggle) {
             join.setText("join");
+            join.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.secondaryColor, getActivity().getTheme())));
             numAttend.setText(String.valueOf(EventAttendance.getNumAttending(event)));
         }
         else {
