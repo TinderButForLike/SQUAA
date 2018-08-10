@@ -24,6 +24,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.FindCallback;
@@ -46,9 +47,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     List<Event> events;
     EventAdapter mAdapter;
     LatLng ewc = new LatLng(37.3903,-122.0945);
-
     private static final String MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey";
     private static final int MY_LOCATION_REQUEST_CODE = 2;
+    private static final String TAG = MapFragment.class.getSimpleName();
 
     public MapFragment() { // Required empty public constructor
     }
@@ -124,8 +125,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                 }
                             }
                         });
-
-
                     }
                 } else {
                     e.printStackTrace();
@@ -172,6 +171,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
          mMap = googleMap;
          mMap.moveCamera(CameraUpdateFactory.newLatLng(ewc));
+
+         boolean success = googleMap.setMapStyle(new MapStyleOptions(getResources().getString(R.string.style_json)));
+         if (!success) {
+             Log.e(TAG, "Style parsing failed.");
+         }
 
          UiSettings uiSettings = mMap.getUiSettings();
          uiSettings.setZoomControlsEnabled(true);

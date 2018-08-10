@@ -19,6 +19,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -29,8 +30,8 @@ public class Event extends ParseObject implements Place{
     private static final String KEY_OWNER = "owner";
     private static final String KEY_ATTENDEES = "attendees";
     private static final String KEY_LOCATION = "location";
-    private static final String KEY_DATE = "date";
-    private static final String KEY_PRIVACY = "privacy";
+    private static final String KEY_DATE = "event_date";
+    private static final String KEY_PRIVACY = "public";
     private static final String KEY_NAME = "event_name";
     private static final String KEY_LATLNG = "latlng";
     LatLng mpk = new LatLng(37.4529, -122.148244);
@@ -58,7 +59,7 @@ public class Event extends ParseObject implements Place{
         put(KEY_LATLNG, geoPoint);
     }
 
-    // get the event image
+    //    // get the event image
     public ParseFile getEventImage() {
         return getParseFile(KEY_IMAGE);
     }
@@ -76,12 +77,14 @@ public class Event extends ParseObject implements Place{
     }
 
     // Set event date
-    public void setDate(String date){
+    public void setDate(Date date){
         put(KEY_DATE, date);
     }
 
     // get event date
-    public String getDate() { return getString(KEY_DATE); }
+    public Date getDate() { return getDate(KEY_DATE); }
+
+    public Date getToDate() { return getDate("toDate"); }
     // get event location
     public String getLocation() {
         return getString(KEY_LOCATION);
@@ -116,6 +119,7 @@ public class Event extends ParseObject implements Place{
         }
         return attendees;
     }
+
     // set event attendees
     public void setAttendees(ParseUser attendee) {
           addUnique(KEY_ATTENDEES,attendee);
@@ -124,9 +128,7 @@ public class Event extends ParseObject implements Place{
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
     }
-
 
     @Override
     public String getId() {
@@ -225,7 +227,5 @@ public class Event extends ParseObject implements Place{
             whereContains(KEY_NAME, query);
             return this;
         }
-
     }
-
 }

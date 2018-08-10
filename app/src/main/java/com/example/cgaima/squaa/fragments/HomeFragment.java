@@ -1,8 +1,16 @@
 package com.example.cgaima.squaa.fragments;
 
+import android.annotation.SuppressLint;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,47 +24,70 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.example.cgaima.squaa.adapters.EventAdapter;
 import com.example.cgaima.squaa.Models.Event;
+import com.example.cgaima.squaa.NotifEnabler;
 import com.example.cgaima.squaa.R;
+import com.example.cgaima.squaa.adapters.EventAdapter;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
+@SuppressLint("ValidFragment")
 public class HomeFragment extends Fragment {
     @BindView(R.id.rvEvents) RecyclerView rvEvents;
     @BindView(R.id.swipeContainer) SwipeRefreshLayout swipeContainer;
 
     private EventAdapter eventAdapter;
     private ArrayList<Event> events;
+    private ArrayList<Event> futureEvents;
+    NotifEnabler mNotifEnabler;
 
     private FragmentActivity listener;
 
+
     // Required empty public constructor
-    public HomeFragment() {}
+    public HomeFragment() {
+
+    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        events = new ArrayList<>();
+        futureEvents = new ArrayList<>();
         Log.e("Home Fragment", "Home fragment created");
+
+
+        //configure the channel
+        int importance = NotificationManager.IMPORTANCE_DEFAULT;
+        NotificationChannel channel = new NotificationChannel("myChannelId", "My Channel", importance);
+        channel.setDescription("Reminders");
+
+        //register the channel
+        //register the channel with the notifications manager
+        NotificationManager mNotificationManager =
+                (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager.createNotificationChannel(channel);
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        // TODO - for yelp style search bar: https://stackoverflow.com/questions/50708072/android-customized-searchview-layout/50764908
+        // TODO - make search view show up for home fragment
         MenuItem searchItem = menu.findItem(R.id.action_search);
 
         final SearchView searchView = (SearchView) searchItem.getActionView();
 
         searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
-
             @Override
             public boolean onMenuItemActionExpand(MenuItem menuItem) {
                 searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -106,15 +137,18 @@ public class HomeFragment extends Fragment {
             public void onRefresh() {
                 eventAdapter.clear();
                 loadTopPosts();
+                checkForNotifs();
                 swipeContainer.setRefreshing(false);
             }
         });
+        mNotifEnabler = new NotifEnabler(getContext());
         loadTopPosts();
-
+        //checkForNotifs();
         return view;
     }
-    /** loads top 20 events */
-    // TODO - make infinite scrolling work
+
+    // TODO - make infinite scrolling work with query
+    // load top 20 events
     private void loadTopPosts() {
         final Event.Query eventsQuery = new Event.Query();
         eventsQuery.getTop().withOwner();
@@ -123,14 +157,40 @@ public class HomeFragment extends Fragment {
             public void done(List<Event> objects, ParseException e) {
                 if (e==null){
                     eventAdapter.setItems(objects);
+                    for (int i = 0; i < objects.size(); i++) {
+                        events.add(objects.get(i));
+                    }
                 } else { e.printStackTrace(); }
             }
         });
+
+        checkForNotifs();
     }
 
-    /** fetch event by name
-     * now case sensitive and searches for all that contains the search query word.
-     * cannot go back to main screen after search */
+    private void checkForNotifs() {
+        Calendar cal = Calendar.getInstance();
+        Date today = cal.getTime();
+        cal.add(Calendar.DATE, 1);
+
+        for (int i = 0; i < events.size(); i++) {
+            Date futureEvent = events.get(i).getDate("event_date");
+            if (futureEvent.after(today)) {
+                futureEvents.add(events.get(i));
+                Log.d("It's before today", futureEvent.toString());
+            }
+        }
+
+        for (int i = 0; i < futureEvents.size() ; i++) {
+            Log.d("list size", String.valueOf(futureEvents.size()));
+            Log.d("hello", futureEvents.get(i).getEventName());
+            mNotifEnabler.scheduleNotification(1, 1, "new notif", "open");
+            //createNotification(1, R.drawable.map, "Upcoming Event!", futureEvents.get(i).getEventName());
+
+        }
+    }
+
+    // TODO - make this not case sensitive and search by more fields
+    // fetch event by name
     private void fetchQueryEvents(String query) {
         // clear adapter
         eventAdapter.clear();
@@ -151,4 +211,29 @@ public class HomeFragment extends Fragment {
         });
     }
 
+    private void createNotification(int nId, int iconRes, String title, String body) {
+
+        //intent trigger when something is selected
+        Intent intent = new Intent(getContext(), ProfileFragment.class).putExtra("upcomingFragment", "profileFragment");
+        int requestID = (int) System.currentTimeMillis(); //unique requestID to differentiate between various notifs with same NotifId
+        int flags = PendingIntent.FLAG_CANCEL_CURRENT; //cancel old intent and create new one
+        PendingIntent pIntent = PendingIntent.getActivity(getContext(), requestID, intent, flags); //gets an activity through its intent
+
+        //attach the pending intent to a new notif
+        Notification mBuilder =
+                new NotificationCompat.Builder(getContext(), "myChannelId")
+                        .setSmallIcon(iconRes)
+                        .setContentTitle(title)
+                        .setContentText(body)
+                        .setContentIntent(pIntent)
+                        .setAutoCancel(true) //hides notif after selection
+                        .setWhen(System.currentTimeMillis())
+                        .build();
+
+        NotificationManager mNotificationManager =
+                (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        // mId allows you to update the notification later on.
+        mNotificationManager.notify(nId, mBuilder); //updtae the notif later
+
+    }
 }

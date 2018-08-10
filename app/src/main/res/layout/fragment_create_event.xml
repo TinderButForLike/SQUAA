@@ -5,133 +5,129 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="5dp"
-    android:background="@android:color/holo_blue_light"
+    android:background="@android:color/white"
     tools:context=".fragments.CreateEventFragment">
 
     <EditText
         android:id="@+id/name"
-        android:layout_width="wrap_content"
+        android:layout_width="197dp"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_margin="5dp"
+        android:layout_below="@+id/imagePrompt"
         android:ems="10"
-        android:hint="what's your event called?"
+        android:hint="event name "
         android:inputType="text"
-        android:textColorHint="@android:color/white"
-        android:textSize="14sp"
-        />
+        android:textColorHint="#9d65c4"
+        android:textSize="12sp" />
 
-    <EditText
+    <TextView
         android:id="@+id/location"
-        android:layout_width="wrap_content"
+        android:layout_width="195dp"
         android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/mapLaunch"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/privateCheck"
-        android:layout_margin="5dp"
         android:ems="10"
-        android:hint="where is your event?"
+        android:hint="event location"
         android:inputType="text"
-        android:textColorHint="@android:color/white"
-        android:textSize="14sp" />
+        android:textColorHint="#9d65c4"
+        android:textSize="12sp" />
 
-    <EditText
+    <TextView
         android:id="@+id/date"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="17dp"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/name"
-        android:layout_margin="5dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="262dp"
         android:ems="10"
-        android:hint="when is your event?"
-        android:inputType="date"
-        android:textColorHint="@android:color/white"
-        android:textSize="14sp" />
+        android:hint="event date
+"
+        android:textColorHint="#9d65c4"
+        android:textSize="12sp" />
 
     <EditText
         android:id="@+id/description"
-        android:layout_width="361dp"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="85dp"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/location"
-        android:layout_margin="5dp"
+        android:layout_below="@+id/date"
         android:ems="10"
-        android:hint="tell the world a little more about your event."
+        android:hint="tell the world a little more about your event! include things \nlike attire suggestions, price ranges, etc."
         android:inputType="text|textPersonName"
-        android:textColorHint="@android:color/white"
-        android:textSize="14sp" />
-
-    <Button
-        android:id="@+id/create"
-        android:layout_width="136dp"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/launchGalBtn"
-        android:layout_below="@+id/launchGalBtn"
-        android:layout_marginTop="-5dp"
-        android:text="create event" />
+        android:textColorHint="#9d65c4"
+        android:textSize="12sp" />
 
     <TextView
         android:id="@+id/imagePrompt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/description"
-        android:layout_margin="5dp"
-        android:text="upload an image that best portrays your event!"
-        android:textColor="@android:color/white" />
+        android:layout_below="@+id/eventPic"
+        android:layout_centerHorizontal="true"
+        android:text="(upload an image that best portrays your event!)"
+        android:textColor="#c09cd9"
+        android:textSize="8sp" />
 
     <ImageView
         android:id="@+id/eventPic"
-        android:layout_width="121dp"
-        android:layout_height="123dp"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/imagePrompt"
-        android:layout_margin="5dp"
+        android:layout_width="157dp"
+        android:layout_height="167dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
         app:srcCompat="@android:color/holo_red_light" />
 
     <Button
         android:id="@+id/launchGalBtn"
-        android:layout_width="131dp"
+        android:layout_width="103dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/imagePrompt"
-        android:layout_margin="5dp"
-        android:layout_toEndOf="@+id/eventPic"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="21dp"
         android:text="launch gallery" />
-
-    <Button
-        android:id="@+id/mapLaunch"
-        android:layout_width="wrap_content"
-        android:layout_height="38dp"
-        android:layout_alignTop="@+id/location"
-        android:layout_margin="5dp"
-        android:layout_toEndOf="@+id/name"
-        android:text="launch map " />
 
     <CheckBox
         android:id="@+id/privateCheck"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/date"
-        android:layout_margin="5dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="120dp"
+        android:layout_toEndOf="@+id/eventPic"
         android:text="private" />
 
     <CheckBox
         android:id="@+id/publicCheck"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/location"
-        android:layout_margin="5dp"
-        android:layout_toEndOf="@+id/privateCheck"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/privateCheck"
+        android:layout_marginTop="138dp"
         android:text="public" />
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="141dp"
+    <Button
+        android:id="@+id/create"
+        android:layout_width="61dp"
+        android:layout_height="35dp"
+        android:layout_below="@+id/description"
+        android:layout_centerHorizontal="true"
+        android:background="#9d65c4"
+        android:text="CREATE!"
+        android:textColor="@android:color/background_light" />
+
+    <ImageButton
+        android:id="@+id/pickDate"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/date"
-        android:layout_alignStart="@+id/mapLaunch"
-        android:text='enter in format "mm/dd/yyyy"'
-        android:textSize="10sp" />
+        android:layout_alignBottom="@+id/date"
+        android:layout_toEndOf="@+id/date"
+        android:background="@android:color/transparent"
+        android:src="@drawable/calendar" />
+
+    <ImageButton
+        android:id="@+id/mapLaunch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/name"
+        android:layout_toEndOf="@+id/name"
+        android:background="@android:color/transparent"
+        android:src="@drawable/map" />
 
 </RelativeLayout>

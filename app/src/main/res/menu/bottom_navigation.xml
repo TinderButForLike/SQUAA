@@ -23,6 +23,7 @@
         android:id="@+id/action_map"
         android:enabled="true"
         android:title="map"
+        android:icon="@drawable/ic_location"
         app:showAsAction="ifRoom" />
 
 </menu>

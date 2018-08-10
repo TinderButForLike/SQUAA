@@ -44,8 +44,7 @@ public class OtherProfileFragment extends Fragment {
 
 
     // Required empty public constructor
-    public OtherProfileFragment() {
-    }
+    public OtherProfileFragment() { }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -88,7 +87,6 @@ public class OtherProfileFragment extends Fragment {
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
                     if (!added) {
                         ParseUser current = ParseUser.getCurrentUser();
                         current.addUnique("friends", owner);
@@ -110,58 +108,53 @@ public class OtherProfileFragment extends Fragment {
 
                         fab.setImageDrawable(ContextCompat.getDrawable(((AppCompatActivity) getActivity()).getApplicationContext(), R.drawable.ic_addfriend));
                         added = false;
-
-
                     }
                 }
-
             });
         }
 
-            viewPager = (ViewPager) view.findViewById(R.id.vpContainer);
-            setupViewPager(viewPager);
+        viewPager = (ViewPager) view.findViewById(R.id.vpContainer);
+        setupViewPager(viewPager);
 
-            tabLayout = (TabLayout) view.findViewById(R.id.tabs);
-            tabLayout.setupWithViewPager(viewPager);
+        tabLayout = (TabLayout) view.findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(viewPager);
 
+        return view;
+    }
 
-            return view;
+    private void setupViewPager(ViewPager viewPager) {
+        ViewPagerAdapter adapter = new ViewPagerAdapter(((AppCompatActivity)getActivity()).getSupportFragmentManager());
+        adapter.addFragment(new EventHistory(), "Event History");
+        adapter.addFragment(new AboutUser(), "About");
+        viewPager.setAdapter(adapter);
+    }
+
+    class ViewPagerAdapter extends FragmentPagerAdapter {
+        private final List<Fragment> mFragmentList = new ArrayList<>();
+        private final List<String> mFragmentTitleList = new ArrayList<>();
+
+        public ViewPagerAdapter(FragmentManager manager) {
+            super(manager);
         }
 
-
-        private void setupViewPager(ViewPager viewPager) {
-            ProfileFragment.ViewPagerAdapter adapter = new ProfileFragment.ViewPagerAdapter(((AppCompatActivity) getActivity()).getSupportFragmentManager());
-            adapter.addFragment(new EventHistory(), "Event History");
-            adapter.addFragment(new AboutUser(), "About");
-            viewPager.setAdapter(adapter);
+        @Override
+        public Fragment getItem(int position) {
+            return mFragmentList.get(position);
         }
 
-        class ViewPagerAdapter extends FragmentPagerAdapter {
-            private final List<Fragment> mFragmentList = new ArrayList<>();
-            private final List<String> mFragmentTitleList = new ArrayList<>();
-
-            public ViewPagerAdapter(FragmentManager manager) {
-                super(manager);
-            }
-
-            @Override
-            public Fragment getItem(int position) {
-                return mFragmentList.get(position);
-            }
-
-            @Override
-            public int getCount() {
-                return mFragmentList.size();
-            }
-
-            public void addFragment(Fragment fragment, String title) {
-                mFragmentList.add(fragment);
-                mFragmentTitleList.add(title);
-            }
-
-            @Override
-            public CharSequence getPageTitle(int position) {
-                return mFragmentTitleList.get(position);
-            }
+        @Override
+        public int getCount() {
+            return mFragmentList.size();
         }
+
+        public void addFragment(Fragment fragment, String title) {
+            mFragmentList.add(fragment);
+            mFragmentTitleList.add(title);
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mFragmentTitleList.get(position);
+        }
+    }
 }

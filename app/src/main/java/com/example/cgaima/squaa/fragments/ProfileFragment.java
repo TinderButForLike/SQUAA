@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,6 +17,7 @@ import com.bumptech.glide.Glide;
 import com.example.cgaima.squaa.ProfileFragements.AboutUser;
 import com.example.cgaima.squaa.ProfileFragements.EventHistory;
 import com.example.cgaima.squaa.ProfileFragements.Logout;
+import com.example.cgaima.squaa.ProfileFragements.Upcoming;
 import com.example.cgaima.squaa.R;
 import com.parse.ParseException;
 import com.parse.ParseUser;
@@ -45,7 +45,7 @@ public class ProfileFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         // Setup any handles to view objects here
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        final ImageView imageInToolbar = (ImageView) toolbar.findViewById(R.id.ivProfilePic);
+        final ImageView imageInToolbar = toolbar.findViewById(R.id.ivProfilePic);
         ParseUser currentUser =  ParseUser.getCurrentUser();
 
         Log.e("PROFILE FRAGMENT", "whoah i get created too wtf");
@@ -55,8 +55,6 @@ public class ProfileFragment extends Fragment {
             e.printStackTrace();
         }
 
-
-
         viewPager = (ViewPager) view.findViewById(R.id.vpContainer);
         setupViewPager(viewPager);
 
@@ -64,9 +62,10 @@ public class ProfileFragment extends Fragment {
         tabLayout.setupWithViewPager(viewPager);
     }
     private void setupViewPager(ViewPager viewPager) {
-       ViewPagerAdapter adapter = new ViewPagerAdapter(((AppCompatActivity)getActivity()).getSupportFragmentManager());
-        adapter.addFragment(new EventHistory(), "Event History");
-        adapter.addFragment(new AboutUser(), "About User");
+       ViewPagerAdapter adapter = new ViewPagerAdapter(getActivity().getSupportFragmentManager());
+        adapter.addFragment(new EventHistory(), "History");
+        adapter.addFragment(new Upcoming(), "Upcoming");
+        adapter.addFragment(new AboutUser(), "About");
         adapter.addFragment(new Logout(), "Logout");
         viewPager.setAdapter(adapter);
     }
