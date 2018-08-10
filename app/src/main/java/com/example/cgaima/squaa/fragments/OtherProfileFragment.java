@@ -1,7 +1,6 @@
 package com.example.cgaima.squaa.fragments;
 
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -26,8 +25,6 @@ import com.example.cgaima.squaa.R;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 
-import org.parceler.Parcels;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -46,6 +43,14 @@ public class OtherProfileFragment extends Fragment {
     // Required empty public constructor
     public OtherProfileFragment() { }
 
+    public static OtherProfileFragment newInstance(Event event) {
+        OtherProfileFragment otherProfileFragment = new OtherProfileFragment();
+        Bundle args = new Bundle();
+        args.putParcelable("event", event);
+        otherProfileFragment.setArguments(args);
+        return otherProfileFragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,56 +67,51 @@ public class OtherProfileFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_other_profile, container, false);
         ButterKnife.bind(this, view);
 
-        toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        final ImageView imageInToolbar = (ImageView) toolbar.findViewById(R.id.ivProfilePic);
-        Parcelable parcel = getActivity().getIntent().getParcelableExtra("event_owner");
+        toolbar = view.findViewById(R.id.toolbar);
+        final ImageView imageInToolbar = toolbar.findViewById(R.id.ivProfilePic);
 
-        if (parcel != null) {
-            final Event event = (Event) Parcels.unwrap(parcel);
+        Event event = getArguments().getParcelable("event");
 
+        final ParseUser owner = event.getOwner();
 
-            final ParseUser owner = event.getOwner();
-
-
-            try {
-                Glide.with(this).load(owner.fetchIfNeeded().getParseFile("profile_picture").getUrl()).into(imageInToolbar);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-
-
-            Log.e("OtherProfileFragment", "I GET OPENED");
-            final FloatingActionButton fab = view.findViewById(R.id.fabFriend);
-            added = false;
-            fab.setImageDrawable(ContextCompat.getDrawable(((AppCompatActivity) getActivity()).getApplicationContext(), R.drawable.ic_addfriend));
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (!added) {
-                        ParseUser current = ParseUser.getCurrentUser();
-                        current.addUnique("friends", owner);
-                        try {
-                            current.save();
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
-                        fab.setImageDrawable(ContextCompat.getDrawable(((AppCompatActivity) getActivity()).getApplicationContext(), R.drawable.ic_unjoin));
-                        added = true;
-                    } else {
-                        ParseUser current = ParseUser.getCurrentUser();
-                        current.removeAll("friends", Collections.singleton(owner));
-                        try {
-                            current.save();
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
-
-                        fab.setImageDrawable(ContextCompat.getDrawable(((AppCompatActivity) getActivity()).getApplicationContext(), R.drawable.ic_addfriend));
-                        added = false;
-                    }
-                }
-            });
+        try {
+            Glide.with(this).load(owner.fetchIfNeeded().getParseFile("profile_picture").getUrl()).into(imageInToolbar);
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
+
+        Log.e("OtherProfileFragment", "I GET OPENED");
+        final FloatingActionButton fab = view.findViewById(R.id.fabFriend);
+        added = false;
+        fab.setImageDrawable(ContextCompat.getDrawable(((AppCompatActivity) getActivity()).getApplicationContext(), R.drawable.ic_addfriend));
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!added) {
+                    ParseUser current = ParseUser.getCurrentUser();
+                    current.addUnique("friends", owner);
+                    try {
+                        current.save();
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    fab.setImageDrawable(ContextCompat.getDrawable(((AppCompatActivity) getActivity()).getApplicationContext(), R.drawable.ic_unfriend));
+                    added = true;
+                } else {
+                    ParseUser current = ParseUser.getCurrentUser();
+                    current.removeAll("friends", Collections.singleton(owner));
+                    try {
+                        current.save();
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
+                    fab.setImageDrawable(ContextCompat.getDrawable(((AppCompatActivity) getActivity()).getApplicationContext(), R.drawable.ic_addfriend));
+                    added = false;
+                }
+            }
+        });
+
 
         viewPager = (ViewPager) view.findViewById(R.id.vpContainer);
         setupViewPager(viewPager);

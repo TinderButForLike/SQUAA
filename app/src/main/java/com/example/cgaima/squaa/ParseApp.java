@@ -12,11 +12,15 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 
 import com.example.cgaima.squaa.Models.Event;
+import com.example.cgaima.squaa.Models.Message;
 import com.example.cgaima.squaa.Models.EventAttendance;
 import com.example.cgaima.squaa.Models.User;
 import com.example.cgaima.squaa.activities.HomeActivity;
 import com.parse.Parse;
 import com.parse.ParseObject;
+
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 
 public class ParseApp extends Application {
 
@@ -25,8 +29,19 @@ public class ParseApp extends Application {
     public void onCreate() {
         super.onCreate();
 
+        // Use for monitoring Parse network traffic
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
+        // Can be Level.BASIC, Level.HEADERS, or Level.BODY
+        httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        builder.networkInterceptors().add(httpLoggingInterceptor);
+
+
+
         ParseObject.registerSubclass(Event.class);
         ParseObject.registerSubclass(User.class);
+        ParseObject.registerSubclass(Message.class);
+
         ParseObject.registerSubclass(EventAttendance.class);
 
         final Parse.Configuration configuration = new Parse.Configuration.Builder(this)

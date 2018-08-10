@@ -8,74 +8,85 @@
     android:fitsSystemWindows="true"
     tools:context=".activities.ProfileLandingActivity">
 
-    <FrameLayout
-        android:id="@+id/placeholder"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </FrameLayout>
 
-    <android.support.design.widget.AppBarLayout
+    <RelativeLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:background="@color/primaryColor"
         android:theme="@style/AppTheme.AppBarOverlay">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="217dp"
-            android:layout_weight="1"
-            android:background="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|enterAlways"
-            app:popupTheme="@style/AppTheme.PopupOverlay"
-            >
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/ivProfilePic"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_launcher_foreground" />
 
-
-            <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/ivProfilePic"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_launcher_foreground"
-                app:civ_border_color="#FF000000"
-                 />
-
-        </android.support.v7.widget.Toolbar>
+        <RatingBar
+            android:id="@+id/rbUserRating"
+            style="@android:style/Widget.Material.Light.RatingBar.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ivProfilePic"
+            android:layout_centerHorizontal="true"
+            android:isIndicator="true"
+            android:numStars="5"
+            android:rating="0" />
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:tabTextColor="@color/secondaryTextColor">
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/avgRating"
+            app:tabTextColor="@color/black">
 
             <android.support.design.widget.TabItem
                 android:id="@+id/tiHistory"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Event History" />
+                android:text="History" />
+
+            <android.support.design.widget.TabItem
+                android:id="@+id/tiUpcoming"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Upcoming" />
 
             <android.support.design.widget.TabItem
                 android:id="@+id/tiAbout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="about me" />
+                android:text="About Me" />
 
             <android.support.design.widget.TabItem
                 android:id="@+id/Friends"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="log out" />
-
+                android:text="Log Out" />
         </android.support.design.widget.TabLayout>
-    </android.support.design.widget.AppBarLayout>
+
+        <TextView
+            android:id="@+id/avgRating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rbUserRating"
+            android:layout_centerHorizontal="true"
+            android:text="avg rating"
+            android:textColor="@color/black" />
+    </RelativeLayout>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/vpContainer"
         android:layout_width="match_parent"
-        android:layout_height="303dp"
+        android:layout_height="match_parent"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="264dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" >
+        android:layout_below="@+id/appbar"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-    </android.support.v4.view.ViewPager>
 </RelativeLayout>

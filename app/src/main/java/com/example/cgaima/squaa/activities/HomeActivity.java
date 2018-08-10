@@ -10,7 +10,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 
@@ -27,7 +26,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class HomeActivity extends AppCompatActivity {
-
 
     @BindView(R.id.bottom_navigation) BottomNavigationView bottomNavigationView;
     @BindView(R.id.fragment_container) FrameLayout fragment_container;
@@ -70,15 +68,12 @@ public class HomeActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false); // remove default text
 
-        String upcomingFragment = getIntent().getStringExtra("upcomingFragment");
-
         final FragmentManager fragmentManager = getSupportFragmentManager();
 
         final HomeFragment homeFragment = new HomeFragment();
         final CreateEventFragment createEventFragment = new CreateEventFragment();
         final ProfileFragment profileFragment = new ProfileFragment();
         final MapFragment mapFragment = new MapFragment();
-        //final DatePickerFragment datePickerFragment = new DatePickerFragment();
 
         // initialize fragment manager
         fragmentManager.beginTransaction().replace(R.id.fragment_container, homeFragment).commit();
@@ -111,19 +106,6 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        if (upcomingFragment != null) {
-            //decide what to do
-            if (upcomingFragment.equals("profileFragment")) {
-                ProfileFragment profileFragment1 = new ProfileFragment();
-                fragmentManager.beginTransaction().replace(R.id.bottom_navigation, profileFragment1);
-                Log.d("transaction d etails", "looks like it worked");
-
-            }
-            else {
-                Log.d("transaction details", "didnt work");
-            }
-        }
-
         if (getIntent().hasExtra("locationtext")){
             Log.d("Home Activity", "we have the goods.....");
             bottomNavigationView.setSelectedItemId(R.id.action_new_event);
@@ -142,10 +124,4 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-    // inflate the menu, adds items to the action bar
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_toolbar, menu);
-        return true;
-    }
 }

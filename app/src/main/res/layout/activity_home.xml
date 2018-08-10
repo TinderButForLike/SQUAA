@@ -10,7 +10,7 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="?attr/actionBarSize"
         android:background="@color/white"
         android:elevation="8dp"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
@@ -18,12 +18,13 @@
             android:id="@+id/toolbar_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            android:layout_gravity="left"
+            android:padding="2dp"
             android:text="squaa"
+            android:layout_marginLeft="8dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
             android:textColor="@color/primaryTextColor" />
     </android.support.v7.widget.Toolbar>
-
 
     <FrameLayout
         android:id="@+id/fragment_container"

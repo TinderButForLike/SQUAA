@@ -3,6 +3,7 @@ package com.example.cgaima.squaa.Models;
 
 import android.net.Uri;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.maps.model.LatLng;
@@ -19,18 +20,21 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 @ParseClassName("Event")
-public class Event extends ParseObject implements Place{
+public class Event extends ParseObject implements Place {
     private static final String KEY_DESCRIPTION = "description";
     private static final String KEY_IMAGE = "event_image";
     private static final String KEY_OWNER = "owner";
     private static final String KEY_ATTENDEES = "attendees";
     private static final String KEY_LOCATION = "location";
     private static final String KEY_DATE = "event_date";
+    private static final String KEY_MESSAGES = "chat_messages";
+    //
     private static final String KEY_PRIVACY = "public";
     private static final String KEY_NAME = "event_name";
     private static final String KEY_LATLNG = "latlng";
@@ -225,6 +229,12 @@ public class Event extends ParseObject implements Place{
         public Query containsWord(String query) {
             setLimit(25);
             whereContains(KEY_NAME, query);
+            return this;
+        }
+
+        public Query getTopNear(ParseGeoPoint userLocation) {
+            setLimit(10);
+            whereNear("latlng", userLocation);
             return this;
         }
     }

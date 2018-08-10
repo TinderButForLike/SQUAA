@@ -36,9 +36,7 @@ public class Logout extends Fragment {
                 ParseUser currentUser = ParseUser.getCurrentUser(); // this will now be null
                 final Intent intent = new Intent(getActivity(), LoginActivity.class);
                 startActivity(intent);
-
             }
         });
-
     }
 }

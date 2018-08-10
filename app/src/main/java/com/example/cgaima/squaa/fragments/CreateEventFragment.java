@@ -141,7 +141,7 @@ public class CreateEventFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        Log.e("Event Fragment", "I get created too");
+        Log.e("EventFragment", "I get created too");
         View view = inflater.inflate(R.layout.fragment_create_event, container, false);
         ButterKnife.bind(this, view);
         return view;
@@ -189,6 +189,11 @@ public class CreateEventFragment extends Fragment {
         String mName = name.getText().toString();
         String mLocation = location.getText().toString();
         String mDescription = description.getText().toString();
+
+        Boolean mPrivacy;
+        if (privateCheck.isChecked()) {mPrivacy = true; }
+        else { mPrivacy = false; }
+
         ParseFile mImage = image;
         String mDate = mMonth + "/" + mDay + "/" + mYear;
 
@@ -221,6 +226,7 @@ public class CreateEventFragment extends Fragment {
         newEvent.setDescription(description);
         newEvent.setEventImage(img);
         newEvent.setGeoPoint(parseGeoPoint);
+        newEvent.put("numRating", 0);
 
         // set event owner
         newEvent.setOwner(ParseUser.getCurrentUser());
@@ -302,7 +308,7 @@ public class CreateEventFragment extends Fragment {
     public static void writeBitmapToFile(Bitmap bitmap) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 0, stream);
-        byte[] bitmapBytes = stream.toByteArray(); //handles each byte individually
+        byte[] bitmapBytes = stream.toByteArray();
 
         image = new ParseFile("myImage", bitmapBytes);
         try {

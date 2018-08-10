@@ -1,8 +1,8 @@
 package com.example.cgaima.squaa.adapters;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.content.res.ColorStateList;
+import android.icu.text.SimpleDateFormat;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -18,16 +18,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.example.cgaima.squaa.Models.Event;
 import com.example.cgaima.squaa.Models.EventAttendance;
+import com.example.cgaima.squaa.Models.GlideApp;
 import com.example.cgaima.squaa.R;
+import com.example.cgaima.squaa.activities.EventDetailActivity;
 import com.example.cgaima.squaa.fragments.OtherProfileFragment;
-import com.parse.GetDataCallback;
+import com.example.cgaima.squaa.fragments.ProfileFragment;
+import com.parse.DeleteCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -40,6 +43,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
     Context context;
     List<Event> events;
     private final int REQUEST_CODE = 21;
+
     public EventAdapter(List<Event> events) {
         this.events = events;
     }
@@ -57,6 +61,12 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
 
         final Event event = events.get(position);
+        EventAttendance eventAttendance = null;
+        try {
+            eventAttendance = (EventAttendance) new EventAttendance.Query().findEventAttendance(ParseUser.getCurrentUser(), event).getFirst();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
         // set event name, description, location, date
         holder.event_name.setText(event.getEventName());
@@ -64,51 +74,47 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         holder.location.setText(event.getLocation());
         holder.date.setText(event.getDate().toString());
 
-        // set media image
-        if (event.getEventImage()==null) {
-            holder.media_image.setImageResource(R.drawable.image_default);
-        } else {
-            event.getEventImage().getDataInBackground(new GetDataCallback() {
-                @Override
-                public void done(byte[] data, ParseException e) {
-                    if (e == null) {
-                        Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
-                        holder.media_image.setImageBitmap(bmp);
-                    }
-                    else {
-                        Log.d("EventAdapter", "Can't load image");
-                        e.printStackTrace();
-                    }
-                }
-            });
-        }
 
-        // set owner name
+        Date fromDate = event.getDate("fromDate");
+        Date toDate = event.getDate("toDate");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm");
+        String dateString = String.format("%s - %s", simpleDateFormat.format(fromDate), simpleDateFormat.format(toDate));
+        holder.date.setText(dateString);
+
+        // set owner name, profile picture, media image
         try {
             holder.tvOwner.setText(event.getOwner().fetchIfNeeded().getUsername());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        // set owner profile picture
-        try {
-            Glide.with(context).load(event.getOwner().fetchIfNeeded()
+            GlideApp.with(context).load(event.getOwner().fetchIfNeeded()
                     .getParseFile("profile_picture").getUrl()).into(holder.ownerPic);
+            if (event.getEventImage() == null) {
+                holder.media_image.setImageResource(R.drawable.image_default);
+            }
+            else {
+                GlideApp.with(context)
+                        .load(event.getEventImage().getUrl())
+                        .error(R.drawable.image_default)
+                        .into(holder.media_image);
+            }
         } catch (ParseException e) {
             e.printStackTrace();
         }
 
         // set button and numAttended initial UI
-        holder.numAttend.setText(String.valueOf(getNumAttending(event)));
-        final boolean joined = isAttending(event);
-        if (joined) { holder.join.setText("unjoin?"); }
+        holder.numAttend.setText(String.valueOf(EventAttendance.getNumAttending(event)));
+        final boolean joined = EventAttendance.isAttending(event);
+        if (joined) {
+            holder.join.setText("unjoin?");
+            holder.join.setBackgroundTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.light_gray, context.getTheme())));
+        }
 
         // after current user clicks join
+        final EventAttendance finalEventAttendance = eventAttendance;
         holder.join.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final boolean joined = isAttending(event);
-                if (!joined){
+                final boolean joined = EventAttendance.isAttending(event);
+                // join event if not already joined
+                if (!joined) {
                     final EventAttendance newEventAttendance = new EventAttendance();
                     newEventAttendance.setEventAttendance(ParseUser.getCurrentUser(), event);
                     newEventAttendance.saveInBackground(new SaveCallback() {
@@ -116,7 +122,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
                         public void done(ParseException e) {
                             if (e == null) {
                                 holder.join.setText("unjoin?");
-                                holder.numAttend.setText(String.valueOf(getNumAttending(event)));
+                                holder.join.setBackgroundTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.light_gray, context.getTheme())));
+                                holder.numAttend.setText(String.valueOf(EventAttendance.getNumAttending(event)));
                                 Log.d("EventAdapter", "Successfully joined event. :) ");
                             } else {
                                 Toast.makeText(context,"Failed to join event", Toast.LENGTH_LONG).show();
@@ -126,32 +133,60 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
                     });
                     // TODO - put check mark on media image and make button gray or remove from home screen
                 }
+                // unjoin event if already joined
                 else{
-                    EventAttendance.Query query = new EventAttendance.Query();
-                    query.findEventAttendance(ParseUser.getCurrentUser(), event);
-                    try {
-                        query.getFirst().deleteInBackground();
-                        holder.join.setText("join");
-                        holder.numAttend.setText(String.valueOf(getNumAttending(event)));
-                        Log.d("EventAdapter", "Successfully unjoined event. ");
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
+                    finalEventAttendance.deleteInBackground(new DeleteCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            if (e == null) {
+                                holder.join.setText("join");
+                                holder.join.setBackgroundTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.secondaryColor, context.getTheme())));
+                                holder.numAttend.setText(String.valueOf(EventAttendance.getNumAttending(event)));
+                                Log.d("EventAdapter", "Successfully unjoined event. ");
+                            }
+                            else {
+                                Toast.makeText(context,"Failed to unjoin event", Toast.LENGTH_LONG).show();
+                                Log.e("EventAdapter", e.toString());
+                            }
+                        }
+                    });
                 }
             }
         });
 
-        // TODO - launch other profile fragment
+        // launch other profile fragment
         holder.ownerPic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                try {
+                    // if current user
+                    if (event.getOwner().fetchIfNeeded().getObjectId().equals(ParseUser.getCurrentUser().getObjectId())){
+                        Fragment otherProfileFragment = new ProfileFragment();
+                        FragmentTransaction fragmentTransaction = ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction();
+                        fragmentTransaction.replace(R.id.fragment_container, otherProfileFragment).commit();
+                    } else {
+                        Fragment otherProfileFragment = OtherProfileFragment.newInstance(event);
+                        FragmentTransaction fragmentTransaction = ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction();
+                        fragmentTransaction.replace(R.id.fragment_container, otherProfileFragment).commit();
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
-                Fragment otherProfileFragment = new OtherProfileFragment();
+        // launch event details view
+        final EventAttendance finalEventAttendance1 = eventAttendance;
+        holder.media_image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment eventDetailActivity = EventDetailActivity.newInstance(event, finalEventAttendance1);
                 FragmentTransaction fragmentTransaction = ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.fragment_container, otherProfileFragment).commit();
+                fragmentTransaction.replace(R.id.fragment_container, eventDetailActivity).commit();
             }
         });
     }
+
 
     @Override
     public int getItemCount() {
@@ -210,33 +245,4 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         notifyDataSetChanged();
     }
 
-    // check if current user is attending event
-    public boolean isAttending(Event event) {
-        EventAttendance.Query query = new EventAttendance.Query();
-        query.findEventAttendance(ParseUser.getCurrentUser(), event);
-        try {
-            List eventAttendance = query.find();
-            return !eventAttendance.isEmpty();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        // defaults to not attending
-        return false;
-    }
-
-
-    // get total number of attendees for event
-    public int getNumAttending(Event event) {
-        // defaults num attending to 0
-        int numAttending = 0;
-        EventAttendance.Query query = new EventAttendance.Query();
-        query.findAllEventAttendance(event);
-        try {
-            List eventAttendance = query.find();
-            numAttending = eventAttendance.size();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return numAttending;
-    }
 }
