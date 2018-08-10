@@ -33,6 +33,7 @@ import com.lyft.lyftbutton.LyftButton;
 import com.lyft.lyftbutton.RideParams;
 import com.lyft.lyftbutton.RideTypeEnum;
 import com.lyft.networking.ApiConfig;
+import com.parse.DeleteCallback;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
@@ -122,7 +123,8 @@ public class EventDetailActivity extends Fragment {
             // set join_button event initial UI
             join.setVisibility(View.VISIBLE);
             joined = EventAttendance.isAttending(event);
-            if (joined) { toggleJoinButton(false);}
+            if (joined) { toggleJoinButton(false); }
+            else { toggleJoinButton(true); }
         }
 
         // if current event - allow user to call uber
@@ -285,23 +287,34 @@ public class EventDetailActivity extends Fragment {
             query.findEventAttendance(ParseUser.getCurrentUser(), event);
             try {
                 toggleJoinButton(true);
-                query.getFirst().deleteInBackground();
-                Log.d("EventAdapter", "Successfully unjoined event.");
+                query.getFirst().deleteInBackground(new DeleteCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if (e == null) {
+                            toggleJoinButton(true);
+                            Log.d("EventDetailActivity", "Successfully unjoined event. ");
+                        }
+                        else {
+                            Toast.makeText(getContext(),"Failed to unjoin event", Toast.LENGTH_LONG).show();
+                            Log.e("EventDetailActivity", e.toString());
+                        }
+                    }
+                });
+                Log.d("EventDetailActivity", "Successfully unjoined event.");
             } catch (ParseException e) {
                 e.printStackTrace();
             }
         }
     }
     public void toggleJoinButton(boolean toggle) {
+        numAttend.setText(String.valueOf(EventAttendance.getNumAttending(event)));
         if (toggle) {
             join.setText("join");
             join.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.secondaryColor, getActivity().getTheme())));
-            numAttend.setText(String.valueOf(EventAttendance.getNumAttending(event)));
         }
         else {
             join.setText("unjoin?");
             join.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.light_gray, getActivity().getTheme())));
-            numAttend.setText(String.valueOf(EventAttendance.getNumAttending(event)));
         }
     }
 }
