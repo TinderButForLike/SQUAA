@@ -1,11 +1,13 @@
 package com.example.cgaima.squaa.adapters;
 
 import android.content.Context;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.transition.Fade;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,10 +15,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.cgaima.squaa.DetailsTransition;
 import com.example.cgaima.squaa.Models.Event;
 import com.example.cgaima.squaa.Models.EventAttendance;
 import com.example.cgaima.squaa.R;
-import com.example.cgaima.squaa.activities.EventDetailActivity;
+import com.example.cgaima.squaa.fragments.EventDetailFragment;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 
@@ -91,7 +94,6 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.ivEvent) ImageView ivEvent;
-        public TextView tvUsername;
         public TextView tvDescription;
 
 
@@ -112,12 +114,31 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                Fragment eventDetailActivity = EventDetailActivity.newInstance(event, eventAttendance);
+                Fragment eventDetailActivity = EventDetailFragment.newInstance(event, eventAttendance);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    // Inflate transitions to apply
+                    /*Transition changeTransform = TransitionInflater.from(context).
+                            inflateTransition(R.transition.change_image_transform);
+                    Transition explodeTransform = TransitionInflater.from(context).
+                            inflateTransition(android.R.transition.explode);*/
+
+                    // Setup exit transition on first fragment
+                    eventDetailActivity.setSharedElementEnterTransition(new DetailsTransition());
+                    eventDetailActivity.setEnterTransition(new Fade());
+                    eventDetailActivity.setSharedElementReturnTransition(new DetailsTransition());
+                    eventDetailActivity.setExitTransition(new Fade());
+                }
+
                 FragmentTransaction fragmentTransaction = ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.fragment_container, eventDetailActivity).commit();
+                fragmentTransaction.addSharedElement(ivEvent, "eventCard")
+                        .replace(R.id.fragment_container, eventDetailActivity)
+                        .addToBackStack(null)
+                        .commit();
             }
 
         }
     }
+
+
 }
 

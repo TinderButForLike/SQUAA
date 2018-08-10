@@ -21,9 +21,8 @@
         <ImageView
             android:id="@+id/ivEvent"
             android:layout_width="match_parent"
+            android:transitionName="eventCard"
             android:layout_height="@dimen/grid_profile_height"
             android:scaleType="centerCrop" />
-
-
     </LinearLayout>
 </android.support.v7.widget.CardView>

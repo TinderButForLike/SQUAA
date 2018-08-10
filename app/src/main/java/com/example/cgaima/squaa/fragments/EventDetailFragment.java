@@ -1,9 +1,10 @@
-package com.example.cgaima.squaa.activities;
+package com.example.cgaima.squaa.fragments;
 
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
+import android.graphics.drawable.Drawable;
 import android.icu.text.SimpleDateFormat;
 import android.location.Location;
 import android.location.LocationManager;
@@ -12,6 +13,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,12 +26,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.example.cgaima.squaa.Models.Event;
 import com.example.cgaima.squaa.Models.EventAttendance;
 import com.example.cgaima.squaa.Models.GlideApp;
 import com.example.cgaima.squaa.R;
-import com.example.cgaima.squaa.fragments.OtherProfileFragment;
-import com.example.cgaima.squaa.fragments.ProfileFragment;
+import com.example.cgaima.squaa.activities.HomeActivity;
 import com.lyft.lyftbutton.LyftButton;
 import com.lyft.lyftbutton.RideParams;
 import com.lyft.lyftbutton.RideTypeEnum;
@@ -46,7 +52,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class EventDetailActivity extends Fragment {
+public class EventDetailFragment extends Fragment {
 
     //resource variables
     boolean joined;
@@ -81,27 +87,29 @@ public class EventDetailActivity extends Fragment {
     @BindView(R.id.join)
     Button join;
 
-    public EventDetailActivity() {
+    ActionBar actionBar;
+
+    public EventDetailFragment() {
     }
 
-    public static EventDetailActivity newInstance(Event event, EventAttendance eventAttendance) {
-        EventDetailActivity eventDetailActivity = new EventDetailActivity();
+    public static EventDetailFragment newInstance(Event event, EventAttendance eventAttendance) {
+        EventDetailFragment eventDetailActivity = new EventDetailFragment();
         Bundle args = new Bundle();
         args.putParcelable("event", event);
         args.putParcelable("eventAttendance", eventAttendance);
         eventDetailActivity.setArguments(args);
 
         return eventDetailActivity;
-
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        postponeEnterTransition();
         // get arguments
         event = getArguments().getParcelable("event");
         eventAttendance = getArguments().getParcelable("eventAttendance");
+
     }
 
     @Override
@@ -183,7 +191,7 @@ public class EventDetailActivity extends Fragment {
                                     tvRate.setVisibility(View.GONE);
                                     rb.setVisibility(View.GONE);
                                 } else {
-                                    Log.e("EventDetailActivity", e.toString());
+                                    Log.e("EventDetailFragment", e.toString());
                                     Toast.makeText(getContext(), "Failed to rate the event try again later", Toast.LENGTH_LONG).show();
                                 }
                             }
@@ -232,6 +240,18 @@ public class EventDetailActivity extends Fragment {
             } else {
                 GlideApp.with(this)
                         .load(event.getEventImage().getUrl())
+                        .listener(new RequestListener<Drawable>() { // for smooth shared element transition
+                            @Override
+                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                return false;
+                            }
+
+                            @Override
+                            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                startPostponedEnterTransition();
+                                return false;
+                            }
+                        })
                         .error(R.drawable.image_default)
                         .into(eventPic);
             }
@@ -259,6 +279,28 @@ public class EventDetailActivity extends Fragment {
             }
         });
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
+        TextView tv = toolbar.findViewById(R.id.toolbar_title);
+        tv.setText("");
+        ActionBar actionBar = ((HomeActivity) getActivity()).getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getFragmentManager().popBackStack();
+            }
+        });
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        ((HomeActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
     }
 
     @OnClick(R.id.join)
@@ -292,15 +334,15 @@ public class EventDetailActivity extends Fragment {
                     public void done(ParseException e) {
                         if (e == null) {
                             toggleJoinButton(true);
-                            Log.d("EventDetailActivity", "Successfully unjoined event. ");
+                            Log.d("EventDetailFragment", "Successfully unjoined event. ");
                         }
                         else {
                             Toast.makeText(getContext(),"Failed to unjoin event", Toast.LENGTH_LONG).show();
-                            Log.e("EventDetailActivity", e.toString());
+                            Log.e("EventDetailFragment", e.toString());
                         }
                     }
                 });
-                Log.d("EventDetailActivity", "Successfully unjoined event.");
+                Log.d("EventDetailFragment", "Successfully unjoined event.");
             } catch (ParseException e) {
                 e.printStackTrace();
             }

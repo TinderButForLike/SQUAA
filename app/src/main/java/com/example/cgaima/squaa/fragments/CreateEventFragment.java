@@ -8,6 +8,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.cgaima.squaa.Models.Event;
@@ -61,21 +63,29 @@ public class CreateEventFragment extends Fragment {
     public CreateEventFragment() { }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
+        TextView tv = toolbar.findViewById(R.id.toolbar_title);
+        tv.setText("create an event");
+        // Inflate the layout for this fragment
+        Log.e("EventFragment", "I get created too");
+        View view = inflater.inflate(R.layout.fragment_create_event, container, false);
+        ButterKnife.bind(this, view);
+        return view;
+    }
+
+    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         location.setText(getActivity().getIntent().getStringExtra("locationtext"));
         if (getActivity().getIntent().getParcelableExtra("geo") != null) {
             Log.d("CreateEventFrag", String.valueOf(((ParseGeoPoint) (getActivity().getIntent().getExtras().getParcelable("geo"))).getLatitude()));
         }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        Log.e("EventFragment", "I get created too");
-        View view = inflater.inflate(R.layout.fragment_create_event, container, false);
-        ButterKnife.bind(this, view);
-        return view;
     }
 
     //launch the map

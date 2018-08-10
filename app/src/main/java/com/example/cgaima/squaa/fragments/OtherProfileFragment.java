@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.cgaima.squaa.Models.Event;
@@ -38,6 +39,7 @@ public class OtherProfileFragment extends Fragment {
     private ViewPager viewPager;
     private FragmentActivity listener;
     private Boolean added;
+    ParseUser owner;
 
 
     // Required empty public constructor
@@ -55,6 +57,8 @@ public class OtherProfileFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        Event event = getArguments().getParcelable("event");
+        owner = event.getOwner();
         Log.e("OtherProfileFragment", "OtherProfile fragment created");
     }
 
@@ -63,6 +67,9 @@ public class OtherProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
+        TextView tv = toolbar.findViewById(R.id.toolbar_title);
+        tv.setText(owner.getUsername());
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_other_profile, container, false);
         ButterKnife.bind(this, view);
@@ -70,9 +77,6 @@ public class OtherProfileFragment extends Fragment {
         toolbar = view.findViewById(R.id.toolbar);
         final ImageView imageInToolbar = toolbar.findViewById(R.id.ivProfilePic);
 
-        Event event = getArguments().getParcelable("event");
-
-        final ParseUser owner = event.getOwner();
 
         try {
             Glide.with(this).load(owner.fetchIfNeeded().getParseFile("profile_picture").getUrl()).into(imageInToolbar);
