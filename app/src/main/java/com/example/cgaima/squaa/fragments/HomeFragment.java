@@ -89,7 +89,8 @@ public class HomeFragment extends Fragment {
         Log.e("Home Fragment", "Home fragment created");
 
 
-        //configure the channel
+
+        //configure the notification channel
         int importance = NotificationManager.IMPORTANCE_DEFAULT;
         NotificationChannel channel = new NotificationChannel("myChannelId", "My Channel", importance);
         channel.setDescription("Reminders");
@@ -202,6 +203,9 @@ public class HomeFragment extends Fragment {
 
         mNotifEnabler = new NotifEnabler(getContext());
         loadTopPosts();
+
+        checkForNotifs();
+
         return view;
     }
 
@@ -326,6 +330,8 @@ public class HomeFragment extends Fragment {
             }
         });
     }
+
+
 
     private void createNotification(int nId, int iconRes, String title, String body) {
 
