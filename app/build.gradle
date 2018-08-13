@@ -31,7 +31,9 @@ dependencies {
     implementation 'com.android.support:design:27.1.1'
 
     //firebase messaging library
-    implementation 'com.google.firebase:firebase-messaging:15.0.2'
+    implementation 'com.google.firebase:firebase-core:16.0.1'
+    implementation 'com.google.firebase:firebase-messaging:17.1.0'
+    implementation 'com.google.firebase:firebase-core'
 
     //google maps and places
     implementation 'com.google.android.gms:play-services-maps:15.0.1'
@@ -93,3 +95,5 @@ dependencies {
     implementation 'com.lyft:lyft-android-sdk:1.0.3'
 
 }
+apply plugin: 'com.google.gms.google-services'
+

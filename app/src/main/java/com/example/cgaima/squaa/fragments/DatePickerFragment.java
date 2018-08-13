@@ -45,7 +45,6 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
         Calendar cal = new GregorianCalendar(datePicker.getYear(), datePicker.getMonth(), datePicker.getDayOfMonth());
         Date theDate = cal.getTime();
-        //Log.d("the date", theDate.toString());
 
         Intent yearIntent = new Intent("yearIntent").putExtra("year", year).putExtra("month", month).putExtra("day", day).putExtra("date", theDate.getTime());
         LocalBroadcastManager.getInstance(getContext()).sendBroadcast(yearIntent);
