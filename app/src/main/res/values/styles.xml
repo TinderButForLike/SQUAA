@@ -16,6 +16,7 @@
         <!--<item name="android:windowDrawsSystemBarBackgrounds">true</item>-->
         <!--Change app font-->
         <item name="android:typeface">monospace</item>
+        <item name="android:windowContentTransitions">true</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>

@@ -20,15 +20,18 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -140,11 +143,30 @@ public class CreateEventFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
+        TextView tv = toolbar.findViewById(R.id.toolbar_title);
+        tv.setText("create an event");
         // Inflate the layout for this fragment
         Log.e("EventFragment", "I get created too");
         View view = inflater.inflate(R.layout.fragment_create_event, container, false);
         ButterKnife.bind(this, view);
+        //get the spinner from the xml.
+        Spinner dropdown = view.findViewById(R.id.spinner1);
+//create a list of items for the spinner.
+        String[] items = new String[]{"1", "2", "three"};
+//create an adapter to describe how the items are displayed, adapters are used in several places in android.
+//There are multiple variations of this, but this is the basic variant.
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, items);
+//set the spinners adapter to the previously created one.
+        dropdown.setAdapter(adapter);
         return view;
+    }
+
+    //launch the map
+    @OnClick(R.id.mapLaunch)
+    public void launchMap() {
+        Intent mapIntent = new Intent(getActivity(), MapsActivity.class);
+        startActivityForResult(mapIntent, 30);
     }
 
     @Override
@@ -244,13 +266,6 @@ public class CreateEventFragment extends Fragment {
 
     }
 
-    //launch the map
-    @OnClick(R.id.mapLaunch)
-    public void launchMap() {
-        Intent intent = new Intent(getActivity(), MapsActivity.class);
-       startActivity(intent);
-    }
-
     //launch the calendar date picker dialog
     @OnClick(R.id.pickDate)
     public void onPickDate() {
@@ -258,7 +273,7 @@ public class CreateEventFragment extends Fragment {
     }
 
 
-    @OnClick(R.id.launchGalBtn)
+    @OnClick(R.id.eventPic)
     //choose a photo from the gallery
     public void onPickPhoto() {
         // create the intent for picking a photo from the gallery

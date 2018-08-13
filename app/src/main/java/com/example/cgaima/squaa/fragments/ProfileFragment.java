@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -41,11 +42,13 @@ public class ProfileFragment extends Fragment {
     @BindView(R.id.ivProfilePic) ImageView profilePic;
     @BindView(R.id.avgRating) TextView avgRating;
     @BindView(R.id.rbUserRating) RatingBar rb;
+    ParseUser currentUser;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        currentUser =  ParseUser.getCurrentUser();
     }
 
     @Override
@@ -70,6 +73,9 @@ public class ProfileFragment extends Fragment {
     // either dynamically or via XML layout inflation.
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
+        Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
+        TextView tv = toolbar.findViewById(R.id.toolbar_title);
+        tv.setText(currentUser.getUsername());
         View view = inflater.inflate(R.layout.fragment_profile, parent, false);
         ButterKnife.bind(this, view);
         // Defines the xml file for the fragment
@@ -81,7 +87,6 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         // Setup any handles to view objects here
-        ParseUser currentUser =  ParseUser.getCurrentUser();
         float rating = (float) currentUser.getDouble("rating");
         avgRating.setText(String.valueOf(rating));
         rb.setRating(rating);

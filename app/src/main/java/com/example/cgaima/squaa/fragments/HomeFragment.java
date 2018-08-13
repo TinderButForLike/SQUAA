@@ -20,6 +20,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -27,6 +28,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.cgaima.squaa.Models.Event;
@@ -130,9 +132,6 @@ public class HomeFragment extends Fragment {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 Log.e("HomeFragment", "search!");
-                // disable refresh during search view
-                /*swipeContainer.setEnabled(false);
-                swipeContainer.setRefreshing(false);*/
                 // perform query
                 fetchQueryEvents(query);
                 // avoid issues with firing twice
@@ -171,6 +170,9 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
+        TextView tv = toolbar.findViewById(R.id.toolbar_title);
+        tv.setText("squaa");
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         ButterKnife.bind(this, view);
@@ -194,7 +196,6 @@ public class HomeFragment extends Fragment {
         });
         mNotifEnabler = new NotifEnabler(getContext());
         loadTopPosts();
-
         return view;
     }
 
