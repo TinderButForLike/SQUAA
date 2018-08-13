@@ -2,11 +2,11 @@ package com.example.cgaima.squaa.fragments;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,8 +28,6 @@ import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
-import org.parceler.Parcels;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,14 +36,9 @@ import butterknife.ButterKnife;
 import static android.support.constraint.Constraints.TAG;
 
 public class Chat extends Fragment {
-
     static final int MAX_CHAT_MESSAGES_TO_SHOW = 50;
-
-
-
-
     EditText etMessage;
-    TextView title;
+//    TextView title;
     Button btSend;
     RecyclerView rvChat;
     ArrayList<Message> mMessages;
@@ -64,8 +57,6 @@ public class Chat extends Fragment {
             myHandler.postDelayed(this, POLL_INTERVAL);
         }
     };
-
-
 
     private FragmentActivity listener;
 
@@ -99,15 +90,17 @@ public class Chat extends Fragment {
         } else { // If not logged in, login as a new anonymous user
             login();
         }
-        title = view.findViewById(R.id.toolbar_title);
 
+        //title = view.findViewById(R.id.toolbar);
+        event = getArguments().getParcelable("event");
+
+        Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
+        TextView tv = toolbar.findViewById(R.id.toolbar_title);
+        tv.setText(event.getEventName());
 
         myHandler.postDelayed(mRefreshMessagesRunnable, POLL_INTERVAL);
-        Parcelable parcel = getActivity().getIntent().getParcelableExtra("event_chat");
-        event = (Event) Parcels.unwrap(parcel);
-        title.setText(event.getEventName());
-
-
+//        Parcelable parcel = getActivity().getIntent().getParcelableExtra("event_chat");
+        //title.setText(event.getEventName());
 
         return view;
     }

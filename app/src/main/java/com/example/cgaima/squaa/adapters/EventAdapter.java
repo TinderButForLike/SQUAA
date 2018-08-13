@@ -1,6 +1,7 @@
 package com.example.cgaima.squaa.adapters;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.icu.text.SimpleDateFormat;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -21,7 +22,7 @@ import com.example.cgaima.squaa.Models.Event;
 import com.example.cgaima.squaa.Models.EventAttendance;
 import com.example.cgaima.squaa.Models.GlideApp;
 import com.example.cgaima.squaa.R;
-import com.example.cgaima.squaa.activities.EventDetailActivity;
+import com.example.cgaima.squaa.fragments.EventDetailFragment;
 import com.example.cgaima.squaa.fragments.OtherProfileFragment;
 import com.example.cgaima.squaa.fragments.ProfileFragment;
 import com.parse.DeleteCallback;
@@ -37,6 +38,7 @@ import butterknife.BindViews;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+// TODO - rename variables so that they are consistent
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> {
     Context context;
     List<Event> events;
@@ -70,6 +72,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         holder.event_name.setText(event.getEventName());
         holder.supporting_text.setText(event.getDescription());
         holder.location.setText(event.getLocation());
+        holder.date.setText(event.getDate().toString());
 
 
         Date fromDate = event.getDate("fromDate");
@@ -98,11 +101,11 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
 
         // set button and numAttended initial UI
         holder.numAttend.setText(String.valueOf(EventAttendance.getNumAttending(event)));
-        final boolean joined;
-        if ((eventAttendance == null)) joined = false;
-        else joined = true;
-        //final boolean joined = EventAttendance.isAttending(event);
-        if (joined) { holder.join.setText("unjoin?"); }
+        final boolean joined = EventAttendance.isAttending(event);
+        if (joined) {
+            holder.join.setText("unjoin?");
+            holder.join.setBackgroundTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.light_gray, context.getTheme())));
+        }
 
         // after current user clicks join
         final EventAttendance finalEventAttendance = eventAttendance;
@@ -119,7 +122,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
                         public void done(ParseException e) {
                             if (e == null) {
                                 holder.join.setText("unjoin?");
-                                holder.numAttend.setText(String.valueOf(String.valueOf(EventAttendance.getNumAttending(event))));
+                                holder.join.setBackgroundTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.light_gray, context.getTheme())));
+                                holder.numAttend.setText(String.valueOf(EventAttendance.getNumAttending(event)));
                                 Log.d("EventAdapter", "Successfully joined event. :) ");
                             } else {
                                 Toast.makeText(context,"Failed to join event", Toast.LENGTH_LONG).show();
@@ -136,7 +140,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
                         public void done(ParseException e) {
                             if (e == null) {
                                 holder.join.setText("join");
-                                holder.numAttend.setText(String.valueOf(String.valueOf(EventAttendance.getNumAttending(event))));
+                                holder.join.setBackgroundTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.secondaryColor, context.getTheme())));
+                                holder.numAttend.setText(String.valueOf(EventAttendance.getNumAttending(event)));
                                 Log.d("EventAdapter", "Successfully unjoined event. ");
                             }
                             else {
@@ -175,12 +180,18 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         holder.media_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment eventDetailActivity = EventDetailActivity.newInstance(event, finalEventAttendance1);
+                Fragment eventDetailActivity = EventDetailFragment.newInstance(event, finalEventAttendance1);
+
                 FragmentTransaction fragmentTransaction = ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.fragment_container, eventDetailActivity).commit();
+                fragmentTransaction.addSharedElement(holder.media_image, "eventCard")
+                        .replace(R.id.fragment_container, eventDetailActivity)
+                        .addToBackStack(null);
+
+                fragmentTransaction.commit();
             }
         });
     }
+
 
     @Override
     public int getItemCount() {
@@ -238,4 +249,5 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         this.events = events;
         notifyDataSetChanged();
     }
+
 }

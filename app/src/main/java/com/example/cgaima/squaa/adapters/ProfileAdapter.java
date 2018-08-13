@@ -16,7 +16,7 @@ import com.bumptech.glide.Glide;
 import com.example.cgaima.squaa.Models.Event;
 import com.example.cgaima.squaa.Models.EventAttendance;
 import com.example.cgaima.squaa.R;
-import com.example.cgaima.squaa.activities.EventDetailActivity;
+import com.example.cgaima.squaa.fragments.EventDetailFragment;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 
@@ -91,7 +91,6 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.ivEvent) ImageView ivEvent;
-        public TextView tvUsername;
         public TextView tvDescription;
 
 
@@ -112,12 +111,13 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                Fragment eventDetailActivity = EventDetailActivity.newInstance(event, eventAttendance);
-                FragmentTransaction fragmentTransaction = ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.fragment_container, eventDetailActivity).commit();
-            }
+                Fragment eventDetailActivity = EventDetailFragment.newInstance(event, eventAttendance);
 
+                FragmentTransaction fragmentTransaction = ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container, eventDetailActivity)
+                        .addToBackStack(null)
+                        .commit();
+            }
         }
     }
 }
-

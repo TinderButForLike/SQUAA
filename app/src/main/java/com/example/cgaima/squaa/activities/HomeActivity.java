@@ -1,6 +1,7 @@
 package com.example.cgaima.squaa.activities;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -14,11 +15,14 @@ import android.view.MenuItem;
 import android.widget.FrameLayout;
 
 import com.example.cgaima.squaa.R;
+import com.example.cgaima.squaa.RegistrationIntentService;
 import com.example.cgaima.squaa.fragments.Chat;
 import com.example.cgaima.squaa.fragments.CreateEventFragment;
 import com.example.cgaima.squaa.fragments.HomeFragment;
 import com.example.cgaima.squaa.fragments.MapFragment;
 import com.example.cgaima.squaa.fragments.ProfileFragment;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,11 +33,39 @@ public class HomeActivity extends AppCompatActivity {
     @BindView(R.id.fragment_container) FrameLayout fragment_container;
 
 
+
+    public static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+
+
+    //check to make sure the device has the google play services sdk. if not,
+    //display a dialog. that allows them to enable it
+    private boolean checkPlayServices() {
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (apiAvailability.isUserResolvableError(resultCode)) {
+                apiAvailability.getErrorDialog(this, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST)
+                        .show();
+            } else {
+                Log.i("HomeActivity", "This device is not supported.");
+                finish();
+            }
+            return false;
+        }
+        return true;
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
+
+        if(checkPlayServices()) {
+            Intent intent = new Intent(this, RegistrationIntentService.class);
+            startService(intent);
+        }
 
         // find the toolbar view inside layout and set tool as action bar for activity
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -99,6 +131,18 @@ public class HomeActivity extends AppCompatActivity {
 //            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 //            fragmentTransaction.replace(R.id.fragment_container, otherProfileFragment).commit();
 //        }
+        if (getIntent().hasExtra("year")){
+            Log.d("Home Activity", "we have the year.....");
+            bottomNavigationView.setSelectedItemId(R.id.action_new_event);
+        }
+        if (getIntent().hasExtra("month")){
+            Log.d("Home Activity", "we have the month.....");
+            bottomNavigationView.setSelectedItemId(R.id.action_new_event);
+        }
+        if (getIntent().hasExtra("date")) {
+            Log.d("Home Activity", "we have the date");
+            bottomNavigationView.setSelectedItemId(R.id.action_new_event);
+        }
     }
     /*// inflate the menu, adds items to the action bar
     @Override
@@ -106,5 +150,6 @@ public class HomeActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_fragment_home, menu);
         return true;
     }*/
+
 
 }

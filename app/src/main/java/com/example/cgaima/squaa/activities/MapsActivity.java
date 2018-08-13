@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 
 import com.example.cgaima.squaa.R;
 import com.example.cgaima.squaa.fragments.CreateEventFragment;
+import com.example.cgaima.squaa.fragments.MapFragment;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.Status;
@@ -24,6 +26,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.ParseGeoPoint;
 
@@ -45,6 +48,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static final String MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey";
     private static final int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
     private static final int MY_LOCATION_REQUEST_CODE = 2;
+    private static final String TAG = MapFragment.class.getSimpleName();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,10 +91,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mapSet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent passLoc = new Intent(MapsActivity.this, HomeActivity.class);
-                passLoc.putExtra("locationtext", setLoc);
-                passLoc.putExtra("geo", mPGP);
-                startActivity(passLoc);
+//                Intent passLoc = new Intent(MapsActivity.this, HomeActivity.class);
+//                passLoc.putExtra("locationtext", setLoc);
+//                passLoc.putExtra("geo", mPGP);
+//                startActivity(passLoc);
+
+
+                Intent intent = new Intent("infoIntent").putExtra("locationtext", setLoc).putExtra("geo", mPGP);
+                LocalBroadcastManager.getInstance(MapsActivity.this).sendBroadcast(intent);
+                finish();
             }
         });
     }
@@ -142,6 +152,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override //set a default map
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        boolean success = googleMap.setMapStyle(new MapStyleOptions(getResources().getString(R.string.style_json)));
+        if (!success) {
+            Log.e(TAG, "Style parsing failed.");
+        }
+
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_LOCATION_REQUEST_CODE); //request permissions

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v7.widget.Toolbar
+    <!--<android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="54dp"
@@ -15,7 +15,7 @@
         android:layout_marginTop="0dp"
         android:background="@color/white"
         android:elevation="8dp"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+        app:popupTheme="@style/ThemeOverlay.AppCompgiat.Light">
 
         <TextView
             android:id="@+id/toolbar_title"
@@ -26,7 +26,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
             android:textColor="@color/primaryTextColor" />
     </android.support.v7.widget.Toolbar>
-
+-->
 
 
 
@@ -45,7 +45,7 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/rvChat"
         android:gravity="top"
-        android:hint="@string/message_hint"
+        android:hint="Type something..."
         android:imeOptions="actionSend"
         android:inputType="textShortMessage" />
 
@@ -57,6 +57,6 @@
         android:layout_below="@+id/rvChat"
         android:gravity="center"
         android:paddingRight="10dp"
-        android:text="@string/send"
+        android:text="Send"
         android:textSize="18sp" />
 </RelativeLayout>

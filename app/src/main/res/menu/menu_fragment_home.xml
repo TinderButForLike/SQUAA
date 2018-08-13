@@ -15,6 +15,11 @@
         app:showAsAction="ifRoom|withText">
         <menu xmlns:android="http://schemas.android.com/apk/res/android">
             <item
+                android:id="@+id/title"
+                android:title="Filter by..."
+                android:iconTint="@color/primaryDarkColor"
+                android:enabled="false"/>
+            <item
                 android:id="@+id/menu_location"
                 android:title="Location" />
             <item
@@ -25,5 +30,4 @@
                 android:title="Categories" />
         </menu>
     </item>
-
 </menu>
