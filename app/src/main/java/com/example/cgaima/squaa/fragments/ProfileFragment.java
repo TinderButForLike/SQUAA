@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,15 +13,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.example.cgaima.squaa.ProfileFragements.AboutUser;
 import com.example.cgaima.squaa.ProfileFragements.EventHistory;
 import com.example.cgaima.squaa.ProfileFragements.Logout;
 import com.example.cgaima.squaa.ProfileFragements.Upcoming;
 import com.example.cgaima.squaa.R;
-import com.parse.ParseException;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
@@ -58,11 +54,11 @@ public class ProfileFragment extends Fragment {
         avgRating.setText(String.valueOf(rating));
         rb.setRating(rating);
         Log.e("PROFILE FRAGMENT", "whoah i get created too wtf");
-        try {
-            Glide.with(this).load(currentUser.fetchIfNeeded().getParseFile("profile_picture").getUrl()).into(profilePic);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            Glide.with(this).load(currentUser.fetchIfNeeded().getParseFile("profile_picture").getUrl()).into(profilePic);
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
 
         viewPager = view.findViewById(R.id.vpContainer);
         setupViewPager(viewPager);

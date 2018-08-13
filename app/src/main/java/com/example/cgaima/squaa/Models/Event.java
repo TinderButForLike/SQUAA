@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.gson.Gson;
 import com.parse.ParseClassName;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -133,37 +132,10 @@ public class Event extends ParseObject implements Place {
         }
     }
 
-    // add message to event chat
-    public void addMessage(Message message) {
-        addUnique(KEY_MESSAGES, message);
-        try {
-            save();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-    }
+    // add cate
 
     //retrieve messages from event chat
-    public ArrayList getChat() {
-        ArrayList<Object> messages = new ArrayList<>();
-        JSONArray jsonArray = (JSONArray)getJSONArray(KEY_MESSAGES);
-        if (jsonArray != null) {
-            int len = jsonArray.length();
-            for (int i=0;i<len;i++){
-                try {
-                    messages.add(jsonArray.get(i));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        ArrayList<Message>messages2 = new ArrayList<>();
-        for (int i = 0 ; i < messages.size(); i++) {
-            Message message = new Gson().fromJson(String.valueOf(messages.get(i)), Message.class);
-            messages2.add(message);
-        }
-        return messages2;
-    }
+
 
     @Override
     public String getId() {
@@ -260,6 +232,12 @@ public class Event extends ParseObject implements Place {
         public Query containsWord(String query) {
             setLimit(25);
             whereContains(KEY_NAME, query);
+            return this;
+        }
+
+        public Query getTopNear(ParseGeoPoint userLocation) {
+            setLimit(10);
+            whereNear("latlng", userLocation);
             return this;
         }
     }

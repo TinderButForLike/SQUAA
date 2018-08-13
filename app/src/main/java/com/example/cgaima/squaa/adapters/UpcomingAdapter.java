@@ -99,7 +99,7 @@ public class UpcomingAdapter extends RecyclerView.Adapter<UpcomingAdapter.ViewHo
             ivEvent = (ImageView) itemView.findViewById(R.id.ivImage);
             tvName = (TextView) itemView.findViewById(R.id.tvName);
             tvCountdown = (TextView) itemView.findViewById(R.id.tvCountdown);
-            tvTime = (TextView) itemView.findViewById(R.id.tvTime);
+            tvTime = (TextView) itemView.findViewById(R.id.tvDate);
 
         }
 

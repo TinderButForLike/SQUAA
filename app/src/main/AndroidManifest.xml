@@ -37,17 +37,12 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activities.HomeActivity"></activity>
+        <activity android:name=".activities.HomeActivity">
+
+        </activity>
 
         <activity android:name=".activities.SignUpActivity" />
-        <activity android:name=".activities.EventDetailActivity" />
         <activity android:name=".activities.MapsActivity" />
-        <activity
-            android:name=".activities.EventActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
-        <activity
-            android:name=".activities.ProfileLandingActivity"
-            android:theme="@style/AppTheme" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

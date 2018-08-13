@@ -1,11 +1,20 @@
 package com.example.cgaima.squaa.fragments;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -13,7 +22,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.support.v7.widget.SearchView;
 import android.widget.Toast;
 
 import com.example.cgaima.squaa.Models.Event;
@@ -21,6 +29,8 @@ import com.example.cgaima.squaa.R;
 import com.example.cgaima.squaa.adapters.EventAdapter;
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseGeoPoint;
+import com.parse.ParseQuery;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,34 +43,69 @@ public class HomeFragment extends Fragment {
     @BindView(R.id.rvEvents) RecyclerView rvEvents;
     @BindView(R.id.swipeContainer) SwipeRefreshLayout swipeContainer;
 
+    String category;
+
     private EventAdapter eventAdapter;
     private ArrayList<Event> events;
 
     private FragmentActivity listener;
+    SearchView searchView;
 
     // Required empty public constructor
-    public HomeFragment() {}
+
+    public static HomeFragment newInstance(String categories) {
+        HomeFragment homeFragment = new HomeFragment();
+        Bundle args = new Bundle();
+        args.putString("categories", categories);
+        homeFragment.setArguments(args);
+
+        return homeFragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
+        category = getArguments().getString("categories");
+
         Log.e("Home Fragment", "Home fragment created");
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+
         // make search view show up for home fragment only
         inflater.inflate(R.menu.menu_fragment_home, menu);
-
         final MenuItem searchItem = menu.findItem(R.id.action_search);
-        final SearchView searchView = (SearchView) searchItem.getActionView();
+        //final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView = (SearchView) searchItem.getActionView();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_search:
+                return false;
+            case R.id.menu_current:
+                Toast.makeText(getContext(), "Current events!", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.menu_location:
+                fetchNearEvents();
+                //Toast.makeText(getContext(), "Location!", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.menu_categories:
+                Fragment catFragment = new Categories();
+                FragmentTransaction fragmentTransaction = ((AppCompatActivity) getContext()).getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container, catFragment).commit();
+            default:
+                break;
+        }
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                // disable refresh during search view
-                swipeContainer.setEnabled(false);
-                swipeContainer.setRefreshing(false);
                 // perform query
                 fetchQueryEvents(query);
                 // avoid issues with firing twice
@@ -73,23 +118,8 @@ public class HomeFragment extends Fragment {
                 return false;
             }
         });
-       /*searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
-            @Override
-            public boolean onMenuItemActionExpand(MenuItem menuItem) {
 
-                return true;
-            }
-
-            @Override
-            public boolean onMenuItemActionCollapse(MenuItem menuItem) {
-                loadTopPosts();
-                // enable refresh after menu closed
-                swipeContainer.setEnabled(true);
-                swipeContainer.setRefreshing(true);
-                searchItem.collapseActionView();
-                return true;
-            }
-        });*/
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -102,22 +132,34 @@ public class HomeFragment extends Fragment {
             eventAdapter = new EventAdapter(new ArrayList<Event>());
         }
 
-        // setup recycler view with adapter
-        rvEvents.setLayoutManager(new LinearLayoutManager(getContext()));
-        rvEvents.setAdapter(eventAdapter);
-
         // setup container view for refresh function
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 eventAdapter.clear();
                 loadTopPosts();
-                swipeContainer.setRefreshing(false);
             }
         });
+
+        // setup recycler view with adapter
+        rvEvents.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        // populate category
+        if (!category.isEmpty()) {
+            getCategory();
+        } else {
+            rvEvents.setAdapter(eventAdapter);
+        }
+
         loadTopPosts();
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
     }
 
     // TODO - make infinite scrolling work with query
@@ -152,6 +194,61 @@ public class HomeFragment extends Fragment {
                 } else {
                     e.printStackTrace();
                     Toast.makeText(getContext(), "Search did not match any events", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
+
+    private void fetchNearEvents() {
+        // clear adapter
+        eventAdapter.clear();
+
+        LocationManager lm = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+
+        // check location permission
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(getContext(), "Turn on location permissions to see near events!", Toast.LENGTH_SHORT).show();
+        } else {
+            Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            ParseGeoPoint parseLocation = new ParseGeoPoint(location.getLatitude(), location.getLongitude());
+            // create new query
+            final Event.Query eventsQuery = new Event.Query();
+            eventsQuery.getTopNear(parseLocation);
+            eventsQuery.findInBackground(new FindCallback<Event>() {
+                @Override
+                public void done(List<Event> objects, ParseException e) {
+                    if (e == null) {
+                        Log.e("HomeFragment", String.valueOf(objects));
+                        eventAdapter.setItems(objects);
+                        if (objects.isEmpty()) {
+                            Toast.makeText(getContext(), "There are no events near you", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    else {
+                        e.printStackTrace();
+                        Toast.makeText(getContext(), "Events near you is not currently available.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
+    }
+
+    private void getCategory() {
+        eventAdapter.clear();
+        ParseQuery query = ParseQuery.getQuery("event");
+        query.whereEqualTo("Categories", category);
+        query.findInBackground(new FindCallback<Event>() {
+            @Override
+            public void done(List<Event> objects, ParseException e) {
+                if (e==null) {
+                    eventAdapter.setItems(objects);
+                    if (objects.isEmpty()) {
+                        Toast.makeText(getContext(), "There are no events in this categories", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                else {
+                    e.printStackTrace();
+                    Toast.makeText(getContext(), "Category is not currently available.", Toast.LENGTH_SHORT).show();
                 }
             }
         });

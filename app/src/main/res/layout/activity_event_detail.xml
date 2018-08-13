@@ -162,6 +162,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/ratingBar"
+        android:layout_alignTop="@+id/ivOwnerPic"
         android:layout_centerHorizontal="true"
         android:text="rate this event!"
         android:visibility="gone" />
@@ -176,8 +177,21 @@
         android:layout_marginBottom="16dp"
         android:numStars="5"
         android:visibility="gone" />
-
-
-
+    <Button
+        android:id="@+id/join"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_below="@+id/ivOwnerPic"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/button_shape"
+        android:backgroundTint="@color/secondaryColor"
+        android:minWidth="0dp"
+        android:paddingEnd="8dp"
+        android:paddingStart="8dp"
+        android:text="join"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </RelativeLayout>
 </ScrollView>
