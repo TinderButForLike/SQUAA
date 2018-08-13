@@ -38,6 +38,7 @@ import android.widget.Toast;
 import com.example.cgaima.squaa.Models.Event;
 import com.example.cgaima.squaa.ProfileFragements.Upcoming;
 import com.example.cgaima.squaa.R;
+import com.example.cgaima.squaa.activities.HomeActivity;
 import com.example.cgaima.squaa.activities.MapsActivity;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -227,8 +228,8 @@ public class CreateEventFragment extends Fragment {
 
         createNotification(4, R.drawable.calendar, "You just made an event!", "Click to view");
 
-        //Intent back = new Intent(getActivity(), HomeFragment.class);
-        //startActivity(back);
+        Intent back = new Intent(getContext(), HomeActivity.class);
+        startActivity(back);
 
         // TODO - set fragment to home fragment after creating event
 //        Fragment homeFragment = new HomeFragment();
@@ -244,6 +245,8 @@ public class CreateEventFragment extends Fragment {
         newEvent.setEventName(name);
         newEvent.setLocation(location);
         newEvent.setDate(date);
+        newEvent.setFromDate(date);
+        newEvent.setToDate(date);
         newEvent.setPrivacy(privacy);
         newEvent.setDescription(description);
         newEvent.setEventImage(img);
