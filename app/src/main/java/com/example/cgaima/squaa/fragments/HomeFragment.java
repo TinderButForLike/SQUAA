@@ -71,7 +71,8 @@ public class HomeFragment extends Fragment {
         Log.e("Home Fragment", "Home fragment created");
 
 
-        //configure the channel
+
+        //configure the notification channel
         int importance = NotificationManager.IMPORTANCE_DEFAULT;
         NotificationChannel channel = new NotificationChannel("myChannelId", "My Channel", importance);
         channel.setDescription("Reminders");
@@ -194,6 +195,7 @@ public class HomeFragment extends Fragment {
         });
         mNotifEnabler = new NotifEnabler(getContext());
         loadTopPosts();
+        checkForNotifs();
 
         return view;
     }
@@ -234,8 +236,7 @@ public class HomeFragment extends Fragment {
         for (int i = 0; i < futureEvents.size() ; i++) {
             Log.d("list size", String.valueOf(futureEvents.size()));
             Log.d("hello", futureEvents.get(i).getEventName());
-            mNotifEnabler.scheduleNotification(1, 1, "new notif", "open");
-            //createNotification(1, R.drawable.map, "Upcoming Event!", futureEvents.get(i).getEventName());
+            createNotification(1, R.drawable.map, "Upcoming Event!", futureEvents.get(i).getEventName());
 
         }
     }
@@ -295,6 +296,8 @@ public class HomeFragment extends Fragment {
             });
         }
     }
+
+
 
     private void createNotification(int nId, int iconRes, String title, String body) {
 

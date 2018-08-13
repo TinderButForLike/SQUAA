@@ -13,8 +13,8 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 
+import com.example.cgaima.squaa.MyFirebaseInstanceIDService;
 import com.example.cgaima.squaa.R;
-import com.example.cgaima.squaa.RegistrationIntentService;
 import com.example.cgaima.squaa.fragments.CreateEventFragment;
 import com.example.cgaima.squaa.fragments.HomeFragment;
 import com.example.cgaima.squaa.fragments.MapFragment;
@@ -59,7 +59,7 @@ public class HomeActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         if(checkPlayServices()) {
-            Intent intent = new Intent(this, RegistrationIntentService.class);
+            Intent intent = new Intent(this, MyFirebaseInstanceIDService.class);
             startService(intent);
         }
 
@@ -122,6 +122,19 @@ public class HomeActivity extends AppCompatActivity {
             Log.d("Home Activity", "we have the date");
             bottomNavigationView.setSelectedItemId(R.id.action_new_event);
         }
+
+//        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(HomeActivity.this, new OnSuccessListener<InstanceIdResult>() {
+//            @Override
+//            public void onSuccess(InstanceIdResult instanceIdResult) {
+//                String newToken = instanceIdResult.getToken();
+//                Log.e("newToken",newToken);
+//            }
+//        });
+
+
     }
+
+
+
 
 }

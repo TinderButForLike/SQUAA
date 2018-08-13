@@ -7,7 +7,6 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-
     <uses-permission android:name="android.permission.READ_CALENDAR" />
     <uses-permission android:name="android.permission.WRITE_CALENDAR" />
 
@@ -22,10 +21,9 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
-    <uses-permission android:name="com.example.cgaima.squaa.gcm.permission.C2D_MESSAGE"
+    <uses-permission
+        android:name="com.example.cgaima.squaa.gcm.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
-
-
 
     <application
         android:name=".ParseApp"
@@ -42,47 +40,41 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".activities.HomeActivity">
-
-        </activity>
-
+        <activity android:name=".activities.HomeActivity"></activity>
         <activity android:name=".activities.SignUpActivity" />
         <activity android:name=".activities.MapsActivity" />
+        <activity android:name=".activities.ChatActivity" />
 
 
-        <service android:name=".RegistrationIntentService" android:exported="false"/>
+        <!-- firebase instance id service -->
+        <service android:name=".MyFirebaseInstanceIDService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+
+        <!-- Fcm Message Handling -->
+        <service
+            android:name=".FcmMessageHandler">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyC1wzsdt6OMMNuW4PBHBHQOFXd_gjtwy2Y" />
-        <service
-            android:name="com.example.cgaima.squaa.MyInstanceIDListenerService"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.google.android.gms.iid.InstanceID"/>
-            </intent-filter>
-        </service>
 
-        <receiver
-            android:name="com.google.android.gms.gcm.GcmReceiver"
-            android:exported="true"
-            android:permission="com.google.android.c2dm.permission.SEND" >
-            <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-                <category android:name="com.codepath.gcmquickstart" />
-            </intent-filter>
-        </receiver>
+        <!--<receiver-->
+            <!--android:name="com.google.android.gms.gcm.GcmReceiver"-->
+            <!--android:exported="true"-->
+            <!--android:permission="com.google.android.c2dm.permission.SEND">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="com.google.android.c2dm.intent.RECEIVE" />-->
 
-        <service
-            android:name=".GcmMessageHandler"
-            android:exported="false" >
-            <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-            </intent-filter>
-        </service>
-
-        <activity android:name=".activities.ChatActivity"></activity>
+                <!--<category android:name="com.codepath.gcmquickstart" />-->
+            <!--</intent-filter>-->
+        <!--</receiver>-->
     </application>
 
 </manifest>
