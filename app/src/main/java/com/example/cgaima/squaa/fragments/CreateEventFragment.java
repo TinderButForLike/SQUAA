@@ -12,9 +12,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.cgaima.squaa.Models.Event;
@@ -75,6 +77,16 @@ public class CreateEventFragment extends Fragment {
         Log.e("EventFragment", "I get created too");
         View view = inflater.inflate(R.layout.fragment_create_event, container, false);
         ButterKnife.bind(this, view);
+        //get the spinner from the xml.
+        Spinner dropdown = view.findViewById(R.id.spCategory);
+        //create a list of items for the spinner.
+        String[] items = new String[]{"1", "2", "three"};
+        //create an adapter to describe how the items are displayed, adapters are used in several places in android.
+        //There are multiple variations of this, but this is the basic variant.
+        ArrayAdapter<String> adapter;
+        adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, items);
+        //set the spinners adapter to the previously created one.
+        dropdown.setAdapter(adapter);
         return view;
     }
 

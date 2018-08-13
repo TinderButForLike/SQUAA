@@ -54,7 +54,7 @@ public class Upcoming extends Fragment {
         // allows for optimizations
         rvGrid.setHasFixedSize(true);
         // Define 2 column grid layout
-        final GridLayoutManager layout = new GridLayoutManager(getActivity(), 2);
+        final GridLayoutManager layout = new GridLayoutManager(getActivity(), 1);
         rvGrid.setLayoutManager(layout);
         // get data
         events = new ArrayList<>();

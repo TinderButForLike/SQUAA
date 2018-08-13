@@ -60,8 +60,8 @@ public class UpcomingAdapter extends RecyclerView.Adapter<UpcomingAdapter.ViewHo
 
         // populate the views according to this data
         holder.tvName.setText(event.getEventName());
-        holder.tvTime.setText(event.getDate());
-        holder.tvCountdown.setText("20");
+        //holder.tvTime.setText(event.getToDate().toString());
+       holder.tvCountdown.setText("3");
 
         Glide.with(context).load(event.getEventImage().getUrl()).into(holder.ivEvent);
 
@@ -99,7 +99,7 @@ public class UpcomingAdapter extends RecyclerView.Adapter<UpcomingAdapter.ViewHo
             ivEvent = (ImageView) itemView.findViewById(R.id.ivImage);
             tvName = (TextView) itemView.findViewById(R.id.tvName);
             tvCountdown = (TextView) itemView.findViewById(R.id.tvCountdown);
-            tvTime = (TextView) itemView.findViewById(R.id.tvTime);
+            tvTime = (TextView) itemView.findViewById(R.id.tvDate);
 
         }
 

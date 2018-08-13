@@ -95,7 +95,7 @@ public class OtherProfileFragment extends Fragment {
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
-                    fab.setImageDrawable(ContextCompat.getDrawable(((AppCompatActivity) getActivity()).getApplicationContext(), R.drawable.ic_unjoin));
+                    fab.setImageDrawable(ContextCompat.getDrawable(((AppCompatActivity) getActivity()).getApplicationContext(), R.drawable.ic_unfriend));
                     added = true;
                 } else {
                     ParseUser current = ParseUser.getCurrentUser();
