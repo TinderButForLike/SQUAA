@@ -3,13 +3,11 @@ package com.example.cgaima.squaa.adapters;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.icu.text.SimpleDateFormat;
-import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
-import android.transition.Fade;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +18,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.cgaima.squaa.DetailsTransition;
 import com.example.cgaima.squaa.Models.Event;
 import com.example.cgaima.squaa.Models.EventAttendance;
 import com.example.cgaima.squaa.Models.GlideApp;
@@ -182,21 +179,6 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
             @Override
             public void onClick(View view) {
                 Fragment eventDetailActivity = EventDetailFragment.newInstance(event, finalEventAttendance1);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    // Inflate transitions to apply
-                    /*Transition changeTransform = TransitionInflater.from(context).
-                            inflateTransition(R.transition.change_image_transform);
-                    Transition explodeTransform = TransitionInflater.from(context).
-                            inflateTransition(android.R.transition.explode);*/
-
-                    // Setup exit transition on first fragment
-                    Fade fade = new Fade();
-                    eventDetailActivity.setSharedElementEnterTransition(new DetailsTransition());
-                    eventDetailActivity.setEnterTransition(fade);
-                    eventDetailActivity.setReturnTransition(fade);
-                    eventDetailActivity.setExitTransition(fade);
-                    eventDetailActivity.setSharedElementReturnTransition(new DetailsTransition());
-                }
 
                 FragmentTransaction fragmentTransaction = ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.addSharedElement(holder.media_image, "eventCard")

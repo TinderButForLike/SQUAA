@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="600dp"
         android:layout_margin="5dp"
         android:layout_marginBottom="10dp"
         android:background="@color/white"
@@ -93,9 +93,8 @@
             android:layout_width="150dp"
             android:layout_height="36dp"
             android:layout_alignParentBottom="true"
-            android:layout_below="@+id/eventPic"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="5dp"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="95dp"
             android:background="@drawable/button_shape"
             android:backgroundTint="@color/primaryColor"
             android:text="create event" />
@@ -104,31 +103,29 @@
             android:id="@+id/imagePrompt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
+            android:layout_alignStart="@+id/create"
             android:layout_below="@+id/description"
             android:layout_marginTop="-5dp"
             android:text="Add a picture"
             android:textColor="@color/black" />
 
-        <Button
-            android:id="@+id/launchGalBtn"
-            android:layout_width="150dp"
-            android:layout_height="36dp"
-            android:layout_below="@+id/imagePrompt"
-            android:layout_toEndOf="@+id/eventPic"
-            android:background="@drawable/button_shape"
-            android:backgroundTint="@color/primaryColor"
-            android:text="launch gallery" />
-
         <ImageView
             android:id="@+id/eventPic"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:scaleType="centerCrop"
-            app:layout_constraintDimensionRatio="H,16:9"
-            android:layout_alignParentStart="true"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/publicCheck"
             android:layout_below="@+id/imagePrompt"
-            android:background="@drawable/ic_cam" />
+            android:background="@drawable/image_upload"
+            app:layout_constraintDimensionRatio="H,16:9" />
+
+        <Spinner
+            android:id="@+id/spinner1"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:layout_alignStart="@+id/eventPic"
+            android:layout_below="@+id/tvCategory"
+            android:background="@android:drawable/btn_dropdown"
+            android:spinnerMode="dropdown" />
 
         <Button
             android:id="@+id/mapLaunch"
@@ -166,6 +163,14 @@
             android:layout_toEndOf="@+id/nameLayout"
             android:text='enter in format "mm/dd/yyyy"'
             android:textSize="10sp" />
+
+        <TextView
+            android:id="@+id/tvCategory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/eventPic"
+            android:layout_below="@+id/eventPic"
+            android:text="Select a category" />
 
     </RelativeLayout>
 
