@@ -72,14 +72,15 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         holder.event_name.setText(event.getEventName());
         holder.supporting_text.setText(event.getDescription());
         holder.location.setText(event.getLocation());
-        holder.date.setText(event.getDate().toString());
 
 
         Date fromDate = event.getDate("fromDate");
         Date toDate = event.getDate("toDate");
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm");
-        String dateString = String.format("%s - %s", simpleDateFormat.format(fromDate), simpleDateFormat.format(toDate));
-        holder.date.setText(dateString);
+        if (fromDate != null && toDate != null) {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm");
+            String dateString = String.format("%s - %s", simpleDateFormat.format(fromDate), simpleDateFormat.format(toDate));
+            holder.date.setText(dateString);
+        }
 
         // set owner name, profile picture, media image
         try {

@@ -95,39 +95,6 @@ public class HomeFragment extends Fragment {
         //final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView = (SearchView) searchItem.getActionView();
 
-        searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
-            @Override
-            public boolean onMenuItemActionExpand(MenuItem menuItem) {
-                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                    @Override
-                    public boolean onQueryTextSubmit(String query) {
-                        // perform query
-                        fetchQueryEvents(query);
-                        // avoid issues with firing twice
-                        searchView.clearFocus();
-                        return true;
-                    }
-
-                    @Override
-                    public boolean onQueryTextChange(String s) {
-                        return false;
-                    }
-
-                });
-                return true;
-            }
-
-            @Override
-            public boolean onMenuItemActionCollapse(MenuItem menuItem) {
-                loadTopPosts();
-                // enable refresh after menu closed
-                swipeContainer.setEnabled(true);
-                swipeContainer.setRefreshing(true);
-                searchItem.collapseActionView();
-                return true;
-            }
-        });
-
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
