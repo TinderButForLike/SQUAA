@@ -105,6 +105,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:lineSpacingExtra="8dp"
+            android:padding="8dp"
             android:text="expanded supporting text"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:visibility="gone"
