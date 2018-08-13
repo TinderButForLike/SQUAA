@@ -15,8 +15,10 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -38,6 +40,7 @@ import com.example.cgaima.squaa.adapters.EventAdapter;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
+import com.parse.ParseQuery;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -53,6 +56,8 @@ public class HomeFragment extends Fragment {
     @BindView(R.id.rvEvents) RecyclerView rvEvents;
     @BindView(R.id.swipeContainer) SwipeRefreshLayout swipeContainer;
 
+    String category;
+
     private EventAdapter eventAdapter;
     private ArrayList<Event> events;
     private ArrayList<Event> futureEvents;
@@ -62,18 +67,30 @@ public class HomeFragment extends Fragment {
     SearchView searchView;
 
     // Required empty public constructor
-    public HomeFragment() {}
+
+    public static HomeFragment newInstance(String categories) {
+        HomeFragment homeFragment = new HomeFragment();
+        Bundle args = new Bundle();
+        args.putString("categories", categories);
+        homeFragment.setArguments(args);
+
+        return homeFragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
+        category = getArguments().getString("categories");
+
         events = new ArrayList<>();
         futureEvents = new ArrayList<>();
         Log.e("Home Fragment", "Home fragment created");
 
 
-        //configure the channel
+
+        //configure the notification channel
         int importance = NotificationManager.IMPORTANCE_DEFAULT;
         NotificationChannel channel = new NotificationChannel("myChannelId", "My Channel", importance);
         channel.setDescription("Reminders");
@@ -98,7 +115,6 @@ public class HomeFragment extends Fragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Log.e("HomeFragment", "search!");
                 // perform query
                 fetchQueryEvents(query);
                 // avoid issues with firing twice
@@ -115,6 +131,24 @@ public class HomeFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_search:
+                return false;
+            case R.id.menu_current:
+                Toast.makeText(getContext(), "Current events!", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.menu_location:
+                fetchNearEvents();
+                //Toast.makeText(getContext(), "Location!", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.menu_categories:
+                Fragment catFragment = new Categories();
+                FragmentTransaction fragmentTransaction = ((AppCompatActivity) getContext()).getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container, catFragment).commit();
+            default:
+                break;
+        }
+
         switch (item.getItemId()) {
             case R.id.action_search:
                 return false;
@@ -147,10 +181,6 @@ public class HomeFragment extends Fragment {
             eventAdapter = new EventAdapter(new ArrayList<Event>());
         }
 
-        // setup recycler view with adapter
-        rvEvents.setLayoutManager(new LinearLayoutManager(getContext()));
-        rvEvents.setAdapter(eventAdapter);
-
         // setup container view for refresh function
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -161,9 +191,29 @@ public class HomeFragment extends Fragment {
                 swipeContainer.setRefreshing(false);
             }
         });
+
+        // setup recycler view with adapter
+        rvEvents.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        // populate category
+        if (!category.isEmpty()) {
+            getCategory();
+        } else {
+            rvEvents.setAdapter(eventAdapter);
+        }
+
         mNotifEnabler = new NotifEnabler(getContext());
         loadTopPosts();
+
+        checkForNotifs();
+
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
     }
 
     // TODO - make infinite scrolling work with query
@@ -182,8 +232,6 @@ public class HomeFragment extends Fragment {
                 } else { e.printStackTrace(); }
             }
         });
-
-        checkForNotifs();
     }
 
     private void checkForNotifs() {
@@ -202,8 +250,7 @@ public class HomeFragment extends Fragment {
         for (int i = 0; i < futureEvents.size() ; i++) {
             Log.d("list size", String.valueOf(futureEvents.size()));
             Log.d("hello", futureEvents.get(i).getEventName());
-            mNotifEnabler.scheduleNotification(1, 1, "new notif", "open");
-            //createNotification(1, R.drawable.map, "Upcoming Event!", futureEvents.get(i).getEventName());
+            createNotification(1, R.drawable.map, "Upcoming Event!", futureEvents.get(i).getEventName());
 
         }
     }
@@ -263,6 +310,29 @@ public class HomeFragment extends Fragment {
             });
         }
     }
+
+    private void getCategory() {
+        eventAdapter.clear();
+        ParseQuery query = ParseQuery.getQuery("event");
+        query.whereEqualTo("Categories", category);
+        query.findInBackground(new FindCallback<Event>() {
+            @Override
+            public void done(List<Event> objects, ParseException e) {
+                if (e==null) {
+                    eventAdapter.setItems(objects);
+                    if (objects.isEmpty()) {
+                        Toast.makeText(getContext(), "There are no events in this categories", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                else {
+                    e.printStackTrace();
+                    Toast.makeText(getContext(), "Category is not currently available.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+
 
     private void createNotification(int nId, int iconRes, String title, String body) {
 

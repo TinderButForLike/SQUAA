@@ -16,15 +16,18 @@
         <menu xmlns:android="http://schemas.android.com/apk/res/android">
             <item
                 android:id="@+id/title"
-                android:title="filter by..."
+                android:title="Filter by..."
                 android:iconTint="@color/primaryDarkColor"
                 android:enabled="false"/>
             <item
                 android:id="@+id/menu_location"
-                android:title="location" />
+                android:title="Location" />
             <item
                 android:id="@+id/menu_current"
-                android:title="current" />
+                android:title="Current" />
+            <item
+                android:id="@+id/menu_categories"
+                android:title="Categories" />
         </menu>
     </item>
 </menu>

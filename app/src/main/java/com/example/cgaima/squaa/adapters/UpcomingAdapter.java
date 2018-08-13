@@ -31,7 +31,7 @@ public class UpcomingAdapter extends RecyclerView.Adapter<UpcomingAdapter.ViewHo
         context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
-        View tweetView = inflater.inflate(R.layout.item_event2, parent, false);
+        View tweetView = inflater.inflate(R.layout.item_upcoming, parent, false);
         ViewHolder viewHolder = new ViewHolder(tweetView);
         return viewHolder;
     }
@@ -59,7 +59,9 @@ public class UpcomingAdapter extends RecyclerView.Adapter<UpcomingAdapter.ViewHo
         final Event event = mEvents.get(position);
 
         // populate the views according to this data
-
+        holder.tvName.setText(event.getEventName());
+        //holder.tvTime.setText(event.getToDate().toString());
+       holder.tvCountdown.setText("3");
 
         Glide.with(context).load(event.getEventImage().getUrl()).into(holder.ivEvent);
 
@@ -72,18 +74,32 @@ public class UpcomingAdapter extends RecyclerView.Adapter<UpcomingAdapter.ViewHo
 
     }
 
+    public void add(Event event) {
+        // Add a list of items -- change to type used
+
+        mEvents.add(event);
+        notifyItemInserted(mEvents.size()-1);
+
+    }
+
     // create the ViewHolder class
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public ImageView ivEvent;
-        public TextView tvUsername;
-        public TextView tvDescription;
+        public TextView tvName;
+        public TextView tvCountdown;
+        public TextView tvTime;
+
+
         //public ImageButton reply;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
-            ivEvent = (ImageView) itemView.findViewById(R.id.ivEvent);
+            ivEvent = (ImageView) itemView.findViewById(R.id.ivImage);
+            tvName = (TextView) itemView.findViewById(R.id.tvName);
+            tvCountdown = (TextView) itemView.findViewById(R.id.tvCountdown);
+            tvTime = (TextView) itemView.findViewById(R.id.tvDate);
 
         }
 

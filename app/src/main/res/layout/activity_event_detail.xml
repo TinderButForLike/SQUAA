@@ -104,10 +104,12 @@
             android:id="@+id/attending"
             android:layout_width="85dp"
             android:layout_height="wrap_content"
+            android:layout_above="@+id/tvNumAttend"
             android:layout_alignEnd="@+id/tvEventName"
-            android:layout_below="@+id/lyft_button"
+            android:layout_marginBottom="-15dp"
             android:text="Attending"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/tvNumAttend"
@@ -115,6 +117,7 @@
             android:layout_height="wrap_content"
             android:layout_alignEnd="@+id/tvEventName"
             android:layout_alignTop="@+id/ivOwnerPic"
+            android:layout_marginTop="15dp"
             android:textAlignment="center"
             android:textStyle="bold" />
 
@@ -136,6 +139,15 @@
             android:layout_centerHorizontal="true"
             android:text="rate this event!"
             android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/ivChat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/owner"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="41dp"
+            app:srcCompat="@drawable/ic_chat" />
 
         <RatingBar
             android:id="@+id/ratingBar"

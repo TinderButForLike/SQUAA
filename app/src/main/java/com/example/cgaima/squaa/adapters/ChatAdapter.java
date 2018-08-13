@@ -51,6 +51,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
         if (isMe) {
             holder.imageMe.setVisibility(View.VISIBLE);
             holder.imageOther.setVisibility(View.GONE);
+            holder.body.setBackgroundResource(R.drawable.textbox_me);
             //holder.imageMe.setBackgroundResource(R.drawable.button_shape);
             holder.body.setGravity(Gravity.CENTER_VERTICAL | Gravity.RIGHT);
            // holder.body.setBackgroundColor(R.color.primaryLightColor);
@@ -58,6 +59,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
             holder.imageOther.setVisibility(View.VISIBLE);
             holder.imageMe.setVisibility(View.GONE);
            // holder.imageOther.setBackgroundResource(circle);
+            holder.body.setBackgroundResource(R.drawable.textbox);
             holder.body.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
             //holder.body.setBackgroundColor(R.color.light_gray);
         }

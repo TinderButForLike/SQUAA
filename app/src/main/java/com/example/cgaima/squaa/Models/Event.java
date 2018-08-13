@@ -3,7 +3,6 @@ package com.example.cgaima.squaa.Models;
 
 import android.net.Uri;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.maps.model.LatLng;
@@ -20,7 +19,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -34,7 +32,8 @@ public class Event extends ParseObject implements Place {
     private static final String KEY_LOCATION = "location";
     private static final String KEY_DATE = "event_date";
     private static final String KEY_MESSAGES = "chat_messages";
-    //
+    private static final String KEY_FDATE = "fromDate";
+    private static final String KEY_TDATE = "toate";
     private static final String KEY_PRIVACY = "public";
     private static final String KEY_NAME = "event_name";
     private static final String KEY_LATLNG = "latlng";
@@ -88,6 +87,11 @@ public class Event extends ParseObject implements Place {
     // get event date
     public Date getDate() { return getDate(KEY_DATE); }
 
+    public void setFromDate(Date date) { put(KEY_FDATE, date);  }
+    public void setToDate(Date date) { put(KEY_TDATE, date);  }
+
+
+
     public Date getToDate() { return getDate("toDate"); }
     // get event location
     public String getLocation() {
@@ -133,6 +137,11 @@ public class Event extends ParseObject implements Place {
             e.printStackTrace();
         }
     }
+
+    // add cate
+
+    //retrieve messages from event chat
+
 
     @Override
     public String getId() {

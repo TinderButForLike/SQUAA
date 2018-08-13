@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 
 import com.example.cgaima.squaa.Models.Event;
 import com.example.cgaima.squaa.R;
-import com.example.cgaima.squaa.adapters.ProfileAdapter;
+import com.example.cgaima.squaa.adapters.UpcomingAdapter;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -28,8 +28,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class Upcoming extends Fragment {
-    @BindView(R.id.rvEventHistory) RecyclerView rvGrid;
-    private ProfileAdapter mAdapter;
+    @BindView(R.id.rvUpcoming) RecyclerView rvGrid;
+    private UpcomingAdapter mAdapter;
     private List<Event> events;
 
     private FragmentActivity listener;
@@ -48,18 +48,18 @@ public class Upcoming extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_event_history, container, false);
+        View view = inflater.inflate(R.layout.fragment_upcoming_event, container, false);
         ButterKnife.bind(this, view);
-        rvGrid = (RecyclerView) view.findViewById(R.id.rvEventHistory);
+        rvGrid = (RecyclerView) view.findViewById(R.id.rvUpcoming);
         // allows for optimizations
         rvGrid.setHasFixedSize(true);
         // Define 2 column grid layout
-        final GridLayoutManager layout = new GridLayoutManager(getActivity(), 2);
+        final GridLayoutManager layout = new GridLayoutManager(getActivity(), 1);
         rvGrid.setLayoutManager(layout);
         // get data
         events = new ArrayList<>();
         // Create an adapter
-        mAdapter = new ProfileAdapter(events);
+        mAdapter = new UpcomingAdapter(events);
         // Bind adapter to list
         rvGrid.setAdapter(mAdapter);
         getUpcoming();
