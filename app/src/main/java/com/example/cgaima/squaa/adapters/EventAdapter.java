@@ -22,7 +22,7 @@ import com.example.cgaima.squaa.Models.Event;
 import com.example.cgaima.squaa.Models.EventAttendance;
 import com.example.cgaima.squaa.Models.GlideApp;
 import com.example.cgaima.squaa.R;
-import com.example.cgaima.squaa.activities.EventDetailActivity;
+import com.example.cgaima.squaa.fragments.EventDetailFragment;
 import com.example.cgaima.squaa.fragments.OtherProfileFragment;
 import com.example.cgaima.squaa.fragments.ProfileFragment;
 import com.parse.DeleteCallback;
@@ -180,9 +180,14 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         holder.media_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment eventDetailActivity = EventDetailActivity.newInstance(event, finalEventAttendance1);
+                Fragment eventDetailActivity = EventDetailFragment.newInstance(event, finalEventAttendance1);
+
                 FragmentTransaction fragmentTransaction = ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.fragment_container, eventDetailActivity).commit();
+                fragmentTransaction.addSharedElement(holder.media_image, "eventCard")
+                        .replace(R.id.fragment_container, eventDetailActivity)
+                        .addToBackStack(null);
+
+                fragmentTransaction.commit();
             }
         });
     }
