@@ -38,6 +38,7 @@ import butterknife.BindViews;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+// TODO - rename variables so that they are consistent
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> {
     Context context;
     List<Event> events;
@@ -71,6 +72,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         holder.event_name.setText(event.getEventName());
         holder.supporting_text.setText(event.getDescription());
         holder.location.setText(event.getLocation());
+        holder.date.setText(event.getDate().toString());
 
 
         Date fromDate = event.getDate("fromDate");

@@ -3,11 +3,11 @@ package com.example.cgaima.squaa.Models;
 
 import android.net.Uri;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.gson.Gson;
 import com.parse.ParseClassName;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -20,6 +20,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -31,7 +32,7 @@ public class Event extends ParseObject implements Place {
     private static final String KEY_OWNER = "owner";
     private static final String KEY_ATTENDEES = "attendees";
     private static final String KEY_LOCATION = "location";
-    private static final String KEY_DATE = "date";
+    private static final String KEY_DATE = "event_date";
     private static final String KEY_MESSAGES = "chat_messages";
     //
     private static final String KEY_PRIVACY = "public";
@@ -80,12 +81,12 @@ public class Event extends ParseObject implements Place {
     }
 
     // Set event date
-    public void setDate(String date){
+    public void setDate(Date date){
         put(KEY_DATE, date);
     }
 
     // get event date
-    public String getDate() { return getString(KEY_DATE); }
+    public Date getDate() { return getDate(KEY_DATE); }
 
     public Date getToDate() { return getDate("toDate"); }
     // get event location
@@ -131,38 +132,6 @@ public class Event extends ParseObject implements Place {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-    }
-
-    // add message to event chat
-    public void addMessage(Message message) {
-        addUnique(KEY_MESSAGES, message);
-        try {
-            save();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-    }
-
-    //retrieve messages from event chat
-    public ArrayList getChat() {
-        ArrayList<Object> messages = new ArrayList<>();
-        JSONArray jsonArray = (JSONArray)getJSONArray(KEY_MESSAGES);
-        if (jsonArray != null) {
-            int len = jsonArray.length();
-            for (int i=0;i<len;i++){
-                try {
-                    messages.add(jsonArray.get(i));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        ArrayList<Message>messages2 = new ArrayList<>();
-        for (int i = 0 ; i < messages.size(); i++) {
-            Message message = new Gson().fromJson(String.valueOf(messages.get(i)), Message.class);
-            messages2.add(message);
-        }
-        return messages2;
     }
 
     @Override

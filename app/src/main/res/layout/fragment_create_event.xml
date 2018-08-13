@@ -95,6 +95,8 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentStart="true"
             android:layout_marginStart="95dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="30dp"
             android:background="@drawable/button_shape"
             android:backgroundTint="@color/primaryColor"
             android:text="create event" />
@@ -127,15 +129,16 @@
             android:background="@android:drawable/btn_dropdown"
             android:spinnerMode="dropdown" />
 
-        <Button
+        <ImageButton
             android:id="@+id/mapLaunch"
-            android:layout_width="150dp"
-            android:layout_height="36dp"
-            android:layout_above="@+id/privateCheck"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/dateLayout"
+            android:layout_marginStart="-2dp"
+            android:layout_marginTop="-2dp"
             android:layout_toEndOf="@+id/nameLayout"
-            android:background="@drawable/button_shape"
-            android:backgroundTint="@color/primaryColor"
-            android:text="launch map " />
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_location" />
 
         <CheckBox
             android:id="@+id/privateCheck"
@@ -155,14 +158,23 @@
             android:padding="16dp"
             android:text="public" />
 
-        <TextView
-            android:id="@+id/textView"
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="141dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/pickDate"
+        android:layout_alignStart="@+id/mapLaunch"
+        android:text='enter in format "mm/dd/yyyy"'
+        android:textSize="10sp" />
+
+        <ImageButton
+            android:id="@+id/pickDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/dateLayout"
-            android:layout_toEndOf="@+id/nameLayout"
-            android:text='enter in format "mm/dd/yyyy"'
-            android:textSize="10sp" />
+            android:layout_alignTop="@+id/dateLayout"
+            android:layout_centerHorizontal="true"
+            android:background="@android:color/transparent"
+            app:srcCompat="@drawable/ic_calendar" />
 
         <TextView
             android:id="@+id/tvCategory"

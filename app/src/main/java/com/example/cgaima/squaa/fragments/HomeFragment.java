@@ -1,7 +1,13 @@
 package com.example.cgaima.squaa.fragments;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
@@ -9,6 +15,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -25,6 +32,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.cgaima.squaa.Models.Event;
+import com.example.cgaima.squaa.NotifEnabler;
 import com.example.cgaima.squaa.R;
 import com.example.cgaima.squaa.adapters.EventAdapter;
 import com.parse.FindCallback;
@@ -32,18 +40,23 @@ import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
+@SuppressLint("ValidFragment")
 public class HomeFragment extends Fragment {
     @BindView(R.id.rvEvents) RecyclerView rvEvents;
     @BindView(R.id.swipeContainer) SwipeRefreshLayout swipeContainer;
 
     private EventAdapter eventAdapter;
     private ArrayList<Event> events;
+    private ArrayList<Event> futureEvents;
+    NotifEnabler mNotifEnabler;
 
     private FragmentActivity listener;
     SearchView searchView;
@@ -55,7 +68,21 @@ public class HomeFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        events = new ArrayList<>();
+        futureEvents = new ArrayList<>();
         Log.e("Home Fragment", "Home fragment created");
+
+
+        //configure the channel
+        int importance = NotificationManager.IMPORTANCE_DEFAULT;
+        NotificationChannel channel = new NotificationChannel("myChannelId", "My Channel", importance);
+        channel.setDescription("Reminders");
+
+        //register the channel
+        //register the channel with the notifications manager
+        NotificationManager mNotificationManager =
+                (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager.createNotificationChannel(channel);
     }
 
     @Override
@@ -67,6 +94,39 @@ public class HomeFragment extends Fragment {
         final MenuItem searchItem = menu.findItem(R.id.action_search);
         //final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView = (SearchView) searchItem.getActionView();
+
+        searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem menuItem) {
+                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                    @Override
+                    public boolean onQueryTextSubmit(String query) {
+                        // perform query
+                        fetchQueryEvents(query);
+                        // avoid issues with firing twice
+                        searchView.clearFocus();
+                        return true;
+                    }
+
+                    @Override
+                    public boolean onQueryTextChange(String s) {
+                        return false;
+                    }
+
+                });
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem menuItem) {
+                loadTopPosts();
+                // enable refresh after menu closed
+                swipeContainer.setEnabled(true);
+                swipeContainer.setRefreshing(true);
+                searchItem.collapseActionView();
+                return true;
+            }
+        });
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -130,9 +190,11 @@ public class HomeFragment extends Fragment {
             public void onRefresh() {
                 eventAdapter.clear();
                 loadTopPosts();
+                checkForNotifs();
                 swipeContainer.setRefreshing(false);
             }
         });
+        mNotifEnabler = new NotifEnabler(getContext());
         loadTopPosts();
         return view;
     }
@@ -147,9 +209,36 @@ public class HomeFragment extends Fragment {
             public void done(List<Event> objects, ParseException e) {
                 if (e==null){
                     eventAdapter.setItems(objects);
+                    for (int i = 0; i < objects.size(); i++) {
+                        events.add(objects.get(i));
+                    }
                 } else { e.printStackTrace(); }
             }
         });
+
+        checkForNotifs();
+    }
+
+    private void checkForNotifs() {
+        Calendar cal = Calendar.getInstance();
+        Date today = cal.getTime();
+        cal.add(Calendar.DATE, 1);
+
+        for (int i = 0; i < events.size(); i++) {
+            Date futureEvent = events.get(i).getDate("event_date");
+            if (futureEvent.after(today)) {
+                futureEvents.add(events.get(i));
+                Log.d("It's before today", futureEvent.toString());
+            }
+        }
+
+        for (int i = 0; i < futureEvents.size() ; i++) {
+            Log.d("list size", String.valueOf(futureEvents.size()));
+            Log.d("hello", futureEvents.get(i).getEventName());
+            mNotifEnabler.scheduleNotification(1, 1, "new notif", "open");
+            //createNotification(1, R.drawable.map, "Upcoming Event!", futureEvents.get(i).getEventName());
+
+        }
     }
 
     // TODO - make this not case sensitive and search by more fields
@@ -206,5 +295,31 @@ public class HomeFragment extends Fragment {
                 }
             });
         }
+    }
+
+    private void createNotification(int nId, int iconRes, String title, String body) {
+
+        //intent trigger when something is selected
+        Intent intent = new Intent(getContext(), ProfileFragment.class).putExtra("upcomingFragment", "profileFragment");
+        int requestID = (int) System.currentTimeMillis(); //unique requestID to differentiate between various notifs with same NotifId
+        int flags = PendingIntent.FLAG_CANCEL_CURRENT; //cancel old intent and create new one
+        PendingIntent pIntent = PendingIntent.getActivity(getContext(), requestID, intent, flags); //gets an activity through its intent
+
+        //attach the pending intent to a new notif
+        Notification mBuilder =
+                new NotificationCompat.Builder(getContext(), "myChannelId")
+                        .setSmallIcon(iconRes)
+                        .setContentTitle(title)
+                        .setContentText(body)
+                        .setContentIntent(pIntent)
+                        .setAutoCancel(true) //hides notif after selection
+                        .setWhen(System.currentTimeMillis())
+                        .build();
+
+        NotificationManager mNotificationManager =
+                (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        // mId allows you to update the notification later on.
+        mNotificationManager.notify(nId, mBuilder); //updtae the notif later
+
     }
 }
