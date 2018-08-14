@@ -33,7 +33,7 @@ public class Event extends ParseObject implements Place {
     private static final String KEY_DATE = "event_date";
     private static final String KEY_MESSAGES = "chat_messages";
     private static final String KEY_FDATE = "fromDate";
-    private static final String KEY_TDATE = "toate";
+    private static final String KEY_TDATE = "toDate";
     private static final String KEY_PRIVACY = "public";
     private static final String KEY_NAME = "event_name";
     private static final String KEY_LATLNG = "latlng";

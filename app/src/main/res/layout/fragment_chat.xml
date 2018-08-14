@@ -6,34 +6,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!--<android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="54dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="0dp"
-        android:background="@color/white"
-        android:elevation="8dp"
-        app:popupTheme="@style/ThemeOverlay.AppCompgiat.Light">
-
-        <TextView
-            android:id="@+id/toolbar_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="squaa"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title"
-            android:textColor="@color/primaryTextColor" />
-    </android.support.v7.widget.Toolbar>
--->
-
-
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rvChat"
         android:layout_width="wrap_content"
-        android:layout_height="481dp"
+        android:layout_height="544dp"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/toolbar"
         android:transcriptMode="alwaysScroll" />
@@ -41,9 +17,8 @@
     <EditText
         android:id="@+id/etMessage"
         android:layout_width="301dp"
+        android:layout_below="@id/rvChat"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/rvChat"
         android:gravity="top"
         android:hint="Type something..."
         android:imeOptions="actionSend"
@@ -54,7 +29,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_below="@+id/rvChat"
+        android:layout_alignTop="@+id/etMessage"
         android:gravity="center"
         android:paddingRight="10dp"
         android:text="Send"

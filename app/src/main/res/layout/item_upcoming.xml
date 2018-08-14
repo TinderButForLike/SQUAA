@@ -40,37 +40,27 @@
             android:id="@+id/tvCountdown"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/textView9"
-            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/textView9"
+            android:layout_marginRight="8dp"
             android:text="20" />
-
-        <TextView
-            android:id="@+id/tvDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/tvName"
-            android:layout_below="@+id/tvName"
-            android:text="TextView"
-            android:textAlignment="center" />
 
         <TextView
             android:id="@+id/textView9"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginEnd="42dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="8dp"
             android:text="in"
             android:textAlignment="center" />
 
         <TextView
             android:id="@+id/textView10"
             android:layout_width="wrap_content"
+            android:layout_alignParentRight="true"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_below="@+id/tvDate"
-            android:layout_marginEnd="32dp"
-            android:layout_marginTop="-1dp"
+            android:layout_below="@+id/tvCountdown"
+            android:layout_marginRight="8dp"
             android:text="days" />
 
 
