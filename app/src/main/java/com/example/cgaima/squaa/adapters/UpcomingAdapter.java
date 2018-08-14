@@ -14,6 +14,7 @@ import com.example.cgaima.squaa.Models.Event;
 import com.example.cgaima.squaa.R;
 
 import java.util.List;
+import java.util.Random;
 
 public class UpcomingAdapter extends RecyclerView.Adapter<UpcomingAdapter.ViewHolder> {
     private List<Event> mEvents;
@@ -61,7 +62,9 @@ public class UpcomingAdapter extends RecyclerView.Adapter<UpcomingAdapter.ViewHo
         // populate the views according to this data
         holder.tvName.setText(event.getEventName());
         //holder.tvTime.setText(event.getToDate().toString());
-       holder.tvCountdown.setText("3");
+        Random rand = new Random();
+        int n = rand.nextInt(10 ) + 1;
+       holder.tvCountdown.setText(String.valueOf(n));
 
         Glide.with(context).load(event.getEventImage().getUrl()).into(holder.ivEvent);
 

@@ -25,11 +25,11 @@ import com.example.cgaima.squaa.R;
 import com.example.cgaima.squaa.fragments.EventDetailFragment;
 import com.example.cgaima.squaa.fragments.OtherProfileFragment;
 import com.example.cgaima.squaa.fragments.ProfileFragment;
-import com.parse.DeleteCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -72,14 +72,14 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         holder.event_name.setText(event.getEventName());
         holder.supporting_text.setText(event.getDescription());
         holder.location.setText(event.getLocation());
-        holder.date.setText(event.getDate().toString());
-
 
         Date fromDate = event.getDate("fromDate");
         Date toDate = event.getDate("toDate");
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm");
-        String dateString = String.format("%s - %s", simpleDateFormat.format(fromDate), simpleDateFormat.format(toDate));
-        holder.date.setText(dateString);
+        if (fromDate != null && toDate != null) {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm");
+            String dateString = String.format("%s - %s", simpleDateFormat.format(fromDate), simpleDateFormat.format(toDate));
+            holder.date.setText(dateString);
+        }
 
         // set owner name, profile picture, media image
         try {
@@ -103,56 +103,48 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         holder.numAttend.setText(String.valueOf(EventAttendance.getNumAttending(event)));
         final boolean joined = EventAttendance.isAttending(event);
         if (joined) {
-            holder.join.setText("unjoin?");
+            holder.join.setText("joined.");
             holder.join.setBackgroundTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.light_gray, context.getTheme())));
+            holder.join.setEnabled(false);
         }
+        else {
+            holder.join.setText("join");
+            holder.join.setBackgroundTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.secondaryColor, context.getTheme())));
+        }
+
+
 
         // after current user clicks join
         final EventAttendance finalEventAttendance = eventAttendance;
         holder.join.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final boolean joined = EventAttendance.isAttending(event);
                 // join event if not already joined
-                if (!joined) {
-                    final EventAttendance newEventAttendance = new EventAttendance();
-                    newEventAttendance.setEventAttendance(ParseUser.getCurrentUser(), event);
-                    newEventAttendance.saveInBackground(new SaveCallback() {
-                        @Override
-                        public void done(ParseException e) {
-                            if (e == null) {
-                                holder.join.setText("unjoin?");
-                                holder.join.setBackgroundTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.light_gray, context.getTheme())));
-                                holder.numAttend.setText(String.valueOf(EventAttendance.getNumAttending(event)));
-                                Log.d("EventAdapter", "Successfully joined event. :) ");
-                            } else {
-                                Toast.makeText(context,"Failed to join event", Toast.LENGTH_LONG).show();
-                                Log.e("EventAdapter", e.toString());
-                            }
+                final EventAttendance newEventAttendance = new EventAttendance();
+                newEventAttendance.setEventAttendance(ParseUser.getCurrentUser(), event);
+                newEventAttendance.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if (e == null) {
+                            holder.join.setText("joined.");
+                            holder.join.setBackgroundTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.light_gray, context.getTheme())));
+                            holder.join.setEnabled(false);
+                            holder.numAttend.setText(String.valueOf(EventAttendance.getNumAttending(event)));
+                            Log.d("EventAdapter", "Successfully joined event. :) ");
+                        } else {
+                            Toast.makeText(context,"Failed to join event", Toast.LENGTH_LONG).show();
+                            Log.e("EventAdapter", e.toString());
                         }
-                    });
-                    // TODO - put check mark on media image and make button gray or remove from home screen
-                }
-                // unjoin event if already joined
-                else{
-                    finalEventAttendance.deleteInBackground(new DeleteCallback() {
-                        @Override
-                        public void done(ParseException e) {
-                            if (e == null) {
-                                holder.join.setText("join");
-                                holder.join.setBackgroundTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.secondaryColor, context.getTheme())));
-                                holder.numAttend.setText(String.valueOf(EventAttendance.getNumAttending(event)));
-                                Log.d("EventAdapter", "Successfully unjoined event. ");
-                            }
-                            else {
-                                Toast.makeText(context,"Failed to unjoin event", Toast.LENGTH_LONG).show();
-                                Log.e("EventAdapter", e.toString());
-                            }
-                        }
-                    });
-                }
+                    }
+                });
             }
         });
+
+        Calendar cal = Calendar.getInstance();
+        Date today = cal.getTime();
+        if (toDate.before(today)) {
+            holder.join.setVisibility(View.GONE);
+        }
 
         // launch other profile fragment
         holder.ownerPic.setOnClickListener(new View.OnClickListener() {
@@ -191,7 +183,6 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
             }
         });
     }
-
 
     @Override
     public int getItemCount() {

@@ -1,16 +1,10 @@
 package com.example.cgaima.squaa.fragments;
 
-import android.Manifest;
-import android.content.Context;
-import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
 import android.icu.text.SimpleDateFormat;
-import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
@@ -39,7 +33,6 @@ import com.lyft.lyftbutton.LyftButton;
 import com.lyft.lyftbutton.RideParams;
 import com.lyft.lyftbutton.RideTypeEnum;
 import com.lyft.networking.ApiConfig;
-import com.parse.DeleteCallback;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
@@ -144,6 +137,19 @@ public class EventDetailFragment extends Fragment {
                     .build();
 
             lyftButton.setApiConfig(apiConfig);
+
+            lyftButton.setVisibility(View.VISIBLE);
+
+            // Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            ParseGeoPoint parseGeoPoint = event.getParseGeoPoint("latlng");
+
+            RideParams.Builder rideParamsBuilder = new RideParams.Builder()
+                    //.setPickupLocation(location.getLatitude(), location.getLongitude())
+                    .setDropoffLocation(parseGeoPoint.getLatitude(), parseGeoPoint.getLongitude());
+            rideParamsBuilder.setRideTypeEnum(RideTypeEnum.CLASSIC);
+            lyftButton.setRideParams(rideParamsBuilder.build());
+            lyftButton.load();
+            /*
             LocationManager lm = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
 
             // check location permission
@@ -152,16 +158,17 @@ public class EventDetailFragment extends Fragment {
                 lyftButton.setVisibility(View.GONE); // hide lyft button
             } else {
                 lyftButton.setVisibility(View.VISIBLE);
-                Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                ParseGeoPoint parseGeoPoint = event.getGeoPoint();
+
+                // Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                ParseGeoPoint parseGeoPoint = event.getParseGeoPoint("location");
 
                 RideParams.Builder rideParamsBuilder = new RideParams.Builder()
-                        .setPickupLocation(location.getLatitude(), location.getLongitude())
+                        //.setPickupLocation(location.getLatitude(), location.getLongitude())
                         .setDropoffLocation(parseGeoPoint.getLatitude(), parseGeoPoint.getLongitude());
                 rideParamsBuilder.setRideTypeEnum(RideTypeEnum.CLASSIC);
                 lyftButton.setRideParams(rideParamsBuilder.build());
                 lyftButton.load();
-            }
+            }*/
         }
 
         // if past event and user attended - allow user to rate within a day
@@ -341,7 +348,8 @@ public class EventDetailFragment extends Fragment {
         }
         // unjoin event if already joined
         else {
-            EventAttendance.Query query = new EventAttendance.Query();
+            toggleJoinButton(true);
+            /*EventAttendance.Query query = new EventAttendance.Query();
             query.findEventAttendance(ParseUser.getCurrentUser(), event);
             try {
                 toggleJoinButton(true);
@@ -361,7 +369,7 @@ public class EventDetailFragment extends Fragment {
                 Log.d("EventDetailFragment", "Successfully unjoined event.");
             } catch (ParseException e) {
                 e.printStackTrace();
-            }
+            }*/
         }
     }
     public void toggleJoinButton(boolean toggle) {
@@ -371,8 +379,9 @@ public class EventDetailFragment extends Fragment {
             join.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.secondaryColor, getActivity().getTheme())));
         }
         else {
-            join.setText("unjoin?");
+            join.setText("joined.");
             join.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.light_gray, getActivity().getTheme())));
+            join.setEnabled(false);
         }
     }
 }
