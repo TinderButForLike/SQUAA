@@ -88,6 +88,7 @@ public class EventHistory extends Fragment {
             public void done(List<ParseObject> objects, ParseException e) {
                 if(e==null) {
                     for (int i = 0; i < objects.size(); i++) {
+                        Log.e("EventHistory", objects.toString());
                         Event event = (Event) objects.get(i).getParseObject("event");
                         Date eventEndDate = event.getDate("toDate");
                         Calendar cal = Calendar.getInstance();

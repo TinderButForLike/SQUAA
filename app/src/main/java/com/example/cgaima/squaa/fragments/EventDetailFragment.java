@@ -1,16 +1,10 @@
 package com.example.cgaima.squaa.fragments;
 
-import android.Manifest;
-import android.content.Context;
-import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
 import android.icu.text.SimpleDateFormat;
-import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
@@ -143,6 +137,19 @@ public class EventDetailFragment extends Fragment {
                     .build();
 
             lyftButton.setApiConfig(apiConfig);
+
+            lyftButton.setVisibility(View.VISIBLE);
+
+            // Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            ParseGeoPoint parseGeoPoint = event.getParseGeoPoint("latlng");
+
+            RideParams.Builder rideParamsBuilder = new RideParams.Builder()
+                    //.setPickupLocation(location.getLatitude(), location.getLongitude())
+                    .setDropoffLocation(parseGeoPoint.getLatitude(), parseGeoPoint.getLongitude());
+            rideParamsBuilder.setRideTypeEnum(RideTypeEnum.CLASSIC);
+            lyftButton.setRideParams(rideParamsBuilder.build());
+            lyftButton.load();
+            /*
             LocationManager lm = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
 
             // check location permission
@@ -151,16 +158,17 @@ public class EventDetailFragment extends Fragment {
                 lyftButton.setVisibility(View.GONE); // hide lyft button
             } else {
                 lyftButton.setVisibility(View.VISIBLE);
-                Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                ParseGeoPoint parseGeoPoint = event.getGeoPoint();
+
+                // Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                ParseGeoPoint parseGeoPoint = event.getParseGeoPoint("location");
 
                 RideParams.Builder rideParamsBuilder = new RideParams.Builder()
-                        .setPickupLocation(location.getLatitude(), location.getLongitude())
+                        //.setPickupLocation(location.getLatitude(), location.getLongitude())
                         .setDropoffLocation(parseGeoPoint.getLatitude(), parseGeoPoint.getLongitude());
                 rideParamsBuilder.setRideTypeEnum(RideTypeEnum.CLASSIC);
                 lyftButton.setRideParams(rideParamsBuilder.build());
                 lyftButton.load();
-            }
+            }*/
         }
 
         // if past event and user attended - allow user to rate within a day

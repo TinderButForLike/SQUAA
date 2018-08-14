@@ -108,7 +108,8 @@
             android:layout_alignEnd="@+id/tvEventName"
             android:layout_marginBottom="-15dp"
             android:text="Attending"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/tvNumAttend"
