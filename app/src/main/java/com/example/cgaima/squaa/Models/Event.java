@@ -226,6 +226,7 @@ public class Event extends ParseObject implements Place {
         }
 
         public Query getTop() {
+            orderByDescending("createdAt");
             setLimit(25);
             return this;
         }

@@ -116,7 +116,7 @@ public class EventDetailFragment extends Fragment {
 
         Calendar cal = Calendar.getInstance();
         Date today = cal.getTime();
-        cal.add(Calendar.DATE, 1);
+        cal.add(Calendar.DATE, 7);
         Date tmrw = cal.getTime();
         Date fromDate = event.getDate("fromDate");
         Date toDate = event.getDate("toDate");

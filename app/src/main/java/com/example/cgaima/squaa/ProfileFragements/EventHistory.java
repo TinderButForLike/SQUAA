@@ -2,7 +2,6 @@ package com.example.cgaima.squaa.ProfileFragements;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -32,9 +31,6 @@ public class EventHistory extends Fragment {
     @BindView(R.id.rvEventHistory) RecyclerView rvGrid;
     private ProfileAdapter mAdapter;
     private List<Event> events;
-
-
-    private FragmentActivity listener;
 
     // Required empty public constructor
     public EventHistory() {}
