@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -54,6 +55,11 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
             holder.body.setBackgroundResource(R.drawable.textbox_me);
             //holder.imageMe.setBackgroundResource(R.drawable.button_shape);
             holder.body.setGravity(Gravity.CENTER_VERTICAL | Gravity.RIGHT);
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.body.getLayoutParams();
+            params.addRule(RelativeLayout.LEFT_OF, R.id.ivProfileMe);
+            params.addRule(RelativeLayout.RIGHT_OF, R.id.ivProfileOther);
+
+            holder.body.setLayoutParams(params);
            // holder.body.setBackgroundColor(R.color.primaryLightColor);
         } else {
             holder.imageOther.setVisibility(View.VISIBLE);
@@ -61,6 +67,12 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
            // holder.imageOther.setBackgroundResource(circle);
             holder.body.setBackgroundResource(R.drawable.textbox);
             holder.body.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.body.getLayoutParams();
+            params.addRule(RelativeLayout.RIGHT_OF, R.id.ivProfileOther);
+            params.addRule(RelativeLayout.LEFT_OF, R.id.ivProfileMe);
+
+            holder.body.setLayoutParams(params);
+
             //holder.body.setBackgroundColor(R.color.light_gray);
         }
 

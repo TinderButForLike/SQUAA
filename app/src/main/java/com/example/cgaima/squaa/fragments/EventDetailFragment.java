@@ -39,7 +39,6 @@ import com.lyft.lyftbutton.LyftButton;
 import com.lyft.lyftbutton.RideParams;
 import com.lyft.lyftbutton.RideTypeEnum;
 import com.lyft.networking.ApiConfig;
-import com.parse.DeleteCallback;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
@@ -341,7 +340,8 @@ public class EventDetailFragment extends Fragment {
         }
         // unjoin event if already joined
         else {
-            EventAttendance.Query query = new EventAttendance.Query();
+            toggleJoinButton(true);
+            /*EventAttendance.Query query = new EventAttendance.Query();
             query.findEventAttendance(ParseUser.getCurrentUser(), event);
             try {
                 toggleJoinButton(true);
@@ -361,7 +361,7 @@ public class EventDetailFragment extends Fragment {
                 Log.d("EventDetailFragment", "Successfully unjoined event.");
             } catch (ParseException e) {
                 e.printStackTrace();
-            }
+            }*/
         }
     }
     public void toggleJoinButton(boolean toggle) {
@@ -371,8 +371,9 @@ public class EventDetailFragment extends Fragment {
             join.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.secondaryColor, getActivity().getTheme())));
         }
         else {
-            join.setText("unjoin?");
+            join.setText("joined.");
             join.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.light_gray, getActivity().getTheme())));
+            join.setEnabled(false);
         }
     }
 }

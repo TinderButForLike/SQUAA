@@ -105,24 +105,24 @@
             android:id="@+id/imagePrompt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/create"
             android:layout_below="@+id/description"
+            android:layout_centerHorizontal="true"
             android:layout_marginTop="-5dp"
             android:text="Add a picture"
             android:textColor="@color/black" />
 
         <ImageView
             android:id="@+id/eventPic"
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
-            android:layout_alignEnd="@+id/publicCheck"
+            android:layout_width="240dp"
+            android:layout_height="160dp"
             android:layout_below="@+id/imagePrompt"
+            android:layout_centerHorizontal="true"
             android:background="@drawable/image_upload"
             app:layout_constraintDimensionRatio="H,16:9" />
 
         <Spinner
             android:id="@+id/spinner1"
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:layout_alignStart="@+id/eventPic"
             android:layout_below="@+id/tvCategory"
@@ -157,15 +157,6 @@
             android:layout_toEndOf="@+id/nameLayout"
             android:padding="16dp"
             android:text="public" />
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="141dp"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/pickDate"
-        android:layout_alignStart="@+id/mapLaunch"
-        android:text='enter in format "mm/dd/yyyy"'
-        android:textSize="10sp" />
 
         <ImageButton
             android:id="@+id/pickDate"

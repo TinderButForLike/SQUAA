@@ -79,6 +79,7 @@ public class CreateEventFragment extends Fragment {
     ImageButton mapLaunch;
 
 
+
     int mYear;
     int mMonth;
     int mDay;
@@ -156,7 +157,7 @@ public class CreateEventFragment extends Fragment {
         //get the spinner from the xml.
          Spinner dropdown = view.findViewById(R.id.spinner1);
 //create a list of items for the spinner.
-        String[] items = new String[]{"1", "2", "three"};
+        String[] items = new String[]{"Sport and Fitness", "Outdoors", "Games","Food and Drink","Music and Theatre","Museums and Art","Movies","Nightlife","Nature and Parks","Shopping","Work"};
 //create an adapter to describe how the items are displayed, adapters are used in several places in android.
 //There are multiple variations of this, but this is the basic variant.
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, items);
@@ -278,6 +279,7 @@ public class CreateEventFragment extends Fragment {
     }
 
 
+
     @OnClick(R.id.eventPic)
     //choose a photo from the gallery
     public void onPickPhoto() {
@@ -312,6 +314,7 @@ public class CreateEventFragment extends Fragment {
                     }
 
                     //load the image into the view
+                    eventPic.setBackgroundResource(0);
                     eventPic.setImageBitmap(selectedImage);
                     writeBitmapToFile(selectedImage);
 
