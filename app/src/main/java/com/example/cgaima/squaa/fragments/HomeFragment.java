@@ -88,8 +88,6 @@ public class HomeFragment extends Fragment {
         futureEvents = new ArrayList<>();
         Log.e("Home Fragment", "Home fragment created");
 
-
-
         //configure the notification channel
         int importance = NotificationManager.IMPORTANCE_DEFAULT;
         NotificationChannel channel = new NotificationChannel("myChannelId", "My Channel", importance);
@@ -177,9 +175,8 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         ButterKnife.bind(this, view);
-        if (eventAdapter == null) {
-            eventAdapter = new EventAdapter(new ArrayList<Event>());
-        }
+
+        Log.e("HomeFragment", "onCreateView");
 
         // setup container view for refresh function
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -194,26 +191,24 @@ public class HomeFragment extends Fragment {
 
         // setup recycler view with adapter
         rvEvents.setLayoutManager(new LinearLayoutManager(getContext()));
+        if (eventAdapter == null) {
+            eventAdapter = new EventAdapter(new ArrayList<Event>());
+        }
+
+        rvEvents.setAdapter(eventAdapter);
 
         // populate category
         if (!category.isEmpty()) {
             getCategory();
         } else {
-            rvEvents.setAdapter(eventAdapter);
+            loadTopPosts();
         }
 
         mNotifEnabler = new NotifEnabler(getContext());
-        loadTopPosts();
 
         checkForNotifs();
 
         return view;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
     }
 
     // TODO - make infinite scrolling work with query
@@ -259,7 +254,6 @@ public class HomeFragment extends Fragment {
     // fetch event by name
     private void fetchQueryEvents(String query) {
         // clear adapter
-        eventAdapter.clear();
         // create a new query
         final Event.Query eventsQuery = new Event.Query();
         eventsQuery.containsWord(query);
@@ -313,12 +307,13 @@ public class HomeFragment extends Fragment {
 
     private void getCategory() {
         eventAdapter.clear();
-        ParseQuery query = ParseQuery.getQuery("event");
+        ParseQuery<Event> query = ParseQuery.getQuery("Event");
         query.whereEqualTo("Categories", category);
         query.findInBackground(new FindCallback<Event>() {
             @Override
             public void done(List<Event> objects, ParseException e) {
                 if (e==null) {
+                    Log.e("HomeFragment", String.valueOf(objects));
                     eventAdapter.setItems(objects);
                     if (objects.isEmpty()) {
                         Toast.makeText(getContext(), "There are no events in this categories", Toast.LENGTH_SHORT).show();

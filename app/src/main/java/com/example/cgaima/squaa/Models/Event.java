@@ -237,6 +237,7 @@ public class Event extends ParseObject implements Place {
         }
 
         public Query containsWord(String query) {
+            orderByDescending("createdAt");
             setLimit(25);
             whereContains(KEY_NAME, query);
             return this;
