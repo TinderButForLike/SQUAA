@@ -36,6 +36,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.cgaima.squaa.Models.Event;
+import com.example.cgaima.squaa.Models.EventAttendance;
 import com.example.cgaima.squaa.ProfileFragements.Upcoming;
 import com.example.cgaima.squaa.R;
 import com.example.cgaima.squaa.activities.HomeActivity;
@@ -263,12 +264,15 @@ public class CreateEventFragment extends Fragment {
             public void done(ParseException e) {
                 if (e == null) {
                     Log.d("Event Activity", "You just made a new event!");
+                    // make user auto join event
+                    joinEvent(newEvent);
                 } else {
                     Log.d("Event Activity", "Something went wrong :(");
                     e.printStackTrace();
                 }
             }
         });
+
 
     }
 
@@ -365,5 +369,21 @@ public class CreateEventFragment extends Fragment {
         // mId allows you to update the notification later on.
         mNotificationManager.notify(nId, mBuilder); //update the notif later
 
+    }
+
+    public void joinEvent(Event event) {
+        final EventAttendance newEventAttendance = new EventAttendance();
+        newEventAttendance.setEventAttendance(ParseUser.getCurrentUser(), event);
+        newEventAttendance.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e == null) {
+                    Log.d("CreateEventFragment", "I'm the owner! Successfully joined event. :) ");
+                } else {
+                    Toast.makeText(getContext(), "Failed to join_button event", Toast.LENGTH_LONG).show();
+                    Log.e("CreateEventFragment", e.toString());
+                }
+            }
+        });
     }
 }

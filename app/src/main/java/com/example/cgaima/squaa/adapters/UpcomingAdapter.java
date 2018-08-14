@@ -2,7 +2,11 @@ package com.example.cgaima.squaa.adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,14 +15,22 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.cgaima.squaa.Models.Event;
+import com.example.cgaima.squaa.Models.EventAttendance;
 import com.example.cgaima.squaa.R;
+import com.example.cgaima.squaa.fragments.EventDetailFragment;
+import com.parse.ParseException;
+import com.parse.ParseUser;
 
 import java.util.List;
 import java.util.Random;
 
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 public class UpcomingAdapter extends RecyclerView.Adapter<UpcomingAdapter.ViewHolder> {
     private List<Event> mEvents;
     Context context;
+
     // pass in the Tweets array in the constructor
     public UpcomingAdapter(List<Event> events) {
         mEvents = events;
@@ -87,7 +99,7 @@ public class UpcomingAdapter extends RecyclerView.Adapter<UpcomingAdapter.ViewHo
 
     // create the ViewHolder class
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         public ImageView ivEvent;
         public TextView tvName;
         public TextView tvCountdown;
@@ -103,9 +115,29 @@ public class UpcomingAdapter extends RecyclerView.Adapter<UpcomingAdapter.ViewHo
             tvName = (TextView) itemView.findViewById(R.id.tvName);
             tvCountdown = (TextView) itemView.findViewById(R.id.tvCountdown);
             tvTime = (TextView) itemView.findViewById(R.id.tvDate);
+            ButterKnife.bind(this, itemView);
 
         }
+        @OnClick
+        public void launchEventDetails() {
+            Log.e("UpcomingAdapter", "hi i'm being clicked");
+            int position = getAdapterPosition();
+            if (position != RecyclerView.NO_POSITION) {
+                Event event = mEvents.get(position);
+                EventAttendance eventAttendance = null;
+                try {
+                    eventAttendance = (EventAttendance) new EventAttendance.Query().findEventAttendance(ParseUser.getCurrentUser(), event).getFirst();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                Fragment eventDetailActivity = EventDetailFragment.newInstance(event, eventAttendance);
 
+                FragmentTransaction fragmentTransaction = ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container, eventDetailActivity)
+                        .addToBackStack(null)
+                        .commit();
+            }
+        }
 
 
     }

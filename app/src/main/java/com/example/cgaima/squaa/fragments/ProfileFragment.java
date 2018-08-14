@@ -79,6 +79,7 @@ public class ProfileFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_profile, parent, false);
         ButterKnife.bind(this, view);
         // Defines the xml file for the fragment
+        currentUser =  ParseUser.getCurrentUser();
         return view;
     }
 
@@ -87,6 +88,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         // Setup any handles to view objects here
+        currentUser =  ParseUser.getCurrentUser();
         float rating = (float) currentUser.getDouble("rating");
         avgRating.setText(String.valueOf(rating));
         rb.setRating(rating);

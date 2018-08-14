@@ -80,6 +80,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
             String dateString = String.format("%s - %s", simpleDateFormat.format(fromDate), simpleDateFormat.format(toDate));
             holder.date.setText(dateString);
         }
+        Calendar cal = Calendar.getInstance();
+        Date today = cal.getTime();
 
         // set owner name, profile picture, media image
         try {
@@ -140,12 +142,6 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
             }
         });
 
-        Calendar cal = Calendar.getInstance();
-        Date today = cal.getTime();
-        if (toDate.before(today)) {
-            holder.join.setVisibility(View.GONE);
-        }
-
         // launch other profile fragment
         holder.ownerPic.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -182,6 +178,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
                 fragmentTransaction.commit();
             }
         });
+
+
     }
 
     @Override
@@ -240,5 +238,4 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         this.events = events;
         notifyDataSetChanged();
     }
-
 }
