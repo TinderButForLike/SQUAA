@@ -67,7 +67,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
         final ImageView profileView = isMe ? holder.imageMe : holder.imageOther;
         Glide.with(mContext).load(getProfileUrl(message.getUserId())).into(profileView);
         holder.body.setText(message.getBody());
-        /* final ImageView profileView = isMe ? holder.imageMe : holder.imageOther; */
+        /* final ImageView prdtdvnhbcjcdhknlvkgrnkuuniclvrnifrbjufcdcjrkfdbuhgrctnhfkedgcgttgrgvtikcbichbkerjvglurifineflivgfgdjecfgvdlglklcdvveekiulegdekftcirrfnfrgntujtlrrthftvlhirhgrlenvruflrflrigfhllrccuvletvkjljiiefdofileView = isMe ? holder.imageMe : holder.imageOther; */
         try {
             ParseUser owner = message.getOwner();
             Glide.with(mContext).load(owner.fetchIfNeeded().getParseFile("profile_picture").getUrl()).apply(RequestOptions.circleCropTransform()).into(profileView);
